@@ -17,6 +17,7 @@ import handleToastError from "$/components/StyledToaster/handleToastError";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { z } from "zod";
+import TimeInMs from "$/enums/TimeInMs";
 
 type Props = {
   show: boolean;
@@ -32,6 +33,8 @@ const CollaboratorsModal: FC<Props> = ({ show, onClose, debtTableId }) => {
     debtTableId,
     {
       enabled: show && session.status === "authenticated",
+      staleTime: TimeInMs.FifteenSeconds,
+      refetchOnWindowFocus: true,
     }
   );
   const allCollaborators = collaboratorsQuery.data?.collaborators ?? [];

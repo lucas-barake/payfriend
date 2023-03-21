@@ -4,12 +4,15 @@ import { Menu, Transition } from "@headlessui/react";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";
 import PendingInviteRow from "$/pages/dashboard/(page-lib)/layouts/Header/UserMenu/NotificationBell/PendingInviteRow";
+import TimeInMs from "$/enums/TimeInMs";
 
 const NotificationBell: FC = () => {
   const session = useSession();
 
   const query = api.invites.getAll.useQuery(undefined, {
     enabled: session.status === "authenticated",
+    staleTime: TimeInMs.FifteenSeconds,
+    refetchOnWindowFocus: true,
   });
   const allPendingInvites = query.data ?? [];
 

@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
 import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/mutations/getById/input";
 import LoadingSpinnerIcon from "$/components/Icons/LoadingSpinnerIcon";
+import TimeInMs from "$/enums/TimeInMs";
 
 const GroupDashboardPage: NextPageWithLayout = () => {
   const session = useSession();
@@ -18,6 +19,8 @@ const GroupDashboardPage: NextPageWithLayout = () => {
 
   const query = api.debtTables.getById.useQuery(groupId as string, {
     enabled: session.status === "authenticated" && groupId !== null,
+    staleTime: TimeInMs.FifteenSeconds,
+    refetchOnWindowFocus: true,
     onError: (error) => {
       if (error instanceof TRPCClientError) {
         void router.push("/dashboard");

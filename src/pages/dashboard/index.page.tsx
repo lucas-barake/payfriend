@@ -9,6 +9,7 @@ import { api } from "$/utils/api";
 import CreateUpdateDebtTable from "$/pages/dashboard/(page-lib)/components/CreateUpdateDebtTable";
 import { useState } from "react";
 import DebtTable from "$/pages/dashboard/(page-lib)/components/DebtTable";
+import TimeInMs from "$/enums/TimeInMs";
 
 const Dashboard: NextPageWithLayout = () => {
   const [showCreate, setShowCreate] = useState(false);
@@ -16,7 +17,8 @@ const Dashboard: NextPageWithLayout = () => {
   const session = useSession();
   const query = api.debtTables.getAll.useQuery(undefined, {
     enabled: session.status === "authenticated",
-    refetchOnWindowFocus: false,
+    staleTime: TimeInMs.ThirtySeconds,
+    refetchOnWindowFocus: true,
   });
 
   return (
@@ -38,7 +40,7 @@ const Dashboard: NextPageWithLayout = () => {
             }}
           >
             <PlusIcon className="h-5 w-5" />
-            Crear Nuevo Grupo
+            Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
           </Button>
 
           {!query.isFetching && query.data?.debtTables.length === 0 && (
