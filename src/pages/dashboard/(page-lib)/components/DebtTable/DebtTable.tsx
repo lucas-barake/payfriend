@@ -2,12 +2,15 @@ import { type FC, useState } from "react";
 import Link from "next/link";
 import CollaboratorsModal from "$/pages/dashboard/(page-lib)/components/CollaboratorsModal";
 import Button from "$/components/Button";
-import { CalendarIcon, UserCircleIcon } from "@heroicons/react/outline";
+import {
+  CalendarIcon,
+  EyeIcon,
+  UserCircleIcon,
+} from "@heroicons/react/outline";
 import truncateString from "$/utils/truncateString";
 import { DateTime } from "luxon";
 import { type InferMutationResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
 
 type Props = {
   debtTable: NonNullable<
@@ -57,23 +60,20 @@ const DebtTable: FC<Props> = ({ debtTable }) => {
         </span>
 
         <div className="mt-auto flex items-center justify-between">
-          <Button
-            color="blue"
-            type="button"
-            noPadding
-            className="px-3"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-            }}
-          >
-            <DotsHorizontalIcon className="h-5 w-5 text-neutral-100 dark:text-neutral-200" />
-          </Button>
-
           <span className="mt-auto flex items-center gap-1 text-sm">
             <CalendarIcon className="inline-block h-4 w-4" />
             {DateTime.fromJSDate(debtTable.createdAt).toFormat("dd/MM/yyyy")}
           </span>
+
+          <Button
+            color="indigo"
+            type="button"
+            noPadding
+            className="flex items-center gap-2 px-3 py-0.5"
+          >
+            Ver
+            <EyeIcon className="h-5 w-5" />
+          </Button>
         </div>
       </Link>
     </>
