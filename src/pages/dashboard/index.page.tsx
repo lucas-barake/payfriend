@@ -47,8 +47,8 @@ const Dashboard: NextPageWithLayout = () => {
 
           {!query.isFetching && query.data?.debtTables.length === 0 && (
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-neutral-600 opacity-75 dark:bg-yellow-300" />
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-neutral-700 dark:bg-yellow-400" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-700 opacity-75 dark:bg-yellow-300" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-600 dark:bg-yellow-400" />
             </span>
           )}
         </span>
