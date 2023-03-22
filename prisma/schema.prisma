@@ -98,7 +98,7 @@ model User {
   name            String?
   email           String?                          @unique
   emailVerified   DateTime?
-  otp             Int?
+  otp             String?
   otpUpdatedAt    DateTime?                        @db.Timestamptz(6)
   image           String?
   accounts        Account[]

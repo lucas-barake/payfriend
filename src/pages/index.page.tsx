@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import DesignLayout from "$/layouts/DesignLayout";
+import LoadingPage from "$/components/LoadingPage";
 
 const Home: NextPage = () => {
   const session = useSession();
@@ -9,7 +10,7 @@ const Home: NextPage = () => {
 
   if (session.status === "authenticated") {
     void router.push("/dashboard");
-    return null;
+    return <LoadingPage />;
   }
 
   return (

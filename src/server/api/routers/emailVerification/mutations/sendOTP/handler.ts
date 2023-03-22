@@ -6,18 +6,20 @@ import { type MailDataRequired } from "@sendgrid/helpers/classes/mail";
 import { DateTime } from "luxon";
 
 const sendOTPHandler = protectedProcedure.mutation(async ({ ctx }) => {
+  const isInSandBoxMode = env.SENDGRID_SANDBOX_MODE === "true";
+
   try {
     if (ctx.session.user.emailVerified != null) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Email already verified",
+        message: "El correo electrónico ya está verificado",
       });
     }
 
     if (ctx.session.user.email == null) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Email not found",
+        message: "Algún error ocurrió. Por favor, vuelve a intentarlo.",
       });
     }
 
@@ -30,12 +32,12 @@ const sendOTPHandler = protectedProcedure.mutation(async ({ ctx }) => {
     if (!lastOTPQuery) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "User not found",
+        message: "No se encontró el usuario",
       });
     }
 
     const { otpUpdatedAt } = lastOTPQuery;
-    if (otpUpdatedAt != null) {
+    if (otpUpdatedAt != null && !isInSandBoxMode) {
       const now = new Date();
       const diff = Math.abs(now.getTime() - otpUpdatedAt.getTime());
       const minutes = Math.floor(diff / 1000 / 60);
@@ -45,22 +47,34 @@ const sendOTPHandler = protectedProcedure.mutation(async ({ ctx }) => {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message:
-            "Ya solicitaste un código de verificación. Por favor, espera unos minutos y vuelve a intentarlo.",
+            "Ya solicitaste un código de verificación. Por favor espera unos minutos y vuelve a intentarlo.",
         });
       }
     }
 
-    const fourDigitGeneratedOTP = Math.floor(1000 + Math.random() * 9000);
-    sendGridMail.setApiKey(env.SENDGRID_API_KEY);
-
+    const fourDigitGeneratedOTP = String(
+      Math.floor(1000 + Math.random() * 9000)
+    );
     const msg: MailDataRequired = {
       to: ctx.session.user.email,
       from: env.SENDGRID_FROM_EMAIL,
       subject: "Código de verificación para tu cuenta de Deudamigo",
       text: `Tu código de verificación es: ${fourDigitGeneratedOTP}`,
       html: `<strong>Tu código de verificación es: ${fourDigitGeneratedOTP}</strong>`,
+      mailSettings: {
+        sandboxMode: {
+          enable: isInSandBoxMode,
+        },
+      },
     };
 
+    if (isInSandBoxMode) {
+      console.log(
+        `Se envió el código de verificación ${fourDigitGeneratedOTP} a ${ctx.session.user.email}`
+      );
+    }
+
+    sendGridMail.setApiKey(env.SENDGRID_API_KEY);
     void sendGridMail.send(msg);
 
     await ctx.prisma.user.update({

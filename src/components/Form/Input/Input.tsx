@@ -6,6 +6,7 @@ type InputProps = {
   leftIcon?: JSX.Element;
   dark?: boolean;
   rightElement?: JSX.Element;
+  noWidth?: boolean;
 } & ComponentPropsWithRef<"input"> &
   Omit<LabelProps, "children">;
 
@@ -20,6 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       warning,
       rightElement,
       dark = false,
+      noWidth = false,
       ...props
     },
     ref
@@ -41,7 +43,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
           ref={ref}
           className={cs(
-            "w-full rounded border border-solid bg-clip-padding px-3 py-1.5 text-base font-normal transition ease-in-out focus:border-indigo-600 focus:outline-none dark:border-neutral-800 dark:bg-neutral-700 dark:text-gray-100 dark:placeholder-neutral-400/75 dark:focus:border-indigo-400",
+            "rounded border border-solid bg-clip-padding px-3 py-1.5 text-base font-normal transition ease-in-out focus:border-indigo-600 focus:outline-none dark:border-neutral-800 dark:bg-neutral-700 dark:text-gray-100 dark:placeholder-neutral-400/75 dark:focus:border-indigo-400",
+            !noWidth && "w-full",
             leftIcon !== undefined && "pl-8",
             dark
               ? "border-dim-50 bg-dim-50 text-gray-100 placeholder-neutral-400/75 focus:border-indigo-400"

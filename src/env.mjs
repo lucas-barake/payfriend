@@ -23,6 +23,7 @@ const server = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   SENDGRID_API_KEY: z.string(),
   SENDGRID_FROM_EMAIL: z.string().email(),
+  SENDGRID_SANDBOX_MODE: z.literal("true").optional(),
 });
 
 /**
@@ -48,6 +49,7 @@ const processEnv = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL,
+  SENDGRID_SANDBOX_MODE: process.env.SENDGRID_SANDBOX_MODE,
 };
 
 // Don't touch the part below
@@ -60,7 +62,6 @@ const merged = server.merge(client);
 /** @typedef {z.SafeParseReturnType<MergedInput, MergedOutput>} MergedSafeParseReturn */
 
 let env = /** @type {MergedOutput} */ (process.env);
-
 if (!!process.env.SKIP_ENV_VALIDATION == false) {
   const isServer = typeof window === "undefined";
 
