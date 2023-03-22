@@ -17,7 +17,7 @@ type Props = {
   onClose: () => void;
 };
 
-const CreateUpdateDebtTable: FC<Props> = ({ show, onClose }) => {
+const CreateDebtTableModal: FC<Props> = ({ show, onClose }) => {
   const utils = api.useContext();
   const create = api.debtTables.create.useMutation({
     onSuccess: (newTable) => {
@@ -111,4 +111,4 @@ const CreateUpdateDebtTable: FC<Props> = ({ show, onClose }) => {
   );
 };
 
-export default CreateUpdateDebtTable;
+export default CreateDebtTableModal;

@@ -1,7 +1,7 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import Header from "$/pages/dashboard/(page-lib)/layouts/Header";
+import Header from "$/layouts/Header";
 import { useRouter } from "next/router";
-import MainLayout from "$/pages/dashboard/(page-lib)/layouts/MainLayout";
+import MainLayout from "$/layouts/MainLayout";
 import { ArrowLeftIcon } from "@heroicons/react/solid";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";

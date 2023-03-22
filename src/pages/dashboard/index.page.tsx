@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react";
-import Header from "$/pages/dashboard/(page-lib)/layouts/Header";
+import Header from "$/layouts/Header";
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import Button from "$/components/Button";
 import { PlusIcon } from "@heroicons/react/solid";
-import MainLayout from "$/pages/dashboard/(page-lib)/layouts/MainLayout";
+import MainLayout from "$/layouts/MainLayout";
 import { api } from "$/utils/api";
-import CreateUpdateDebtTable from "$/pages/dashboard/(page-lib)/components/CreateUpdateDebtTable";
+import CreateDebtTableModal from "$/pages/dashboard/(page-lib)/components/CreateDebtTableModal";
 import { useState } from "react";
 import DebtTable from "$/pages/dashboard/(page-lib)/components/DebtTable";
 import TimeInMs from "$/enums/TimeInMs";
@@ -25,7 +25,7 @@ const Dashboard: NextPageWithLayout = () => {
 
   return (
     <MainLayout className="flex flex-col gap-8">
-      <CreateUpdateDebtTable
+      <CreateDebtTableModal
         show={showCreate}
         onClose={() => {
           setShowCreate(false);

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { MoonIcon, SunIcon } from "@heroicons/react/outline";
 import { useTheme } from "next-themes";
 import Button from "$/components/Button";
-import UserMenu from "$/pages/dashboard/(page-lib)/layouts/Header/UserMenu";
+import UserMenu from "$/layouts/Header/UserMenu";
 
 const Header: FC = () => {
   const session = useSession();
