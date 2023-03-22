@@ -78,7 +78,6 @@ const CreateUpdateDebtTable: FC<Props> = ({ show, onClose }) => {
         <Form.Textarea
           label="Descripción"
           {...form.register("description")}
-          required
           error={form.formState.errors.description?.message}
         />
 

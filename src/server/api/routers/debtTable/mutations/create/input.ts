@@ -10,8 +10,8 @@ export const createDebTableInput = z.object({
     .min(1, {
       message: "El nombre es requerido",
     })
-    .max(50, {
-      message: "El nombre debe tener menos de 50 caracteres",
+    .max(40, {
+      message: "El nombre debe tener menos de 40 caracteres",
     }),
   description: z
     .string({
@@ -19,11 +19,8 @@ export const createDebTableInput = z.object({
       required_error: "La descripción es requerida",
     })
     .trim()
-    .min(1, {
-      message: "La descripción es requerida",
-    })
-    .max(200, {
-      message: "La descripción debe tener menos de 200 caracteres",
+    .max(100, {
+      message: "La descripción debe tener menos de 100 caracteres",
     }),
 });
 export type CreateDebtTableInput = z.infer<typeof createDebTableInput>;
