@@ -39,30 +39,24 @@ const DebtTable: FC<Props> = ({ debtTable }) => {
         <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
           <span className="truncate">{debtTable.name}</span>
 
-          <Button
-            color="orange"
-            className="flex items-center gap-1 text-sm"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              setShowCollaborators(true);
-            }}
-          >
+          <span className="flex items-center gap-1">
             <UserCircleIcon className="h-5 w-5" />
-            {debtTable.collaborators.length === 1
-              ? "Agregar"
-              : debtTable.collaborators.length}
-          </Button>
+            {debtTable.collaborators.length}
+          </span>
         </div>
 
-        <span className="my-2">
+        <span className="mt-2 mb-6 pr-2 lg:pr-3 xl:pr-6">
           {truncateString(debtTable.description, 80)}
         </span>
 
         <div className="mt-auto flex items-center justify-between">
-          <span className="mt-auto flex items-center gap-1 text-sm">
-            <CalendarIcon className="inline-block h-4 w-4" />
-            {DateTime.fromJSDate(debtTable.createdAt).toFormat("dd/MM/yyyy")}
+          <span className="flex items-center gap-1 text-sm">
+            <CalendarIcon className="h-4 w-4" />
+            {DateTime.fromJSDate(debtTable.createdAt).toLocaleString({
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
           </span>
 
           <Button
