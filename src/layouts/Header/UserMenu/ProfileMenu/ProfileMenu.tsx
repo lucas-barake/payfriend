@@ -26,7 +26,9 @@ const ProfileMenu: FC = () => {
         )}
 
         <span className="hidden font-bold dark:text-white sm:inline-block">
-          {session.data?.user?.name ?? "User"}
+          {session.data?.user?.name != null
+            ? session.data.user.name.trim().split(" ").slice(0, 2).join(" ")
+            : "Usuario"}
         </span>
 
         <ChevronDownIcon
