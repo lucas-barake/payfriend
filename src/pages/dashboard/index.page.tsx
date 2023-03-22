@@ -10,6 +10,19 @@ import { useState } from "react";
 import DebtTable from "$/pages/dashboard/(page-lib)/components/DebtTable";
 import TimeInMs from "$/enums/TimeInMs";
 import AuthWrapper from "$/components/AuthWrapper";
+import { Tab } from "@headlessui/react";
+import cs from "$/utils/cs";
+
+const tabCateogories = [
+  {
+    id: "clfkb7bqm000008l504ty55y4",
+    title: "Tus Grupos",
+  },
+  {
+    id: "clfkb7i2z000108l55ln6briu",
+    title: "Grupos Compartidos",
+  },
+];
 
 const Dashboard: NextPageWithLayout = () => {
   const [showCreate, setShowCreate] = useState(false);
@@ -24,13 +37,33 @@ const Dashboard: NextPageWithLayout = () => {
   });
 
   return (
-    <MainLayout className="flex flex-col gap-8">
+    <MainLayout className="flex flex-col gap-6">
       <CreateDebtTableModal
         show={showCreate}
         onClose={() => {
           setShowCreate(false);
         }}
       />
+
+      <Tab.Group as="div" className="self-center md:self-start">
+        <Tab.List className="flex gap-2 rounded bg-neutral-200 p-1 dark:bg-neutral-700">
+          {tabCateogories.map((category) => (
+            <Tab
+              key={category.id}
+              className={({ selected }) =>
+                cs(
+                  "rounded p-3 text-sm font-bold leading-5 text-neutral-600 transition-colors duration-200 ease-in-out",
+                  selected
+                    ? "bg-white text-black shadow dark:bg-neutral-800 dark:text-neutral-100"
+                    : "hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-600"
+                )
+              }
+            >
+              {category.title}
+            </Tab>
+          ))}
+        </Tab.List>
+      </Tab.Group>
 
       <div className="flex items-center justify-between">
         <span className="relative inline-flex">
