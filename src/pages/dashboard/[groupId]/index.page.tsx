@@ -1,5 +1,4 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import AuthWrapper from "$/pages/(page-lib)/components/AuthWrapper";
 import Header from "$/pages/dashboard/(page-lib)/layouts/Header";
 import { useRouter } from "next/router";
 import MainLayout from "$/pages/dashboard/(page-lib)/layouts/MainLayout";
@@ -10,6 +9,7 @@ import { TRPCClientError } from "@trpc/client";
 import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/mutations/getById/input";
 import LoadingSpinnerIcon from "$/components/Icons/LoadingSpinnerIcon";
 import TimeInMs from "$/enums/TimeInMs";
+import AuthWrapper from "$/components/AuthWrapper";
 
 const GroupDashboardPage: NextPageWithLayout = () => {
   const session = useSession();
