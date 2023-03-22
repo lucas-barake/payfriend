@@ -1,6 +1,6 @@
-import { protectedProcedure } from "$/server/api/trpc";
+import { protectedVerifiedProcedure } from "$/server/api/trpc";
 
-const getAllHandler = protectedProcedure.query(async ({ ctx }) => {
+const getAllHandler = protectedVerifiedProcedure.query(async ({ ctx }) => {
   const query = await ctx.prisma.debtTable.findMany({
     where: {
       collaborators: {

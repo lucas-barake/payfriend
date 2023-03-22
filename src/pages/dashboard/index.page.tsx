@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import AuthWrapper from "$/pages/(page-lib)/AuthWrapper";
 import Header from "$/pages/dashboard/(page-lib)/layouts/Header";
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import Button from "$/components/Button";
@@ -10,13 +9,16 @@ import CreateUpdateDebtTable from "$/pages/dashboard/(page-lib)/components/Creat
 import { useState } from "react";
 import DebtTable from "$/pages/dashboard/(page-lib)/components/DebtTable";
 import TimeInMs from "$/enums/TimeInMs";
+import AuthWrapper from "$/components/AuthWrapper";
 
 const Dashboard: NextPageWithLayout = () => {
   const [showCreate, setShowCreate] = useState(false);
 
   const session = useSession();
   const query = api.debtTables.getAll.useQuery(undefined, {
-    enabled: session.status === "authenticated",
+    enabled:
+      session.status === "authenticated" &&
+      session.data.user.emailVerified != null,
     staleTime: TimeInMs.ThirtySeconds,
     refetchOnWindowFocus: true,
   });

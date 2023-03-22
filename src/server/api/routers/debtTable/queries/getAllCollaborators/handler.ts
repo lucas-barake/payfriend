@@ -1,7 +1,7 @@
-import { protectedProcedure } from "$/server/api/trpc";
+import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { getAllCollaboratorsInput } from "$/server/api/routers/debtTable/queries/getAllCollaborators/input";
 
-const getAllCollaboratorsHandler = protectedProcedure
+const getAllCollaboratorsHandler = protectedVerifiedProcedure
   .input(getAllCollaboratorsInput)
   .query(async ({ ctx, input }) => {
     const query = await ctx.prisma.debtTable.findUnique({

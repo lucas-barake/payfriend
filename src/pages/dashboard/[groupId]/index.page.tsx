@@ -1,5 +1,5 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import AuthWrapper from "$/pages/(page-lib)/AuthWrapper/AuthWrapper";
+import AuthWrapper from "$/pages/(page-lib)/components/AuthWrapper";
 import Header from "$/pages/dashboard/(page-lib)/layouts/Header";
 import { useRouter } from "next/router";
 import MainLayout from "$/pages/dashboard/(page-lib)/layouts/MainLayout";
@@ -23,9 +23,10 @@ const GroupDashboardPage: NextPageWithLayout = () => {
     refetchOnWindowFocus: true,
     onError: (error) => {
       if (error instanceof TRPCClientError) {
-        void router.push("/dashboard");
+        void router.push("/404");
       }
     },
+    retry: false,
   });
 
   return (

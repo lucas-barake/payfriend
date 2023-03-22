@@ -64,7 +64,7 @@ const CollaboratorsModal: FC<Props> = ({ show, onClose, debtTableId }) => {
         if (val.email === session.data?.user.email) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "No puedes invitarte a ti mismo",
+            message: "No puedes autoinvitarte",
             path: ["email"],
           });
         }
@@ -179,9 +179,18 @@ const CollaboratorsModal: FC<Props> = ({ show, onClose, debtTableId }) => {
                       Dueño
                     </span>
                   ) : (
-                    <span className="font-medium text-neutral-900 dark:text-neutral-200">
-                      Colaborador
-                    </span>
+                    <Form.Listbox
+                      value={role}
+                      onChange={(v) => {
+                        console.log(v);
+                      }}
+                      options={sendInviteRoleOptions}
+                      displayValue={
+                        sendInviteRoleOptions.find(
+                          (option) => option.value === role
+                        )?.label
+                      }
+                    />
                   )}
                 </div>
               ))}

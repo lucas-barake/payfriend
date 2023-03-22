@@ -1,8 +1,8 @@
-import { protectedProcedure } from "$/server/api/trpc";
+import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { acceptInviteInput } from "$/server/api/routers/invites/mutations/acceptInvite/input";
 
-const acceptInviteHandler = protectedProcedure
+const acceptInviteHandler = protectedVerifiedProcedure
   .input(acceptInviteInput)
   .mutation(async ({ ctx, input }) => {
     try {

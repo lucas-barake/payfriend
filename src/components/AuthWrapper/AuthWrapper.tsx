@@ -2,14 +2,20 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type FC, type ReactNode } from "react";
 import dynamic from "next/dynamic";
+import VerifyEmail from "$/components/AuthWrapper/VerifyEmail";
 
 type Props = {
   children: ReactNode;
 };
 
 const AuthWrapper: FC<Props> = ({ children }) => {
-  const session = useSession();
   const router = useRouter();
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+      void router.push("/");
+    },
+  });
 
   if (session.status === "loading")
     return (
@@ -38,9 +44,8 @@ const AuthWrapper: FC<Props> = ({ children }) => {
       </div>
     );
 
-  if (session.status !== "authenticated") {
-    void router.push("/");
-    return null;
+  if (session.data?.user.emailVerified == null) {
+    return <VerifyEmail />;
   }
 
   return <>{children}</>;

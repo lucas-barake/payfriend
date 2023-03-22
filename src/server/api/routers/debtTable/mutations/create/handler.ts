@@ -1,8 +1,8 @@
-import { protectedProcedure } from "$/server/api/trpc";
+import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { createDebTableInput } from "$/server/api/routers/debtTable/mutations/create/input";
 
-const createHandler = protectedProcedure
+const createHandler = protectedVerifiedProcedure
   .input(createDebTableInput)
   .mutation(async ({ ctx, input }) => {
     const debtTableCount = await ctx.prisma.debtTable.count({

@@ -1,8 +1,8 @@
-import { protectedProcedure } from "$/server/api/trpc";
+import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { sendInviteInput } from "$/server/api/routers/invites/mutations/sendInvite/input";
 
-const sendInviteHandler = protectedProcedure
+const sendInviteHandler = protectedVerifiedProcedure
   .input(sendInviteInput)
   .mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({

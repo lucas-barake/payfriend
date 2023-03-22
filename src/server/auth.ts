@@ -1,5 +1,9 @@
 import { type GetServerSidePropsContext } from "next";
-import { getServerSession, type NextAuthOptions, type DefaultSession } from "next-auth";
+import {
+  getServerSession,
+  type NextAuthOptions,
+  type DefaultSession,
+} from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "$/env.mjs";
@@ -17,13 +21,15 @@ declare module "next-auth" {
       id: string;
       // ...other properties
       // role: UserRole;
+      emailVerified: Date | null;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    emailVerified: Date | null;
+    // ...other properties
+    // role: UserRole;
+  }
 }
 
 /**
@@ -36,6 +42,7 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.emailVerified = user.emailVerified;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
