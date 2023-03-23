@@ -42,15 +42,10 @@ const GroupDashboardPage: NextPageWithLayout = () => {
       <button
         type="button"
         onClick={() => {
-          void router.push("/dashboard");
+          void router.back();
         }}
       >
-        <ArrowLeftIcon
-          className="h-6 w-6"
-          onClick={() => {
-            void router.push("/dashboard");
-          }}
-        />
+        <ArrowLeftIcon className="h-6 w-6" />
       </button>
     </MainLayout>
   );

@@ -5,22 +5,48 @@ import AuthWrapper from "$/components/AuthWrapper";
 import { Tab } from "@headlessui/react";
 import cs from "$/utils/cs";
 import Groups from "$/pages/dashboard/(page-lib)/components/Groups";
+import { useRouter } from "next/router";
+import { z } from "zod";
 
 const tabCateogories = [
   {
-    id: "clfkb7bqm000008l504ty55y4",
+    id: "yours",
     title: "Tus Grupos",
   },
   {
-    id: "clfkb7i2z000108l55ln6briu",
+    id: "shared",
     title: "Grupos Compartidos",
   },
-];
+] as const;
 
 const Dashboard: NextPageWithLayout = () => {
+  const router = useRouter();
+
+  const parsedGroupId = z
+    .union([z.literal("yours"), z.literal("shared")])
+    .safeParse(router.query.group);
+  const groupId = parsedGroupId.success ? parsedGroupId.data : "yours";
+  const selectedTab = tabCateogories.findIndex(
+    (category) => category.id === groupId
+  );
+
+  function handleTabChange(index: number) {
+    void router.push({
+      pathname: "/dashboard",
+      query: {
+        group: tabCateogories[index]?.id,
+      },
+    });
+  }
+
   return (
     <MainLayout>
-      <Tab.Group as="div" className="flex flex-col gap-6">
+      <Tab.Group
+        as="div"
+        className="flex flex-col gap-6"
+        onChange={handleTabChange}
+        defaultIndex={selectedTab}
+      >
         <Tab.List className="flex gap-2 self-center rounded bg-neutral-200 p-1 dark:bg-neutral-700 md:self-start">
           {tabCateogories.map((category) => (
             <Tab
