@@ -29,7 +29,7 @@ const CollaboratorsModal: FC<Props> = ({ show, onClose, debtTableId }) => {
   const session = useSession();
 
   const sendInviteMutation = api.invites.sendInvite.useMutation();
-  const collaboratorsQuery = api.debtTables.getAllCollaborators.useQuery(
+  const collaboratorsQuery = api.groups.getAllCollaborators.useQuery(
     debtTableId,
     {
       enabled: show && session.status === "authenticated",

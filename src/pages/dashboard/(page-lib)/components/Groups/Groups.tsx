@@ -1,28 +1,36 @@
 import React, { type FC, useState } from "react";
 import Button from "$/components/Button";
 import { PlusIcon } from "@heroicons/react/solid";
-import CreateDebtTableModal from "$/pages/dashboard/(page-lib)/components/OwnedGroupsTabPanel/CreateDebtTableModal";
+import CreateGroupModal from "$/pages/dashboard/(page-lib)/components/Groups/CreateGroupModal";
 import { api } from "$/utils/api";
 import TimeInMs from "$/enums/TimeInMs";
-import DebtTableCard from "$/pages/dashboard/(page-lib)/components/DebtTableCard";
+import GroupCard from "$/pages/dashboard/(page-lib)/components/Groups/GroupCard";
 
 type Props = {
   selected: boolean;
+  render: "owned" | "shared";
 };
 
-const OwnedGroupsTabPanel: FC<Props> = ({ selected }) => {
+const OwnedGroupsTabPanel: FC<Props> = ({ selected, render }) => {
   const [showCreate, setShowCreate] = useState(false);
 
-  const query = api.debtTables.getAllOwned.useQuery(undefined, {
-    enabled: selected,
+  const ownedQuery = api.groups.getAllOwned.useQuery(undefined, {
+    enabled: selected && render === "owned",
     staleTime: TimeInMs.ThirtySeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
+  const sharedQuery = api.groups.getAllShared.useQuery(undefined, {
+    enabled: selected && render === "shared",
+    staleTime: TimeInMs.TenSeconds,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+  const groups = render === "owned" ? ownedQuery.data : sharedQuery.data;
 
   return (
     <>
-      <CreateDebtTableModal
+      <CreateGroupModal
         show={showCreate}
         onClose={() => {
           setShowCreate(false);
@@ -42,7 +50,7 @@ const OwnedGroupsTabPanel: FC<Props> = ({ selected }) => {
             Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
           </Button>
 
-          {!query.isFetching && query.data?.debtTables.length === 0 && (
+          {!ownedQuery.isFetching && ownedQuery.data?.length === 0 && (
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-700 opacity-75 dark:bg-yellow-300" />
               <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-600 dark:bg-yellow-400" />
@@ -51,21 +59,22 @@ const OwnedGroupsTabPanel: FC<Props> = ({ selected }) => {
         </div>
 
         <span className="text-sm text-neutral-700 dark:text-neutral-300">
-          {query.data?.debtTables.length} / 10 tablas
+          {ownedQuery.data?.length} / 10 tablas
         </span>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {query.isLoading ? (
+        {(render === "owned" && ownedQuery.isLoading) ||
+        (render === "shared" && sharedQuery.isLoading) ? (
           <>
             {Array.from({ length: 3 }).map((_, index) => (
-              <DebtTableCard.Skeleton key={index} />
+              <GroupCard.Skeleton key={index} />
             ))}
           </>
         ) : (
           <>
-            {query.data?.debtTables.map((debtTable) => (
-              <DebtTableCard key={debtTable.id} debtTable={debtTable} />
+            {groups?.map((debtTable) => (
+              <GroupCard key={debtTable.id} debtTable={debtTable} />
             ))}
           </>
         )}

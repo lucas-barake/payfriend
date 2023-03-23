@@ -17,7 +17,7 @@ const GroupDashboardPage: NextPageWithLayout = () => {
   const result = getDebtTableByIdInput.safeParse(router.query.groupId);
   const groupId = result.success ? result.data : null;
 
-  const query = api.debtTables.getById.useQuery(groupId as string, {
+  const query = api.groups.getById.useQuery(groupId as string, {
     enabled: session.status === "authenticated" && groupId !== null,
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,

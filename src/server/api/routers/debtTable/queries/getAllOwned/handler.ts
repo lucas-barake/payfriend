@@ -25,9 +25,7 @@ const getAllOwnedHandler = protectedVerifiedProcedure.query(async ({ ctx }) => {
     },
   });
 
-  return {
-    debtTables: query,
-  };
+  return query;
 });
 
 export default getAllOwnedHandler;

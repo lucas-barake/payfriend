@@ -26,9 +26,7 @@ const getAllSharedHandler = protectedVerifiedProcedure.query(
       },
     });
 
-    return {
-      debtTables: query,
-    };
+    return query;
   }
 );
 

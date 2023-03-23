@@ -17,18 +17,16 @@ type Props = {
   onClose: () => void;
 };
 
-const CreateDebtTableModal: FC<Props> = ({ show, onClose }) => {
+const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
   const utils = api.useContext();
-  const create = api.debtTables.create.useMutation({
+  const create = api.groups.create.useMutation({
     onSuccess: (newTable) => {
-      const prevData = utils.debtTables.getAllOwned.getData() ?? {
-        debtTables: [],
-        count: 0,
-      };
+      const prevData = utils.groups.getAllOwned.getData();
 
-      utils.debtTables.getAllOwned.setData(undefined, {
-        debtTables: [newTable, ...prevData.debtTables],
-      });
+      utils.groups.getAllOwned.setData(
+        undefined,
+        prevData != null ? [newTable, ...prevData] : [newTable]
+      );
 
       return {
         prevData,
@@ -111,4 +109,4 @@ const CreateDebtTableModal: FC<Props> = ({ show, onClose }) => {
   );
 };
 
-export default CreateDebtTableModal;
+export default CreateGroupModal;

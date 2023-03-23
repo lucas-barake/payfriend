@@ -14,11 +14,11 @@ import { type AppRouter } from "$/server/api/root";
 
 type Props = {
   debtTable: NonNullable<
-    InferMutationResult<AppRouter["debtTables"]["getAllOwned"]>["data"]
-  >["debtTables"][0];
+    InferMutationResult<AppRouter["groups"]["getAllOwned"]>["data"]
+  >[number];
 };
 
-const DebtTableCard: FC<Props> & {
+const GroupCard: FC<Props> & {
   Skeleton: FC;
 } = ({ debtTable }) => {
   const [showCollaborators, setShowCollaborators] = useState(false);
@@ -32,7 +32,6 @@ const DebtTableCard: FC<Props> & {
         }}
         debtTableId={debtTable.id}
       />
-
       <Link
         key={debtTable.id}
         className="flex flex-col gap-2 rounded-lg bg-white p-6 shadow transition-colors duration-200 ease-in-out hover:bg-neutral-50 dark:bg-neutral-900/30 dark:text-neutral-100 dark:hover:bg-neutral-900/50"
@@ -87,5 +86,5 @@ const Skeleton: FC = () => (
   </div>
 );
 
-DebtTableCard.Skeleton = Skeleton;
-export default DebtTableCard;
+GroupCard.Skeleton = Skeleton;
+export default GroupCard;

@@ -4,7 +4,7 @@ import MainLayout from "$/layouts/MainLayout";
 import AuthWrapper from "$/components/AuthWrapper";
 import { Tab } from "@headlessui/react";
 import cs from "$/utils/cs";
-import OwnedGroupsTabPanel from "$/pages/dashboard/(page-lib)/components/OwnedGroupsTabPanel";
+import Groups from "$/pages/dashboard/(page-lib)/components/Groups";
 
 const tabCateogories = [
   {
@@ -41,7 +41,11 @@ const Dashboard: NextPageWithLayout = () => {
 
         <Tab.Panels>
           <Tab.Panel as="div" className="flex flex-col gap-6">
-            {({ selected }) => <OwnedGroupsTabPanel selected={selected} />}
+            {({ selected }) => <Groups selected={selected} render="owned" />}
+          </Tab.Panel>
+
+          <Tab.Panel as="div" className="flex flex-col gap-6">
+            {({ selected }) => <Groups selected={selected} render="shared" />}
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

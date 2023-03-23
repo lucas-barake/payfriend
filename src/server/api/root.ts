@@ -1,5 +1,5 @@
 import { createTRPCRouter } from "$/server/api/trpc";
-import { debtTableRouter } from "$/server/api/routers/debtTable/router";
+import { groupsRouter } from "$/server/api/routers/debtTable/router";
 import { invitesRouter } from "$/server/api/routers/invites/router";
 import collaboratorsRouter from "$/server/api/routers/collaborators/router";
 import emailVerificationRouter from "$/server/api/routers/emailVerification/router";
@@ -10,7 +10,7 @@ import emailVerificationRouter from "$/server/api/routers/emailVerification/rout
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  debtTables: debtTableRouter,
+  groups: groupsRouter,
   invites: invitesRouter,
   collaborators: collaboratorsRouter,
   emailVerification: emailVerificationRouter,

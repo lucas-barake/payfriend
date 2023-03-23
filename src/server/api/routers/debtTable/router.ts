@@ -5,7 +5,7 @@ import getByIdHandler from "$/server/api/routers/debtTable/queries/getById/handl
 import getAllCollaboratorsHandler from "$/server/api/routers/debtTable/queries/getAllCollaborators/handler";
 import getAllSharedHandler from "$/server/api/routers/debtTable/queries/getAllShared/handler";
 
-export const debtTableRouter = createTRPCRouter({
+export const groupsRouter = createTRPCRouter({
   getAllOwned: getAllOwnedHandler,
   getAllShared: getAllSharedHandler,
   create: createHandler,

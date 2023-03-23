@@ -27,7 +27,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
         ),
       ]);
 
-      await utils.debtTables.invalidate();
+      await utils.groups.invalidate();
 
       return {
         prevData,
