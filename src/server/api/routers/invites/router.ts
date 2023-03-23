@@ -5,7 +5,7 @@ import cancelInviteHandler from "$/server/api/routers/invites/mutations/cancelIn
 import acceptInviteHandler from "$/server/api/routers/invites/mutations/acceptInvite/handler";
 
 export const invitesRouter = createTRPCRouter({
-  getAll: getAllHandler,
+  getAllOwned: getAllHandler,
   sendInvite: sendInviteHandler,
   rejectInvite: cancelInviteHandler,
   acceptInvite: acceptInviteHandler,

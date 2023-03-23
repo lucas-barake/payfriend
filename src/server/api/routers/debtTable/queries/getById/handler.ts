@@ -1,6 +1,6 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/mutations/getById/input";
+import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/queries/getById/input";
 
 const getByIdHandler = protectedVerifiedProcedure
   .input(getDebtTableByIdInput)
