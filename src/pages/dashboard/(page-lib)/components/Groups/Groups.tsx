@@ -26,7 +26,8 @@ const OwnedGroupsTabPanel: FC<Props> = ({ selected, render }) => {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
-  const groups = render === "owned" ? ownedQuery.data : sharedQuery.data;
+  const groups =
+    (render === "owned" ? ownedQuery.data : sharedQuery.data) ?? [];
 
   return (
     <>
@@ -59,7 +60,7 @@ const OwnedGroupsTabPanel: FC<Props> = ({ selected, render }) => {
         </div>
 
         <span className="text-sm text-neutral-700 dark:text-neutral-300">
-          {ownedQuery.data?.length} / 10 tablas
+          {groups.length} / 10 grupos
         </span>
       </div>
 
@@ -73,7 +74,7 @@ const OwnedGroupsTabPanel: FC<Props> = ({ selected, render }) => {
           </>
         ) : (
           <>
-            {groups?.map((debtTable) => (
+            {groups.map((debtTable) => (
               <GroupCard key={debtTable.id} debtTable={debtTable} />
             ))}
           </>
