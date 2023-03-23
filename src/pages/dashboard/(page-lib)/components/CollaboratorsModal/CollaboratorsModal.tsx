@@ -9,7 +9,7 @@ import {
   sendInviteInput,
   type SendInviteInput,
   sendInviteRoleOptions,
-} from "$/server/api/routers/invites/mutations/sendInvite/input";
+} from "$/server/api/routers/groupInvites/mutations/sendInvite/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
@@ -28,15 +28,12 @@ type Props = {
 const CollaboratorsModal: FC<Props> = ({ show, onClose, debtTableId }) => {
   const session = useSession();
 
-  const sendInviteMutation = api.invites.sendInvite.useMutation();
-  const collaboratorsQuery = api.groups.getAllCollaborators.useQuery(
-    debtTableId,
-    {
-      enabled: show && session.status === "authenticated",
-      staleTime: TimeInMs.FifteenSeconds,
-      refetchOnWindowFocus: true,
-    }
-  );
+  const sendInviteMutation = api.groupInvites.sendInvite.useMutation();
+  const collaboratorsQuery = api.groups.getAllMembers.useQuery(debtTableId, {
+    enabled: show && session.status === "authenticated",
+    staleTime: TimeInMs.FifteenSeconds,
+    refetchOnWindowFocus: true,
+  });
   const allCollaborators = collaboratorsQuery.data?.collaborators ?? [];
   const allPendingCollaborators = collaboratorsQuery.data?.pendingInvites ?? [];
   const allCollaboratorsAndPendingCollaborators = [

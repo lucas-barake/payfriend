@@ -59,6 +59,9 @@ const changeRoleHandler = protectedVerifiedProcedure
         data: {
           role: input.role,
         },
+        select: {
+          role: true,
+        },
       });
 
       return {

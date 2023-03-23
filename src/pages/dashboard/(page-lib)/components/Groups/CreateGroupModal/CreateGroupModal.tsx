@@ -2,9 +2,9 @@ import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  createDebTableInput,
-  type CreateDebtTableInput,
-} from "$/server/api/routers/debtTable/mutations/create/input";
+  createGroupInput,
+  type CreateGroupInput,
+} from "$/server/api/routers/groups/mutations/create/input";
 import Modal from "$/components/Modal/Modal";
 import Form from "$/components/Form";
 import Button from "$/components/Button";
@@ -21,9 +21,9 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
   const utils = api.useContext();
   const create = api.groups.create.useMutation({
     onSuccess: (newTable) => {
-      const prevData = utils.groups.getAllOwned.getData();
+      const prevData = utils.groups.getAll.getData();
 
-      utils.groups.getAllOwned.setData(
+      utils.groups.getAll.setData(
         undefined,
         prevData != null ? [newTable, ...prevData] : [newTable]
       );
@@ -34,10 +34,10 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
     },
   });
 
-  const form = useForm<CreateDebtTableInput>({
+  const form = useForm<CreateGroupInput>({
     mode: "onSubmit",
     reValidateMode: "onChange",
-    resolver: zodResolver(createDebTableInput),
+    resolver: zodResolver(createGroupInput),
   });
 
   function afterClose(): void {
@@ -45,7 +45,7 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
     create.reset();
   }
 
-  async function handleSubmit(data: CreateDebtTableInput): Promise<void> {
+  async function handleSubmit(data: CreateGroupInput): Promise<void> {
     await toast.promise(create.mutateAsync(data), {
       loading: "Creando grupo...",
       success() {

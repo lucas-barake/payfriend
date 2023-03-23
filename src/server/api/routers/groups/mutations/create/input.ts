@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createDebTableInput = z.object({
+export const createGroupInput = z.object({
   name: z
     .string({
       invalid_type_error: "El nombre debe ser un string",
@@ -23,4 +23,4 @@ export const createDebTableInput = z.object({
       message: "La descripción debe tener menos de 100 caracteres",
     }),
 });
-export type CreateDebtTableInput = z.infer<typeof createDebTableInput>;
+export type CreateGroupInput = z.infer<typeof createGroupInput>;

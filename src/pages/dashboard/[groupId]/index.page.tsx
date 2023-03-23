@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "@heroicons/react/solid";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
-import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/queries/getById/input";
+import { getGroupByIdInput } from "$/server/api/routers/groups/queries/getById/input";
 import LoadingSpinnerIcon from "$/components/Icons/LoadingSpinnerIcon";
 import TimeInMs from "$/enums/TimeInMs";
 import AuthWrapper from "$/components/AuthWrapper";
@@ -14,7 +14,7 @@ import AuthWrapper from "$/components/AuthWrapper";
 const GroupDashboardPage: NextPageWithLayout = () => {
   const session = useSession();
   const router = useRouter();
-  const result = getDebtTableByIdInput.safeParse(router.query.groupId);
+  const result = getGroupByIdInput.safeParse(router.query.groupId);
   const groupId = result.success ? result.data : null;
 
   const query = api.groups.getById.useQuery(groupId as string, {

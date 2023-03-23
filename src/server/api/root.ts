@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "$/server/api/trpc";
-import { groupsRouter } from "$/server/api/routers/debtTable/router";
-import { invitesRouter } from "$/server/api/routers/invites/router";
+import { groupsRouter } from "$/server/api/routers/groups/router";
+import { invitesRouter } from "$/server/api/routers/groupInvites/router";
 import collaboratorsRouter from "$/server/api/routers/collaborators/router";
 import emailVerificationRouter from "$/server/api/routers/emailVerification/router";
 
@@ -11,7 +11,7 @@ import emailVerificationRouter from "$/server/api/routers/emailVerification/rout
  */
 export const appRouter = createTRPCRouter({
   groups: groupsRouter,
-  invites: invitesRouter,
+  groupInvites: invitesRouter,
   collaborators: collaboratorsRouter,
   emailVerification: emailVerificationRouter,
 });

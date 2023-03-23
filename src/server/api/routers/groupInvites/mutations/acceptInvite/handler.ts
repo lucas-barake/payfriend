@@ -1,6 +1,6 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { acceptInviteInput } from "$/server/api/routers/invites/mutations/acceptInvite/input";
+import { acceptInviteInput } from "$/server/api/routers/groupInvites/mutations/acceptInvite/input";
 
 const acceptInviteHandler = protectedVerifiedProcedure
   .input(acceptInviteInput)

@@ -11,17 +11,17 @@ import { api } from "$/utils/api";
 
 type Props = {
   invite: NonNullable<
-    InferQueryResult<AppRouter["invites"]["getAllOwned"]>["data"]
+    InferQueryResult<AppRouter["groupInvites"]["getAll"]>["data"]
   >[number];
 };
 
 const PendingInviteRow: FC<Props> = ({ invite }) => {
   const utils = api.useContext();
-  const acceptMutation = api.invites.acceptInvite.useMutation({
+  const acceptMutation = api.groupInvites.acceptInvite.useMutation({
     onSuccess: async (res) => {
-      const prevData = utils.invites.getAllOwned.getData() ?? [];
+      const prevData = utils.groupInvites.getAll.getData() ?? [];
 
-      utils.invites.getAllOwned.setData(undefined, [
+      utils.groupInvites.getAll.setData(undefined, [
         ...prevData.filter(
           (invite) => invite.debtTableId !== res.acceptedDebtTableId
         ),
@@ -34,11 +34,11 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
       };
     },
   });
-  const rejectMutation = api.invites.rejectInvite.useMutation({
+  const rejectMutation = api.groupInvites.rejectInvite.useMutation({
     onSuccess: (res) => {
-      const prevData = utils.invites.getAllOwned.getData() ?? [];
+      const prevData = utils.groupInvites.getAll.getData() ?? [];
 
-      utils.invites.getAllOwned.setData(undefined, [
+      utils.groupInvites.getAll.setData(undefined, [
         ...prevData.filter(
           (invite) => invite.debtTableId !== res.rejectedDebtTableId
         ),
@@ -50,9 +50,9 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
     },
     onError: (err) => {
       if (err.data?.code === "BAD_REQUEST") {
-        const prevData = utils.invites.getAllOwned.getData() ?? [];
+        const prevData = utils.groupInvites.getAll.getData() ?? [];
 
-        utils.invites.getAllOwned.setData(undefined, [
+        utils.groupInvites.getAll.setData(undefined, [
           ...prevData.filter(
             (invite) => invite.debtTableId !== invite.debtTableId
           ),

@@ -1,9 +1,9 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { createDebTableInput } from "$/server/api/routers/debtTable/mutations/create/input";
+import { createGroupInput } from "$/server/api/routers/groups/mutations/create/input";
 
 const createHandler = protectedVerifiedProcedure
-  .input(createDebTableInput)
+  .input(createGroupInput)
   .mutation(async ({ ctx, input }) => {
     const debtTableCount = await ctx.prisma.debtTable.count({
       where: {

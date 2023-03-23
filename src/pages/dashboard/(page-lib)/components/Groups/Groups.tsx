@@ -14,7 +14,7 @@ type Props = {
 const OwnedGroupsTabPanel: FC<Props> = ({ selected, render }) => {
   const [showCreate, setShowCreate] = useState(false);
 
-  const ownedQuery = api.groups.getAllOwned.useQuery(undefined, {
+  const ownedQuery = api.groups.getAll.useQuery(undefined, {
     enabled: selected && render === "owned",
     staleTime: TimeInMs.ThirtySeconds,
     refetchOnWindowFocus: true,

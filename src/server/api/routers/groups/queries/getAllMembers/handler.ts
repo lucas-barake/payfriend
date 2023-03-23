@@ -1,8 +1,8 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
-import { getAllCollaboratorsInput } from "$/server/api/routers/debtTable/queries/getAllCollaborators/input";
+import { getAllGroupMembersInput } from "$/server/api/routers/groups/queries/getAllMembers/input";
 
-const getAllCollaboratorsHandler = protectedVerifiedProcedure
-  .input(getAllCollaboratorsInput)
+const getAllMembersHandler = protectedVerifiedProcedure
+  .input(getAllGroupMembersInput)
   .query(async ({ ctx, input }) => {
     const query = await ctx.prisma.debtTable.findUnique({
       where: {
@@ -39,4 +39,4 @@ const getAllCollaboratorsHandler = protectedVerifiedProcedure
     return query;
   });
 
-export default getAllCollaboratorsHandler;
+export default getAllMembersHandler;

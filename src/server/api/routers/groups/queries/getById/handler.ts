@@ -1,9 +1,9 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/queries/getById/input";
+import { getGroupByIdInput } from "$/server/api/routers/groups/queries/getById/input";
 
 const getByIdHandler = protectedVerifiedProcedure
-  .input(getDebtTableByIdInput)
+  .input(getGroupByIdInput)
   .query(async ({ ctx, input }) => {
     const query = await ctx.prisma.debtTable.findFirst({
       where: {

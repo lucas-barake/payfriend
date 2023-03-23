@@ -1,5 +1,5 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
-import { cancelInviteInput } from "$/server/api/routers/invites/mutations/cancelInvite/input";
+import { cancelInviteInput } from "$/server/api/routers/groupInvites/mutations/cancelInvite/input";
 import { TRPCError } from "@trpc/server";
 
 const cancelInviteHandler = protectedVerifiedProcedure

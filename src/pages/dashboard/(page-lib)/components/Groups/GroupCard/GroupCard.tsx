@@ -14,7 +14,7 @@ import { type AppRouter } from "$/server/api/root";
 
 type Props = {
   debtTable: NonNullable<
-    InferMutationResult<AppRouter["groups"]["getAllOwned"]>["data"]
+    InferMutationResult<AppRouter["groups"]["getAll"]>["data"]
   >[number];
 };
 
