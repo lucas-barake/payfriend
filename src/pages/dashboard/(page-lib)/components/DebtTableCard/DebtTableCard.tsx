@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import React, { type FC, useState } from "react";
 import Link from "next/link";
 import CollaboratorsModal from "$/pages/dashboard/(page-lib)/components/CollaboratorsModal";
 import Button from "$/components/Button";
@@ -14,11 +14,13 @@ import { type AppRouter } from "$/server/api/root";
 
 type Props = {
   debtTable: NonNullable<
-    InferMutationResult<AppRouter["debtTables"]["getAll"]>["data"]
+    InferMutationResult<AppRouter["debtTables"]["getAllOwned"]>["data"]
   >["debtTables"][0];
 };
 
-const DebtTable: FC<Props> = ({ debtTable }) => {
+const DebtTableCard: FC<Props> & {
+  Skeleton: FC;
+} = ({ debtTable }) => {
   const [showCollaborators, setShowCollaborators] = useState(false);
 
   return (
@@ -41,7 +43,7 @@ const DebtTable: FC<Props> = ({ debtTable }) => {
 
           <span className="flex items-center gap-1">
             <UserCircleIcon className="h-5 w-5" />
-            {debtTable.collaborators.length}
+            {debtTable._count.collaborators}
           </span>
         </div>
 
@@ -74,4 +76,16 @@ const DebtTable: FC<Props> = ({ debtTable }) => {
   );
 };
 
-export default DebtTable;
+const Skeleton: FC = () => (
+  <div className="flex h-60 animate-pulse flex-col gap-2 rounded-lg bg-white p-6 shadow transition-transform duration-200 ease-in-out hover:scale-105 dark:bg-neutral-900/30 dark:text-neutral-100">
+    <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
+      <div className="h-4 w-1/2 rounded bg-neutral-300 dark:bg-neutral-700" />
+      <div className="h-4 w-1/4 rounded bg-neutral-300 dark:bg-neutral-700" />
+    </div>
+
+    <div className="mt-4 h-12 w-full rounded bg-neutral-300 dark:bg-neutral-700" />
+  </div>
+);
+
+DebtTableCard.Skeleton = Skeleton;
+export default DebtTableCard;

@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "@heroicons/react/solid";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
-import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/mutations/getById/input";
+import { getDebtTableByIdInput } from "$/server/api/routers/debtTable/queries/getById/input";
 import LoadingSpinnerIcon from "$/components/Icons/LoadingSpinnerIcon";
 import TimeInMs from "$/enums/TimeInMs";
 import AuthWrapper from "$/components/AuthWrapper";

@@ -9,7 +9,7 @@ import TimeInMs from "$/enums/TimeInMs";
 const NotificationBell: FC = () => {
   const session = useSession();
 
-  const query = api.invites.getAll.useQuery(undefined, {
+  const query = api.invites.getAllOwned.useQuery(undefined, {
     enabled:
       session.status === "authenticated" &&
       session.data.user.emailVerified != null,

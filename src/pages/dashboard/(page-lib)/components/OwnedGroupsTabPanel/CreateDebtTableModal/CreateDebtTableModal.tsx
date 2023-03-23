@@ -21,12 +21,12 @@ const CreateDebtTableModal: FC<Props> = ({ show, onClose }) => {
   const utils = api.useContext();
   const create = api.debtTables.create.useMutation({
     onSuccess: (newTable) => {
-      const prevData = utils.debtTables.getAll.getData() ?? {
+      const prevData = utils.debtTables.getAllOwned.getData() ?? {
         debtTables: [],
         count: 0,
       };
 
-      utils.debtTables.getAll.setData(undefined, {
+      utils.debtTables.getAllOwned.setData(undefined, {
         debtTables: [newTable, ...prevData.debtTables],
       });
 
