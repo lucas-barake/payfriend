@@ -4,7 +4,7 @@ export const sendInviteInput = z.object({
   email: z.string().email({
     message: "Correo inválido",
   }),
-  debtTableId: z.string(),
+  debtTableId: z.string().cuid(),
   role: z.enum(["VIEWER", "COLLABORATOR"]),
 });
 export type SendInviteInput = z.infer<typeof sendInviteInput>;

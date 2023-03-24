@@ -7,7 +7,7 @@ const getByIdHandler = protectedVerifiedProcedure
   .query(async ({ ctx, input }) => {
     const query = await ctx.prisma.debtTable.findFirst({
       where: {
-        id: input,
+        id: input.id,
         collaborators: {
           some: {
             collaboratorId: ctx.session.user.id,
@@ -18,6 +18,7 @@ const getByIdHandler = protectedVerifiedProcedure
         collaborators: {
           select: {
             collaboratorId: true,
+            role: true,
           },
         },
       },

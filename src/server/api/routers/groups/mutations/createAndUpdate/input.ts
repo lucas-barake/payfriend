@@ -16,7 +16,6 @@ export const createGroupInput = z.object({
   description: z
     .string({
       invalid_type_error: "La descripción debe ser un string",
-      required_error: "La descripción es requerida",
     })
     .trim()
     .max(100, {
@@ -24,3 +23,15 @@ export const createGroupInput = z.object({
     }),
 });
 export type CreateGroupInput = z.infer<typeof createGroupInput>;
+
+export const updateGroupInput = createGroupInput.extend({
+  id: z
+    .string({
+      invalid_type_error: "El id debe ser un string",
+      required_error: "El id es requerido",
+    })
+    .cuid({
+      message: "El id no es válido",
+    }),
+});
+export type UpdateGroupInput = z.infer<typeof updateGroupInput>;

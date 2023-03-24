@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createGroupInput,
   type CreateGroupInput,
-} from "$/server/api/routers/groups/mutations/create/input";
+} from "$/server/api/routers/groups/mutations/createAndUpdate/input";
 import Modal from "$/components/Modal/Modal";
 import Form from "$/components/Form";
 import Button from "$/components/Button";

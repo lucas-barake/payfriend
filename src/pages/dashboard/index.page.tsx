@@ -1,14 +1,13 @@
-import Header from "$/layouts/Header";
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import MainLayout from "$/layouts/MainLayout";
-import AuthWrapper from "$/components/AuthWrapper";
+import Layout from "$/layouts/Layout";
 import { Tab } from "@headlessui/react";
 import cs from "$/utils/cs";
 import Groups from "$/pages/dashboard/(page-lib)/components/Groups";
 import { useRouter } from "next/router";
 import { z } from "zod";
+import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
 
-const tabCateogories = [
+const tabCategories = [
   {
     id: "yours",
     title: "Tus Grupos",
@@ -22,11 +21,11 @@ const tabCateogories = [
 const Dashboard: NextPageWithLayout = () => {
   const router = useRouter();
 
-  const parsedGroupId = z
+  const parsedGroupKey = z
     .union([z.literal("yours"), z.literal("shared")])
     .safeParse(router.query.group);
-  const groupId = parsedGroupId.success ? parsedGroupId.data : "yours";
-  const selectedTab = tabCateogories.findIndex(
+  const groupId = parsedGroupKey.success ? parsedGroupKey.data : "yours";
+  const selectedTab = tabCategories.findIndex(
     (category) => category.id === groupId
   );
 
@@ -34,13 +33,13 @@ const Dashboard: NextPageWithLayout = () => {
     void router.push({
       pathname: "/dashboard",
       query: {
-        group: tabCateogories[index]?.id,
+        group: tabCategories[index]?.id,
       },
     });
   }
 
   return (
-    <MainLayout>
+    <Layout>
       <Tab.Group
         as="div"
         className="flex flex-col gap-6"
@@ -48,7 +47,7 @@ const Dashboard: NextPageWithLayout = () => {
         defaultIndex={selectedTab}
       >
         <Tab.List className="flex gap-2 self-center rounded bg-neutral-200 p-1 dark:bg-neutral-700 md:self-start">
-          {tabCateogories.map((category) => (
+          {tabCategories.map((category) => (
             <Tab
               key={category.id}
               className={({ selected }) =>
@@ -75,16 +74,10 @@ const Dashboard: NextPageWithLayout = () => {
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
-    </MainLayout>
+    </Layout>
   );
 };
 
-Dashboard.getLayout = (page) => (
-  <AuthWrapper>
-    <Header />
-
-    {page}
-  </AuthWrapper>
-);
+Dashboard.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
 
 export default Dashboard;

@@ -4,6 +4,7 @@ import { Listbox as HeadlessListbox } from "@headlessui/react";
 import cs from "$/utils/cs";
 
 type Props = {
+  buttonClassName?: string;
   options: Array<{
     value: string;
     label: string;
@@ -13,21 +14,32 @@ type Props = {
   onChange: (value: string | undefined) => void;
 };
 
-const Listbox: FC<Props> = ({ options, onChange, value, displayValue }) => (
+const Listbox: FC<Props> = ({
+  options,
+  onChange,
+  value,
+  displayValue,
+  buttonClassName,
+}) => (
   <HeadlessListbox
     value={value}
     onChange={onChange}
     as="div"
     className="relative"
   >
-    <HeadlessListbox.Button className="relative w-32 cursor-default rounded border border-gray-300 bg-white py-2 pl-3 pr-10 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-neutral-800 dark:bg-neutral-700 sm:text-sm">
+    <HeadlessListbox.Button
+      className={cs(
+        "relative w-28 cursor-default rounded border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-neutral-800 dark:bg-neutral-700 sm:py-2 sm:text-sm lg:w-32 xl:w-36 2xl:w-40",
+        buttonClassName
+      )}
+    >
       <span className="block truncate">{displayValue}</span>
       <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
         <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
       </span>
     </HeadlessListbox.Button>
 
-    <HeadlessListbox.Options className="w-42 absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-neutral-700 sm:text-sm">
+    <HeadlessListbox.Options className="absolute z-10 mt-1 max-h-60 w-40 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-neutral-700 sm:text-sm">
       {options.map((option) => (
         <HeadlessListbox.Option key={option.value} value={option.value}>
           {({ selected, active }) => (

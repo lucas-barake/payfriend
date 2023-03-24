@@ -1,9 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { type FC, Fragment, type ReactNode } from "react";
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  Fragment,
+  type ReactNode,
+} from "react";
 
 type Props = {
   show: boolean;
-  onClose: () => void;
+  onClose: ComponentPropsWithoutRef<typeof Dialog>["onClose"];
   afterClose?: () => void;
   title: string;
   children: ReactNode;

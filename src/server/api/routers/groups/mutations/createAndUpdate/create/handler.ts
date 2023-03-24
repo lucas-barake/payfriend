@@ -1,6 +1,6 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { createGroupInput } from "$/server/api/routers/groups/mutations/create/input";
+import { createGroupInput } from "$/server/api/routers/groups/mutations/createAndUpdate/input";
 
 const createHandler = protectedVerifiedProcedure
   .input(createGroupInput)

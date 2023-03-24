@@ -5,6 +5,7 @@ import CreateGroupModal from "$/pages/dashboard/(page-lib)/components/Groups/Cre
 import { api } from "$/utils/api";
 import TimeInMs from "$/enums/TimeInMs";
 import GroupCard from "$/pages/dashboard/(page-lib)/components/Groups/GroupCard";
+import cs from "$/utils/cs";
 
 type Props = {
   selected: boolean;
@@ -14,20 +15,20 @@ type Props = {
 const OwnedGroupsTabPanel: FC<Props> = ({ selected, render }) => {
   const [showCreate, setShowCreate] = useState(false);
 
+  const isOwned = render === "owned";
   const ownedQuery = api.groups.getAll.useQuery(undefined, {
-    enabled: selected && render === "owned",
-    staleTime: TimeInMs.ThirtySeconds,
+    enabled: selected && isOwned,
+    staleTime: TimeInMs.FortyFiveSeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
   const sharedQuery = api.groups.getAllShared.useQuery(undefined, {
     enabled: selected && render === "shared",
-    staleTime: TimeInMs.TenSeconds,
+    staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
-  const groups =
-    (render === "owned" ? ownedQuery.data : sharedQuery.data) ?? [];
+  const groups = (isOwned ? ownedQuery.data : sharedQuery.data) ?? [];
 
   return (
     <>
@@ -38,26 +39,33 @@ const OwnedGroupsTabPanel: FC<Props> = ({ selected, render }) => {
         }}
       />
 
-      <div className="flex items-center justify-between">
-        <div className="relative">
-          <Button
-            color="indigo"
-            className="flex items-center gap-1"
-            onClick={() => {
-              setShowCreate(true);
-            }}
-          >
-            <PlusIcon className="h-5 w-5" />
-            Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
-          </Button>
+      <div
+        className={cs(
+          "flex items-center",
+          isOwned ? "justify-between" : "justify-end"
+        )}
+      >
+        {isOwned && (
+          <div className="relative">
+            <Button
+              color="indigo"
+              className="flex items-center gap-1"
+              onClick={() => {
+                setShowCreate(true);
+              }}
+            >
+              <PlusIcon className="h-5 w-5" />
+              Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
+            </Button>
 
-          {!ownedQuery.isFetching && ownedQuery.data?.length === 0 && (
-            <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-700 opacity-75 dark:bg-yellow-300" />
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-600 dark:bg-yellow-400" />
-            </span>
-          )}
-        </div>
+            {!ownedQuery.isFetching && ownedQuery.data?.length === 0 && (
+              <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-700 opacity-75 dark:bg-yellow-300" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-600 dark:bg-yellow-400" />
+              </span>
+            )}
+          </div>
+        )}
 
         <span className="text-sm text-neutral-700 dark:text-neutral-300">
           {groups.length} / 10 grupos

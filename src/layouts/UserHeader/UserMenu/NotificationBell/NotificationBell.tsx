@@ -3,7 +3,7 @@ import { BellIcon } from "@heroicons/react/outline";
 import { Menu, Transition } from "@headlessui/react";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";
-import PendingInviteRow from "$/layouts/Header/UserMenu/NotificationBell/PendingInviteRow";
+import PendingInviteRow from "$/layouts/UserHeader/UserMenu/NotificationBell/PendingInviteRow";
 import TimeInMs from "$/enums/TimeInMs";
 
 const NotificationBell: FC = () => {
