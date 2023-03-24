@@ -2,10 +2,11 @@ import { type NextPageWithLayout } from "$/pages/_app.page";
 import Layout from "$/layouts/Layout";
 import { Tab } from "@headlessui/react";
 import cs from "$/utils/cs";
-import Groups from "$/pages/dashboard/(page-lib)/components/Groups";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
+import OwnedGroupsTab from "$/pages/dashboard/(page-lib)/components/OwnedGroupsTab";
+import SharedGroupsTab from "$/pages/dashboard/(page-lib)/components/SharedGroupsTab";
 
 const tabCategories = [
   {
@@ -66,11 +67,11 @@ const Dashboard: NextPageWithLayout = () => {
 
         <Tab.Panels>
           <Tab.Panel as="div" className="flex flex-col gap-6">
-            {({ selected }) => <Groups selected={selected} render="owned" />}
+            <OwnedGroupsTab />
           </Tab.Panel>
 
           <Tab.Panel as="div" className="flex flex-col gap-6">
-            {({ selected }) => <Groups selected={selected} render="shared" />}
+            <SharedGroupsTab />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

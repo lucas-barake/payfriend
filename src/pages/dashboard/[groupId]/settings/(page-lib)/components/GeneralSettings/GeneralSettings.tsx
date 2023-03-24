@@ -25,6 +25,7 @@ const GeneralSettings: FC<Props> = ({
   groupDescription,
   queryVariables,
 }) => {
+  const utils = api.useContext();
   const updateMutation = api.groups.update.useMutation();
 
   const form = useForm<UpdateGroupInput>({
@@ -36,12 +37,14 @@ const GeneralSettings: FC<Props> = ({
     resolver: zodResolver(updateGroupInput),
   });
 
-  function handleSubmit(data: UpdateGroupInput): void {
-    void toast.promise(updateMutation.mutateAsync(data), {
+  async function handleSubmit(data: UpdateGroupInput): Promise<void> {
+    await toast.promise(updateMutation.mutateAsync(data), {
       loading: "Guardando...",
       success: "Guardado",
       error: handleToastError,
     });
+
+    await utils.groups.getAll.invalidate();
 
     form.reset(data);
   }

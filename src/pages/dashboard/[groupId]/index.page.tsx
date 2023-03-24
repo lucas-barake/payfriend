@@ -26,9 +26,9 @@ const GroupDashboardPage: NextPageWithLayout = () => {
     id: groupId as string,
   };
   const query = api.groups.getById.useQuery(queryVariables, {
-    enabled: session.status === "authenticated" && groupId !== null,
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
+    refetchOnMount: true,
     onError: (error) => error.data?.code !== "UNAUTHORIZED",
   });
   const isOwner =

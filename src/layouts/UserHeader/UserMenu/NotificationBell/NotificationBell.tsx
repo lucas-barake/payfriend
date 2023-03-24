@@ -10,9 +10,7 @@ const NotificationBell: FC = () => {
   const session = useSession();
 
   const query = api.groupInvites.getAll.useQuery(undefined, {
-    enabled:
-      session.status === "authenticated" &&
-      session.data.user.emailVerified != null,
+    enabled: session.data?.user.emailVerified != null,
     staleTime: TimeInMs.TenSeconds,
     refetchOnWindowFocus: true,
     retry: false,
