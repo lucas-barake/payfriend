@@ -2,7 +2,6 @@ import { type FC } from "react";
 import Form from "$/components/Form";
 import Button from "$/components/Button";
 import { PlusCircleIcon } from "@heroicons/react/outline";
-import { type DebtTable, DebtTableRole } from ".prisma/client";
 import { Controller, useForm } from "react-hook-form";
 import {
   sendInviteInput,
