@@ -45,6 +45,9 @@ const GeneralSettings: FC<Props> = ({
     });
 
     await utils.groups.getAll.invalidate();
+    await utils.groups.getById.invalidate({
+      id: queryVariables.groupId,
+    });
 
     form.reset(data);
   }
