@@ -1,19 +1,16 @@
 import React, { type FC } from "react";
 import Link from "next/link";
 import Button from "$/components/Button";
-import {
-  CalendarIcon,
-  EyeIcon,
-  UserCircleIcon,
-} from "@heroicons/react/outline";
+import { CalendarIcon, EyeIcon } from "@heroicons/react/outline";
 import truncateString from "$/utils/truncateString";
 import { DateTime } from "luxon";
 import { type InferMutationResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
+import Image from "next/image";
 
 type Props = {
   debtTable: NonNullable<
-    InferMutationResult<AppRouter["groups"]["getAll"]>["data"]
+    InferMutationResult<AppRouter["groups"]["getAllOwned"]>["data"]
   >[number];
 };
 
@@ -29,10 +26,27 @@ const GroupCard: FC<Props> & {
       <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
         <span className="truncate">{debtTable.name}</span>
 
-        <span className="flex items-center gap-1">
-          <UserCircleIcon className="h-5 w-5" />
-          {debtTable._count.collaborators}
-        </span>
+        <div className="flex -space-x-2 overflow-hidden p-2">
+          {debtTable?.collaborators?.map(({ collaborator }) =>
+            collaborator.image == null ? (
+              <div
+                key={collaborator.name}
+                className="tranform inline-block w-7 rounded-full bg-neutral-200 text-center ring-2 ring-white duration-100 hover:scale-105 dark:bg-neutral-600 dark:ring-neutral-800 md:w-8"
+              >
+                {collaborator.name?.charAt(0).toUpperCase()}
+              </div>
+            ) : (
+              <Image
+                key={collaborator.image}
+                className="tranform inline-block w-7 rounded-full duration-100 hover:scale-105 md:w-8"
+                src={collaborator.image}
+                alt={collaborator.name ?? "Miembro del grupo"}
+                width={20}
+                height={20}
+              />
+            )
+          )}
+        </div>
       </div>
 
       <span className="mt-2 mb-6 pr-2 lg:pr-3 xl:pr-6">

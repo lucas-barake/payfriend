@@ -5,7 +5,9 @@ import { type AppRouter } from "$/server/api/root";
 
 type Props = {
   loading: boolean;
-  groups: NonNullable<InferQueryResult<AppRouter["groups"]["getAll"]>["data"]>;
+  groups: NonNullable<
+    InferQueryResult<AppRouter["groups"]["getAllOwned"]>["data"]
+  >;
 };
 
 const Groups: FC<Props> = ({ loading, groups }) => {
