@@ -1,17 +1,22 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { type Prisma } from "@prisma/client";
 
-const select: Prisma.DebtTableSelect = {
+const select = {
   id: true,
   name: true,
   description: true,
   createdAt: true,
-  _count: {
+  collaborators: {
     select: {
-      collaborators: true,
+      collaborator: {
+        select: {
+          image: true,
+          name: true,
+        },
+      },
     },
   },
-};
+} satisfies Prisma.DebtTableSelect;
 
 export const getAllOwnedHandler = protectedVerifiedProcedure.query(
   ({ ctx }) => {
