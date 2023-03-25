@@ -1,6 +1,6 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 
-const getAllHandler = protectedVerifiedProcedure.query(async ({ ctx }) => {
+const getUserInvites = protectedVerifiedProcedure.query(async ({ ctx }) => {
   const query = await ctx.prisma.user.findUnique({
     where: {
       id: ctx.session.user.id,
@@ -39,4 +39,4 @@ const getAllHandler = protectedVerifiedProcedure.query(async ({ ctx }) => {
   }));
 });
 
-export default getAllHandler;
+export default getUserInvites;

@@ -9,7 +9,7 @@ import TimeInMs from "$/enums/TimeInMs";
 const NotificationBell: FC = () => {
   const session = useSession();
 
-  const query = api.groupInvites.getAll.useQuery(undefined, {
+  const query = api.groupInvites.getUserInvites.useQuery(undefined, {
     enabled: session.data?.user.emailVerified != null,
     staleTime: TimeInMs.TenSeconds,
     refetchOnWindowFocus: true,
