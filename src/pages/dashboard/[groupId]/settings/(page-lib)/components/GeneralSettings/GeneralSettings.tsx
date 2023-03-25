@@ -26,7 +26,23 @@ const GeneralSettings: FC<Props> = ({
   queryVariables,
 }) => {
   const utils = api.useContext();
-  const updateMutation = api.groups.update.useMutation();
+  const updateMutation = api.groups.update.useMutation({
+    onSuccess: async (updatedGroup) => {
+      const prevData = utils.groups.getSettings.getData(queryVariables);
+      if (prevData == null) return;
+
+      await utils.groups.getUserOwned.invalidate();
+      await utils.groups.getById.invalidate({
+        id: queryVariables.groupId,
+      });
+
+      utils.groups.getSettings.setData(queryVariables, {
+        ...prevData,
+        name: updatedGroup.name,
+        description: updatedGroup.description,
+      });
+    },
+  });
 
   const form = useForm<UpdateGroupInput>({
     defaultValues: {
@@ -42,11 +58,6 @@ const GeneralSettings: FC<Props> = ({
       loading: "Guardando...",
       success: "Guardado",
       error: handleToastError,
-    });
-
-    await utils.groups.getUserOwned.invalidate();
-    await utils.groups.getById.invalidate({
-      id: queryVariables.groupId,
     });
 
     form.reset(data);
