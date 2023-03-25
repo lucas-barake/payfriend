@@ -1,8 +1,8 @@
 import { createTRPCRouter } from "$/server/api/trpc";
 import {
-  getAllOwnedHandler,
-  getAllSharedHandler,
-} from "$/server/api/routers/groups/queries/getAllOwnedAndShared/handler";
+  getUserOwned,
+  getUserShared,
+} from "$/server/api/routers/groups/queries/getUserOwnedAndShared/handler";
 import createHandler from "$/server/api/routers/groups/mutations/createAndUpdate/create/handler";
 import getByIdHandler from "$/server/api/routers/groups/queries/getById/handler";
 import getSettingsHandler from "$/server/api/routers/groups/queries/getSettingsHandler/handler";
@@ -13,8 +13,8 @@ export const groupsRouter = createTRPCRouter({
   create: createHandler,
   update: updateHandler,
   delete: deleteHandler,
-  getAllOwned: getAllOwnedHandler,
-  getAllShared: getAllSharedHandler,
+  getUserOwned: getUserOwned,
+  getUserShared: getUserShared,
   getById: getByIdHandler,
   getSettings: getSettingsHandler,
 });

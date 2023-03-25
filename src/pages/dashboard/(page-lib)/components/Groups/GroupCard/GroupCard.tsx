@@ -10,7 +10,7 @@ import Image from "next/image";
 
 type Props = {
   debtTable: NonNullable<
-    InferMutationResult<AppRouter["groups"]["getAllOwned"]>["data"]
+    InferMutationResult<AppRouter["groups"]["getUserOwned"]>["data"]
   >[number];
 };
 

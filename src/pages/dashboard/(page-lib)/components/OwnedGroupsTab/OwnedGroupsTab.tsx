@@ -9,7 +9,7 @@ import Groups from "$/pages/dashboard/(page-lib)/components/Groups";
 const OwnedGroupsTab: FC = () => {
   const [showCreate, setShowCreate] = useState(false);
 
-  const query = api.groups.getAllOwned.useQuery(undefined, {
+  const query = api.groups.getUserOwned.useQuery(undefined, {
     staleTime: TimeInMs.ThirtySeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,

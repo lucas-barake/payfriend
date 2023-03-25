@@ -44,7 +44,7 @@ const GeneralSettings: FC<Props> = ({
       error: handleToastError,
     });
 
-    await utils.groups.getAllOwned.invalidate();
+    await utils.groups.getUserOwned.invalidate();
     await utils.groups.getById.invalidate({
       id: queryVariables.groupId,
     });

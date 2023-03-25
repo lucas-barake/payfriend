@@ -6,7 +6,7 @@ import { type AppRouter } from "$/server/api/root";
 type Props = {
   loading: boolean;
   groups: NonNullable<
-    InferQueryResult<AppRouter["groups"]["getAllOwned"]>["data"]
+    InferQueryResult<AppRouter["groups"]["getUserOwned"]>["data"]
   >;
 };
 

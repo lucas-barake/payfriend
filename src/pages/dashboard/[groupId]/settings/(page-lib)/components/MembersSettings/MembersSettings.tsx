@@ -47,7 +47,7 @@ const MembersSettings: FC<Props> = ({
         pendingInvites: [...prevSettings.pendingInvites, createdPendingInvite],
       });
 
-      await utils.groups.getAllOwned.invalidate();
+      await utils.groups.getUserOwned.invalidate();
 
       return {
         prevSettings,

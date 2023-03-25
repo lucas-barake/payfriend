@@ -30,7 +30,7 @@ const DangerZone: FC<Props> = ({ groupId }) => {
       }
     );
 
-    await utils.groups.getAllOwned.invalidate();
+    await utils.groups.getUserOwned.invalidate();
 
     await router.push("/dashboard");
   }

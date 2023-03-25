@@ -18,38 +18,34 @@ const select = {
   },
 } satisfies Prisma.DebtTableSelect;
 
-export const getAllOwnedHandler = protectedVerifiedProcedure.query(
-  ({ ctx }) => {
-    return ctx.prisma.debtTable.findMany({
-      where: {
-        collaborators: {
-          some: {
-            collaboratorId: ctx.session.user.id,
-            role: {
-              equals: "OWNER",
-            },
+export const getUserOwned = protectedVerifiedProcedure.query(({ ctx }) => {
+  return ctx.prisma.debtTable.findMany({
+    where: {
+      collaborators: {
+        some: {
+          collaboratorId: ctx.session.user.id,
+          role: {
+            equals: "OWNER",
           },
         },
       },
-      select,
-    });
-  }
-);
+    },
+    select,
+  });
+});
 
-export const getAllSharedHandler = protectedVerifiedProcedure.query(
-  ({ ctx }) => {
-    return ctx.prisma.debtTable.findMany({
-      where: {
-        collaborators: {
-          some: {
-            collaboratorId: ctx.session.user.id,
-            role: {
-              not: "OWNER",
-            },
+export const getUserShared = protectedVerifiedProcedure.query(({ ctx }) => {
+  return ctx.prisma.debtTable.findMany({
+    where: {
+      collaborators: {
+        some: {
+          collaboratorId: ctx.session.user.id,
+          role: {
+            not: "OWNER",
           },
         },
       },
-      select,
-    });
-  }
-);
+    },
+    select,
+  });
+});
