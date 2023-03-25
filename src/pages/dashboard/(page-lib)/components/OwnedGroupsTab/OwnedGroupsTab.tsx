@@ -1,7 +1,7 @@
 import React, { type FC, useState } from "react";
 import { api } from "$/utils/api";
 import TimeInMs from "$/enums/TimeInMs";
-import CreateGroupModal from "$/pages/dashboard/(page-lib)/components/Groups/CreateGroupModal";
+import CreateGroupModal from "$/pages/dashboard/(page-lib)/components/OwnedGroupsTab/CreateGroupModal";
 import Button from "$/components/Button";
 import { PlusIcon } from "@heroicons/react/solid";
 import Groups from "$/pages/dashboard/(page-lib)/components/Groups";

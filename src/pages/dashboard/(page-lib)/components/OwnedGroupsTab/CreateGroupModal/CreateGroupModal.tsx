@@ -11,6 +11,7 @@ import Button from "$/components/Button";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import handleToastError from "$/components/StyledToaster/handleToastError";
+import { useRouter } from "next/router";
 
 type Props = {
   show: boolean;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
+  const router = useRouter();
   const utils = api.useContext();
   const create = api.groups.create.useMutation({
     onSuccess: (newTable) => {
@@ -27,6 +29,8 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
         undefined,
         prevData != null ? [newTable, ...prevData] : [newTable]
       );
+
+      void router.push(`/dashboard/${newTable.id}`);
 
       return {
         prevData,
