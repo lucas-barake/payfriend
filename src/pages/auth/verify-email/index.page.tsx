@@ -16,6 +16,7 @@ import {
   verifyOTPInput,
 } from "$/server/api/routers/emailVerification/mutations/verifyOTP/input";
 import Form from "$/components/Form";
+import { z } from "zod";
 
 const VerifyEmailPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -105,7 +106,11 @@ const VerifyEmailPage: NextPageWithLayout = () => {
               render={({ field }) => (
                 <OtpInput
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(v) => {
+                    if (z.coerce.number().safeParse(v).success) {
+                      field.onChange(v);
+                    }
+                  }}
                   numInputs={4}
                   containerStyle="flex justify-center gap-4 px-2 text-center"
                   inputStyle={{
