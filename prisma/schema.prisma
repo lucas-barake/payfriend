@@ -36,7 +36,7 @@ model Debt {
   borrowerId  String
   lender      User       @relation("Lender", fields: [lenderId], references: [id])
   lenderId    String
-  debtTable   DebtTable? @relation(fields: [debtTableId], references: [id])
+  debtTable   DebtTable? @relation(fields: [debtTableId], references: [id], onDelete: Cascade)
   debtTableId String?
 }
 
