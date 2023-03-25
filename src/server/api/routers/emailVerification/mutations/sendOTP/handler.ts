@@ -4,6 +4,7 @@ import sendGridMail from "@sendgrid/mail";
 import { env } from "$/env.mjs";
 import { type MailDataRequired } from "@sendgrid/helpers/classes/mail";
 import { DateTime } from "luxon";
+import handleMainError from "$/server/log/handleMainError";
 
 const sendOTPHandler = protectedProcedure.mutation(async ({ ctx }) => {
   const isInSandBoxMode = env.SENDGRID_SANDBOX_MODE === "true";
@@ -87,11 +88,7 @@ const sendOTPHandler = protectedProcedure.mutation(async ({ ctx }) => {
 
     return true;
   } catch (error) {
-    if (error instanceof TRPCError) throw error;
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Algo salió mal.",
-    });
+    handleMainError(error);
   }
 });
 
