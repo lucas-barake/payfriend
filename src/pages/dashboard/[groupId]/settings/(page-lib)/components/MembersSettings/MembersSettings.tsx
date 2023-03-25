@@ -38,7 +38,7 @@ const MembersSettings: FC<Props> = ({
 
   const utils = api.useContext();
   const sendInviteMutation = api.groupInvites.sendInvite.useMutation({
-    onSuccess: (createdPendingInvite) => {
+    onSuccess: async (createdPendingInvite) => {
       const prevSettings = utils.groups.getSettings.getData(queryVariables);
       if (prevSettings == null) return;
 
@@ -46,6 +46,8 @@ const MembersSettings: FC<Props> = ({
         ...prevSettings,
         pendingInvites: [...prevSettings.pendingInvites, createdPendingInvite],
       });
+
+      await utils.groups.getAllOwned.invalidate();
 
       return {
         prevSettings,

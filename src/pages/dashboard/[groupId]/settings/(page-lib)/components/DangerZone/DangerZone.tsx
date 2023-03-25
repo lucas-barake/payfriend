@@ -15,6 +15,7 @@ type Props = {
 const DangerZone: FC<Props> = ({ groupId }) => {
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const utils = api.useContext();
   const deleteMutation = api.groups.delete.useMutation();
 
   async function handleDelete(): Promise<void> {
@@ -28,6 +29,8 @@ const DangerZone: FC<Props> = ({ groupId }) => {
         error: handleToastError,
       }
     );
+
+    await utils.groups.getAllOwned.invalidate();
 
     await router.push("/dashboard");
   }
