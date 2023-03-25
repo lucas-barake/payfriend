@@ -27,7 +27,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
         ),
       ]);
 
-      await utils.groups.invalidate();
+      await utils.groups.getUserShared.invalidate();
 
       return {
         prevData,
@@ -36,9 +36,9 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
   });
   const rejectMutation = api.groupInvites.rejectInvite.useMutation({
     onSuccess: (res) => {
-      const prevData = utils.groupInvites.getAllOwned.getData() ?? [];
+      const prevData = utils.groupInvites.getUserInvites.getData() ?? [];
 
-      utils.groupInvites.getAllOwned.setData(undefined, [
+      utils.groupInvites.getUserInvites.setData(undefined, [
         ...prevData.filter(
           (invite) => invite.debtTableId !== res.rejectedDebtTableId
         ),
@@ -50,9 +50,9 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
     },
     onError: (err) => {
       if (err.data?.code === "BAD_REQUEST") {
-        const prevData = utils.groupInvites.getAllOwned.getData() ?? [];
+        const prevData = utils.groupInvites.getUserInvites.getData() ?? [];
 
-        utils.groupInvites.getAllOwned.setData(undefined, [
+        utils.groupInvites.getUserInvites.setData(undefined, [
           ...prevData.filter(
             (invite) => invite.debtTableId !== invite.debtTableId
           ),
