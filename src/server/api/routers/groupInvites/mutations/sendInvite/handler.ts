@@ -1,6 +1,8 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { sendInviteInput } from "$/server/api/routers/groupInvites/mutations/sendInvite/input";
+import { MAX_NUM_OF_MEMBERS } from "$/server/api/routers/groupInvites/restrictions";
+import handleMainError from "$/server/log/handleMainError";
 
 const sendInviteHandler = protectedVerifiedProcedure
   .input(sendInviteInput)
@@ -24,6 +26,19 @@ const sendInviteHandler = protectedVerifiedProcedure
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "No tienes permisos para invitar a este grupo",
+        });
+      }
+
+      const numMembers = await ctx.prisma.debtTable.count({
+        where: {
+          id: input.debtTableId,
+        },
+      });
+
+      if (numMembers >= MAX_NUM_OF_MEMBERS) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No puedes invitar más miembros a este grupo",
         });
       }
 
@@ -51,7 +66,7 @@ const sendInviteHandler = protectedVerifiedProcedure
       }
 
       try {
-        const createdPendingInvite = await ctx.prisma.pendingInvite.create({
+        return ctx.prisma.pendingInvite.create({
           data: {
             userId: user.id,
             debtTableId: input.debtTableId,
@@ -68,8 +83,6 @@ const sendInviteHandler = protectedVerifiedProcedure
             },
           },
         });
-
-        return createdPendingInvite;
       } catch (error) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -77,11 +90,7 @@ const sendInviteHandler = protectedVerifiedProcedure
         });
       }
     } catch (error) {
-      if (error instanceof TRPCError) throw error;
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Algo salió mal",
-      });
+      handleMainError(error);
     }
   });
 

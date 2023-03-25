@@ -18,6 +18,7 @@ import { z } from "zod";
 import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
 import { type GetSettingsInput } from "$/server/api/routers/groups/queries/getSettingsHandler/input";
+import { MAX_NUM_OF_MEMBERS } from "$/server/api/routers/groupInvites/restrictions";
 
 type Props = {
   members: NonNullable<
@@ -93,6 +94,14 @@ const MembersSettings: FC<Props> = ({
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Ya hay un usuario con ese correo",
+            path: ["email"],
+          });
+        }
+
+        if (members.length + pendingMembers.length >= MAX_NUM_OF_MEMBERS) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `No puedes agregar más de ${MAX_NUM_OF_MEMBERS} miembros`,
             path: ["email"],
           });
         }

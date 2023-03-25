@@ -1,6 +1,7 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { getSettingsInput } from "$/server/api/routers/groups/queries/getSettingsHandler/input";
 import { TRPCError } from "@trpc/server";
+import handleMainError from "$/server/log/handleMainError";
 
 const getSettingsHandler = protectedVerifiedProcedure
   .input(getSettingsInput)
@@ -57,11 +58,7 @@ const getSettingsHandler = protectedVerifiedProcedure
 
       return settingsQuery;
     } catch (error) {
-      if (error instanceof TRPCError) throw error;
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Algo salió mal",
-      });
+      handleMainError(error);
     }
   });
 
