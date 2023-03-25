@@ -13,7 +13,7 @@ export const groupsRouter = createTRPCRouter({
   create: createHandler,
   update: updateHandler,
   delete: deleteHandler,
-  getAll: getAllOwnedHandler,
+  getAllOwned: getAllOwnedHandler,
   getAllShared: getAllSharedHandler,
   getById: getByIdHandler,
   getSettings: getSettingsHandler,

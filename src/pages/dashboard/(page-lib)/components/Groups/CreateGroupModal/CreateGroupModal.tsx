@@ -21,9 +21,9 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
   const utils = api.useContext();
   const create = api.groups.create.useMutation({
     onSuccess: (newTable) => {
-      const prevData = utils.groups.getAll.getData();
+      const prevData = utils.groups.getAllOwned.getData();
 
-      utils.groups.getAll.setData(
+      utils.groups.getAllOwned.setData(
         undefined,
         prevData != null ? [newTable, ...prevData] : [newTable]
       );
