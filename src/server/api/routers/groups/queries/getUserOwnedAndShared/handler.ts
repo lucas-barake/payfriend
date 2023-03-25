@@ -1,7 +1,7 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { type Prisma } from "@prisma/client";
 
-const select = {
+export const getUserGroupsSelect = {
   id: true,
   name: true,
   description: true,
@@ -30,7 +30,7 @@ export const getUserOwned = protectedVerifiedProcedure.query(({ ctx }) => {
         },
       },
     },
-    select,
+    select: getUserGroupsSelect,
   });
 });
 
@@ -46,6 +46,6 @@ export const getUserShared = protectedVerifiedProcedure.query(({ ctx }) => {
         },
       },
     },
-    select,
+    select: getUserGroupsSelect,
   });
 });

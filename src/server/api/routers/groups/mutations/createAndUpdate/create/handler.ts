@@ -1,6 +1,7 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { createGroupInput } from "$/server/api/routers/groups/mutations/createAndUpdate/input";
+import { getUserGroupsSelect } from "$/server/api/routers/groups/queries/getUserOwnedAndShared/handler";
 
 const createHandler = protectedVerifiedProcedure
   .input(createGroupInput)
@@ -25,7 +26,7 @@ const createHandler = protectedVerifiedProcedure
       });
     }
 
-    const query = await ctx.prisma.debtTable.create({
+    return ctx.prisma.debtTable.create({
       data: {
         name: input.name,
         description: input.description,
@@ -36,20 +37,8 @@ const createHandler = protectedVerifiedProcedure
           },
         },
       },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        _count: {
-          select: {
-            collaborators: true,
-          },
-        },
-      },
+      select: getUserGroupsSelect,
     });
-
-    return query;
   });
 
 export default createHandler;
