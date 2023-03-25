@@ -4,12 +4,11 @@ import { useSession } from "next-auth/react";
 import LoadingPage from "$/components/LoadingPage";
 import DesignLayout from "$/layouts/DesignLayout";
 import Button from "$/components/Button";
-import { CheckIcon } from "@heroicons/react/outline";
+import { CheckIcon, MailIcon } from "@heroicons/react/outline";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import handleToastError from "$/components/StyledToaster/handleToastError";
 import OtpInput from "react-otp-input";
-import { MailIcon } from "@heroicons/react/outline";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -77,8 +76,13 @@ const VerifyEmailPage: NextPageWithLayout = () => {
             Verifica tu <span className="text-indigo-500">correo</span>
           </h1>
 
-          <p className="flex flex-col items-center gap-4 text-lg text-gray-500 dark:text-neutral-300 sm:flex-row">
-            ¿No has solicitado el código?
+          <div className="flex flex-col items-center gap-4 text-lg text-gray-500 dark:text-neutral-300">
+            <p className="text-center">
+              Haz clic en el botón de abajo para recibir un código de
+              verificación por correo electrónico, que necesitarás para
+              completar la creación de tu cuenta.
+            </p>
+
             <Button
               color="emerald"
               noPadding
@@ -91,7 +95,7 @@ const VerifyEmailPage: NextPageWithLayout = () => {
               <MailIcon className="h-6 w-6" />
               Enviar Código
             </Button>
-          </p>
+          </div>
 
           {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
           <Form onSubmit={form.handleSubmit(verifyEmail)} className="my-4">
@@ -112,7 +116,10 @@ const VerifyEmailPage: NextPageWithLayout = () => {
                     <input
                       {...props}
                       maxLength={1}
-                      className="flex flex-col items-center justify-center rounded border border-gray-200 bg-white px-2 text-center text-lg outline-none ring-blue-700 focus:bg-gray-50 focus:ring-1 dark:border-neutral-800 dark:bg-neutral-700"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="\d{1}"
+                      className="m-0 flex flex-col items-center justify-center rounded border border-gray-200 bg-white px-2 text-center text-lg outline-none ring-blue-700 focus:bg-gray-50 focus:ring-1 dark:border-neutral-800 dark:bg-neutral-700"
                     />
                   )}
                 />
@@ -138,7 +145,7 @@ const VerifyEmailPage: NextPageWithLayout = () => {
             </div>
           </Form>
 
-          <span className="text-center text-sm text-gray-500 dark:text-neutral-300">
+          <span className="text-center text-gray-500 dark:text-neutral-300">
             Si no te aparece el correo revisa tu carpeta de{" "}
             <span className="font-bold text-orange-500">spam</span>
           </span>
