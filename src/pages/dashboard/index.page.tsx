@@ -22,10 +22,10 @@ const tabCategories = [
 const Dashboard: NextPageWithLayout = () => {
   const router = useRouter();
 
-  const parsedGroupKey = z
+  const groupId = z
     .union([z.literal("yours"), z.literal("shared")])
-    .safeParse(router.query.group);
-  const groupId = parsedGroupKey.success ? parsedGroupKey.data : "yours";
+    .catch("yours")
+    .parse(router.query.group);
   const selectedTab = tabCategories.findIndex(
     (category) => category.id === groupId
   );
