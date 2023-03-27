@@ -13,6 +13,7 @@ import { CogIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import GoBackButton from "$/components/GoBackButton/GoBackButton";
 import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
+import Unauthorized from "$/components/Unauthorized";
 
 const GroupDashboardPage: NextPageWithLayout = () => {
   const session = useSession();
@@ -35,12 +36,16 @@ const GroupDashboardPage: NextPageWithLayout = () => {
     query.data?.users.find((user) => user.userId === session.data?.user.id)
       ?.role === "OWNER";
 
+  if (groupId === null || query.data === undefined) {
+    return <Unauthorized />;
+  }
+
   return (
     <Layout>
       <div className="flex items-center justify-between">
         <GoBackButton />
 
-        {groupId !== null && isOwner && (
+        {isOwner && (
           <Link
             className="flex transform items-center gap-2 rounded bg-indigo-600 px-4 py-1.5 font-medium text-white transition duration-200 ease-in-out hover:bg-indigo-700 active:translate-y-0.5"
             href={`/dashboard/${groupId}/settings`}
