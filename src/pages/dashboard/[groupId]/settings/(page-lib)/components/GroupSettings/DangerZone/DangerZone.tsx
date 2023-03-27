@@ -4,15 +4,15 @@ import { TrashIcon } from "@heroicons/react/outline";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import handleToastError from "$/components/StyledToaster/handleToastError";
-import { type Group } from ".prisma/client";
 import Modal from "$/components/Modal";
 import { useRouter } from "next/router";
+import { type GetSettingsInput } from "$/server/api/routers/groups/queries/getSettingsById/input";
 
 type Props = {
-  groupId: Group["id"];
+  queryVariables: GetSettingsInput;
 };
 
-const DangerZone: FC<Props> = ({ groupId }) => {
+const DangerZone: FC<Props> = ({ queryVariables }) => {
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const utils = api.useContext();
@@ -21,7 +21,7 @@ const DangerZone: FC<Props> = ({ groupId }) => {
   async function handleDelete(): Promise<void> {
     await toast.promise(
       deleteMutation.mutateAsync({
-        groupId,
+        groupId: queryVariables.groupId,
       }),
       {
         loading: "Eliminando grupo...",
@@ -31,6 +31,9 @@ const DangerZone: FC<Props> = ({ groupId }) => {
     );
 
     await utils.user.getOwnedGroups.invalidate();
+    await utils.groups.getById.invalidate({
+      id: queryVariables.groupId,
+    });
 
     await router.push("/dashboard");
   }

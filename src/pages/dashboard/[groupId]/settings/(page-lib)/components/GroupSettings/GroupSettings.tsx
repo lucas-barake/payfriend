@@ -51,7 +51,7 @@ const GroupSettings: FC<Props> = ({ groupId }) => {
         queryVariables={queryVariables}
       />
 
-      <DangerZone groupId={queryVariables.groupId} />
+      <DangerZone queryVariables={queryVariables} />
     </div>
   );
 };
