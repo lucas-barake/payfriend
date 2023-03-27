@@ -1,8 +1,8 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
-import { TRPCError } from "@trpc/server";
 import { getGroupByIdInput } from "$/server/api/routers/groups/queries/byId/input";
+import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
-const byId = protectedVerifiedProcedure
+const getById = protectedVerifiedProcedure
   .input(getGroupByIdInput)
   .query(async ({ ctx, input }) => {
     const query = await ctx.prisma.group.findFirst({
@@ -24,14 +24,9 @@ const byId = protectedVerifiedProcedure
       },
     });
 
-    if (!query) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "No se encontró la tabla",
-      });
-    }
+    if (!query) throw CUSTOM_EXCEPTIONS.UNAUTHORIZED();
 
     return query;
   });
 
-export default byId;
+export default getById;
