@@ -1,6 +1,5 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
-import Layout from "$/layouts/Layout";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";
 import {
@@ -14,29 +13,28 @@ import Link from "next/link";
 import GoBackButton from "$/components/GoBackButton/GoBackButton";
 import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
 import Unauthorized from "$/components/Unauthorized";
+import Layout from "$/layouts/Layout";
+import { type ReactElement } from "react";
 
 const GroupDashboardPage: NextPageWithLayout = () => {
   const session = useSession();
   const router = useRouter();
-  const parsedGroupId = getGroupByIdInput.shape.id.safeParse(
-    router.query.groupId
-  );
-  const groupId = parsedGroupId.success ? parsedGroupId.data : null;
+  const groupId = router.query.groupId as string;
 
   const queryVariables: GetGroupByIdInput = {
-    id: groupId as string,
+    id: groupId,
   };
   const query = api.groups.getById.useQuery(queryVariables, {
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
-    onError: (error) => error.data?.code !== "UNAUTHORIZED",
+    retry: false,
   });
   const isOwner =
     query.data?.users.find((user) => user.userId === session.data?.user.id)
       ?.role === "OWNER";
 
-  if (groupId === null || query.data === undefined) {
+  if (query.isError) {
     return <Unauthorized />;
   }
 
@@ -67,6 +65,16 @@ const GroupDashboardPage: NextPageWithLayout = () => {
   );
 };
 
-GroupDashboardPage.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
+const QueryWrapper = (page: ReactElement) => {
+  const router = useRouter();
+  const parsedGroupId = getGroupByIdInput.shape.id.safeParse(
+    router.query.groupId
+  );
+  const groupId = parsedGroupId.success ? parsedGroupId.data : null;
+
+  return <AuthLayout>{groupId === null ? <Unauthorized /> : page}</AuthLayout>;
+};
+
+GroupDashboardPage.getLayout = QueryWrapper;
 
 export default GroupDashboardPage;
