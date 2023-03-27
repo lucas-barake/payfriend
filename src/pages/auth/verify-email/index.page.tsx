@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type VerifyOTPInput,
   verifyOTPInput,
-} from "$/server/api/routers/emailVerification/mutations/verifyOTP/input";
+} from "$/server/api/routers/user/mutations/verifyOTP/input";
 import Form from "$/components/Form";
 import { z } from "zod";
 
@@ -36,9 +36,8 @@ const VerifyEmailPage: NextPageWithLayout = () => {
     resolver: zodResolver(verifyOTPInput),
   });
 
-  const sendVerificationEmailMutation =
-    api.emailVerification.sendVerificationEmail.useMutation();
-  const verifyEmailMutation = api.emailVerification.verifyOTP.useMutation();
+  const sendOTP = api.user.sendOTP.useMutation();
+  const verifyOTP = api.user.verifyOTP.useMutation();
 
   if (session.data?.user?.emailVerified) {
     void router.push("/dashboard");
@@ -46,7 +45,7 @@ const VerifyEmailPage: NextPageWithLayout = () => {
   }
 
   async function sendVerificationEmail(): Promise<void> {
-    await toast.promise(sendVerificationEmailMutation.mutateAsync(), {
+    await toast.promise(sendOTP.mutateAsync(), {
       loading: "Enviando código...",
       success: "Código enviado",
       error: handleToastError,
@@ -55,7 +54,7 @@ const VerifyEmailPage: NextPageWithLayout = () => {
 
   async function verifyEmail(data: VerifyOTPInput): Promise<void> {
     await toast.promise(
-      verifyEmailMutation.mutateAsync({
+      verifyOTP.mutateAsync({
         otp: data.otp,
       }),
       {
@@ -88,7 +87,7 @@ const VerifyEmailPage: NextPageWithLayout = () => {
               color="emerald"
               noPadding
               className="flex items-center gap-2 px-2 py-1"
-              loading={sendVerificationEmailMutation.isLoading}
+              loading={sendOTP.isLoading}
               onClick={() => {
                 void sendVerificationEmail();
               }}
@@ -141,7 +140,7 @@ const VerifyEmailPage: NextPageWithLayout = () => {
               <Button
                 color="indigo"
                 className="flex items-center gap-2 self-center"
-                loading={verifyEmailMutation.isLoading}
+                loading={verifyOTP.isLoading}
                 type="submit"
               >
                 <CheckIcon className="h-6 w-6" />

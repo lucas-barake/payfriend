@@ -1,8 +1,6 @@
 import { createTRPCRouter } from "$/server/api/trpc";
 import { groupsRouter } from "$/server/api/routers/groups/router";
-import { invitesRouter } from "$/server/api/routers/groupInvites/router";
-import collaboratorsRouter from "$/server/api/routers/collaborators/router";
-import emailVerificationRouter from "$/server/api/routers/emailVerification/router";
+import userRouter from "$/server/api/routers/user/router";
 
 /**
  * This is the primary router for your server.
@@ -11,9 +9,7 @@ import emailVerificationRouter from "$/server/api/routers/emailVerification/rout
  */
 export const appRouter = createTRPCRouter({
   groups: groupsRouter,
-  groupInvites: invitesRouter,
-  collaborators: collaboratorsRouter,
-  emailVerification: emailVerificationRouter,
+  user: userRouter,
 });
 
 // export type definition of API

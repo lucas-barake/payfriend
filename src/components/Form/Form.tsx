@@ -8,7 +8,7 @@ import Group from "./Group";
 import RequiredStar from "./RequiredStar";
 import FileInput from "./FileInput";
 import Switch from "./Switch";
-import Listbox from "./Listbox";
+import ListBox from "./ListBox";
 
 type Props = {
   row?: boolean;
@@ -23,7 +23,7 @@ type FormDefinition = FC<Props> & {
   RequiredStar: typeof RequiredStar;
   FileInput: typeof FileInput;
   Switch: typeof Switch;
-  Listbox: typeof Listbox;
+  ListBox: typeof ListBox;
 };
 
 const Form: FormDefinition = ({
@@ -48,6 +48,6 @@ Form.Group = Group;
 Form.RequiredStar = RequiredStar;
 Form.FileInput = FileInput;
 Form.Switch = Switch;
-Form.Listbox = Listbox;
+Form.ListBox = ListBox;
 
 export default Form;

@@ -11,62 +11,43 @@ import { api } from "$/utils/api";
 
 type Props = {
   invite: NonNullable<
-    InferQueryResult<AppRouter["groupInvites"]["getUserInvites"]>["data"]
+    InferQueryResult<AppRouter["user"]["getInvites"]>["data"]
   >[number];
 };
 
 const PendingInviteRow: FC<Props> = ({ invite }) => {
   const utils = api.useContext();
-  const acceptMutation = api.groupInvites.acceptInvite.useMutation({
+  const acceptMutation = api.user.acceptInvite.useMutation({
     onSuccess: async (res) => {
-      const prevData = utils.groupInvites.getUserInvites.getData() ?? [];
+      const prevData = utils.user.getInvites.getData() ?? [];
 
-      utils.groupInvites.getUserInvites.setData(undefined, [
-        ...prevData.filter(
-          (invite) => invite.debtTableId !== res.acceptedDebtTableId
-        ),
+      utils.user.getInvites.setData(undefined, [
+        ...prevData.filter((invite) => invite.groupId !== res.groupId),
       ]);
 
-      await utils.groups.getUserShared.invalidate();
+      await utils.user.getSharedGroups.invalidate();
 
       return {
         prevData,
       };
     },
   });
-  const rejectMutation = api.groupInvites.rejectInvite.useMutation({
+  const rejectMutation = api.user.rejectInvite.useMutation({
     onSuccess: (res) => {
-      const prevData = utils.groupInvites.getUserInvites.getData() ?? [];
+      const prevData = utils.user.getInvites.getData() ?? [];
 
-      utils.groupInvites.getUserInvites.setData(undefined, [
-        ...prevData.filter(
-          (invite) => invite.debtTableId !== res.rejectedDebtTableId
-        ),
+      utils.user.getInvites.setData(undefined, [
+        ...prevData.filter((invite) => invite.groupId !== res.groupId),
       ]);
 
       return {
         prevData,
       };
-    },
-    onError: (err) => {
-      if (err.data?.code === "BAD_REQUEST") {
-        const prevData = utils.groupInvites.getUserInvites.getData() ?? [];
-
-        utils.groupInvites.getUserInvites.setData(undefined, [
-          ...prevData.filter(
-            (invite) => invite.debtTableId !== invite.debtTableId
-          ),
-        ]);
-
-        return {
-          prevData,
-        };
-      }
     },
   });
 
   return (
-    <Menu.Item key={invite.name}>
+    <Menu.Item key={invite.groupId}>
       {({ active }) => (
         <div
           className={cs(
@@ -77,7 +58,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
           <div className="flex flex-col font-medium">
             {invite.owner}
             <span className="font-normal dark:text-neutral-200">
-              Grupo {truncateString(invite.name, 14)}
+              Grupo {truncateString(invite.groupName, 14)}
             </span>
           </div>
 
@@ -88,7 +69,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
               onClick={() => {
                 void toast.promise(
                   acceptMutation.mutateAsync({
-                    debtTableId: invite.debtTableId,
+                    groupId: invite.groupId,
                   }),
                   {
                     loading: "Aceptando invitación...",
@@ -107,7 +88,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
               onClick={() => {
                 void toast.promise(
                   rejectMutation.mutateAsync({
-                    debtTableId: invite.debtTableId,
+                    groupId: invite.groupId,
                   }),
                   {
                     loading: "Rechazando invitación...",

@@ -4,7 +4,7 @@ import TimeInMs from "$/enums/TimeInMs";
 import Groups from "$/pages/dashboard/(page-lib)/components/Groups";
 
 const SharedGroupsTab: FC = () => {
-  const query = api.groups.getUserShared.useQuery(undefined, {
+  const query = api.user.getSharedGroups.useQuery(undefined, {
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,

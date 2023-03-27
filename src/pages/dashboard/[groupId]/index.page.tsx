@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import {
   type GetGroupByIdInput,
   getGroupByIdInput,
-} from "$/server/api/routers/groups/queries/getById/input";
+} from "$/server/api/routers/groups/queries/byId/input";
 import LoadingSpinnerIcon from "$/components/Icons/LoadingSpinnerIcon";
 import TimeInMs from "$/enums/TimeInMs";
 import { CogIcon } from "@heroicons/react/outline";
@@ -32,9 +32,8 @@ const GroupDashboardPage: NextPageWithLayout = () => {
     onError: (error) => error.data?.code !== "UNAUTHORIZED",
   });
   const isOwner =
-    query.data?.collaborators.find(
-      (collaborator) => collaborator.collaboratorId === session.data?.user.id
-    )?.role === "OWNER";
+    query.data?.users.find((user) => user.userId === session.data?.user.id)
+      ?.role === "OWNER";
 
   return (
     <Layout>

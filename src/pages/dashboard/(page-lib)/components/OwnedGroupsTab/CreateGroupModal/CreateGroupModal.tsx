@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createGroupInput,
   type CreateGroupInput,
-} from "$/server/api/routers/groups/mutations/createAndUpdate/input";
+} from "$/server/api/routers/groups/mutations/create-update/input";
 import Modal from "$/components/Modal/Modal";
 import Form from "$/components/Form";
 import Button from "$/components/Button";
@@ -23,9 +23,9 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
   const utils = api.useContext();
   const create = api.groups.create.useMutation({
     onSuccess: (newTable) => {
-      const prevData = utils.groups.getUserOwned.getData();
+      const prevData = utils.user.getOwnedGroups.getData();
 
-      utils.groups.getUserOwned.setData(
+      utils.user.getOwnedGroups.setData(
         undefined,
         prevData != null ? [newTable, ...prevData] : [newTable]
       );
@@ -52,10 +52,7 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
   async function handleSubmit(data: CreateGroupInput): Promise<void> {
     await toast.promise(create.mutateAsync(data), {
       loading: "Creando grupo...",
-      success() {
-        onClose();
-        return "Grupo creado";
-      },
+      success: "Grupo creado",
       error: handleToastError,
     });
 

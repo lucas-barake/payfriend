@@ -9,38 +9,38 @@ import { type AppRouter } from "$/server/api/root";
 import Image from "next/image";
 
 type Props = {
-  debtTable: NonNullable<
-    InferMutationResult<AppRouter["groups"]["getUserOwned"]>["data"]
+  group: NonNullable<
+    InferMutationResult<AppRouter["user"]["getOwnedGroups"]>["data"]
   >[number];
 };
 
 const GroupCard: FC<Props> & {
   Skeleton: FC;
-} = ({ debtTable }) => {
+} = ({ group }) => {
   return (
     <Link
-      key={debtTable.id}
+      key={group.id}
       className="flex flex-col gap-2 rounded-lg bg-white p-6 shadow transition-colors duration-200 ease-in-out hover:bg-neutral-50 dark:bg-neutral-900/30 dark:text-neutral-100 dark:hover:bg-neutral-900/50"
-      href={`/dashboard/${debtTable.id}`}
+      href={`/dashboard/${group.id}`}
     >
       <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
-        <span className="truncate">{debtTable.name}</span>
+        <span className="truncate">{group.name}</span>
 
         <div className="flex -space-x-2 overflow-hidden p-2">
-          {debtTable?.collaborators?.map(({ collaborator }) =>
-            collaborator.image == null ? (
+          {group?.users?.map(({ user }) =>
+            user.image == null ? (
               <div
-                key={collaborator.name}
+                key={user.name}
                 className="tranform inline-block w-7 rounded-full bg-neutral-200 text-center ring-2 ring-white duration-100 hover:scale-105 dark:bg-neutral-600 dark:ring-neutral-800 md:w-8"
               >
-                {collaborator.name?.charAt(0).toUpperCase()}
+                {user.name?.charAt(0).toUpperCase()}
               </div>
             ) : (
               <Image
-                key={collaborator.image}
+                key={user.image}
                 className="tranform inline-block w-7 rounded-full duration-100 hover:scale-105 md:w-8"
-                src={collaborator.image}
-                alt={collaborator.name ?? "Miembro del grupo"}
+                src={user.image}
+                alt={user.name ?? "Miembro del grupo"}
                 width={20}
                 height={20}
               />
@@ -50,13 +50,13 @@ const GroupCard: FC<Props> & {
       </div>
 
       <span className="mt-2 mb-6 pr-2 lg:pr-3 xl:pr-6">
-        {truncateString(debtTable.description, 80)}
+        {truncateString(group.description, 80)}
       </span>
 
       <div className="mt-auto flex items-center justify-between">
         <span className="flex items-center gap-1 text-sm">
           <CalendarIcon className="h-4 w-4" />
-          {DateTime.fromJSDate(debtTable.createdAt).toLocaleString({
+          {DateTime.fromJSDate(group.createdAt).toLocaleString({
             month: "long",
             day: "numeric",
             year: "numeric",

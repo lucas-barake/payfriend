@@ -7,12 +7,12 @@ const deleteGroupHandler = protectedVerifiedProcedure
   .input(deleteGroupInput)
   .mutation(async ({ ctx, input }) => {
     try {
-      const isOwner = await ctx.prisma.debtTable.findFirst({
+      const isOwner = await ctx.prisma.group.findFirst({
         where: {
           id: input.groupId,
-          collaborators: {
+          users: {
             some: {
-              collaborator: {
+              user: {
                 id: ctx.session.user.id,
               },
               role: "OWNER",
@@ -28,7 +28,7 @@ const deleteGroupHandler = protectedVerifiedProcedure
         });
       }
 
-      const deleted = await ctx.prisma.debtTable.delete({
+      return ctx.prisma.group.delete({
         where: {
           id: input.groupId,
         },
@@ -36,8 +36,6 @@ const deleteGroupHandler = protectedVerifiedProcedure
           id: true,
         },
       });
-
-      return deleted;
     } catch (error) {
       handleMainError(error);
     }

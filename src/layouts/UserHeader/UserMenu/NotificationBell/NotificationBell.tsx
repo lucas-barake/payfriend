@@ -9,7 +9,7 @@ import TimeInMs from "$/enums/TimeInMs";
 const NotificationBell: FC = () => {
   const session = useSession();
 
-  const query = api.groupInvites.getUserInvites.useQuery(undefined, {
+  const query = api.user.getInvites.useQuery(undefined, {
     enabled: session.data?.user.emailVerified != null,
     staleTime: TimeInMs.TenSeconds,
     refetchOnWindowFocus: true,
@@ -54,7 +54,7 @@ const NotificationBell: FC = () => {
               </Menu.Item>
             ) : (
               allPendingInvites.map((invite) => (
-                <PendingInviteRow key={invite.debtTableId} invite={invite} />
+                <PendingInviteRow key={invite.groupId} invite={invite} />
               ))
             )}
           </div>

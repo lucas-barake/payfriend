@@ -6,7 +6,7 @@ import { type AppRouter } from "$/server/api/root";
 type Props = {
   loading: boolean;
   groups: NonNullable<
-    InferQueryResult<AppRouter["groups"]["getUserOwned"]>["data"]
+    InferQueryResult<AppRouter["user"]["getOwnedGroups"]>["data"]
   >;
 };
 
@@ -22,7 +22,7 @@ const Groups: FC<Props> = ({ loading, groups }) => {
       ) : (
         <>
           {groups.map((debtTable) => (
-            <GroupCard key={debtTable.id} debtTable={debtTable} />
+            <GroupCard key={debtTable.id} group={debtTable} />
           ))}
         </>
       )}
