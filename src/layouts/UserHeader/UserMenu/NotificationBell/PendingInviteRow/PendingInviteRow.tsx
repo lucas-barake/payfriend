@@ -11,17 +11,17 @@ import { api } from "$/utils/api";
 
 type Props = {
   invite: NonNullable<
-    InferQueryResult<AppRouter["user"]["getInvites"]>["data"]
+    InferQueryResult<AppRouter["user"]["getGroupInvites"]>["data"]
   >[number];
 };
 
 const PendingInviteRow: FC<Props> = ({ invite }) => {
   const utils = api.useContext();
-  const acceptMutation = api.user.acceptInvite.useMutation({
+  const acceptMutation = api.user.acceptGroupInvite.useMutation({
     onSuccess: async (res) => {
-      const prevData = utils.user.getInvites.getData() ?? [];
+      const prevData = utils.user.getGroupInvites.getData() ?? [];
 
-      utils.user.getInvites.setData(undefined, [
+      utils.user.getGroupInvites.setData(undefined, [
         ...prevData.filter((invite) => invite.groupId !== res.groupId),
       ]);
 
@@ -32,11 +32,11 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
       };
     },
   });
-  const rejectMutation = api.user.rejectInvite.useMutation({
+  const declineMutation = api.user.declineGroupInvite.useMutation({
     onSuccess: (res) => {
-      const prevData = utils.user.getInvites.getData() ?? [];
+      const prevData = utils.user.getGroupInvites.getData() ?? [];
 
-      utils.user.getInvites.setData(undefined, [
+      utils.user.getGroupInvites.setData(undefined, [
         ...prevData.filter((invite) => invite.groupId !== res.groupId),
       ]);
 
@@ -87,7 +87,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
               className="rounded-full border border-neutral-500 p-0.5 text-neutral-500 hover:bg-neutral-200 dark:border-neutral-400 dark:text-neutral-400 hover:dark:bg-neutral-700"
               onClick={() => {
                 void toast.promise(
-                  rejectMutation.mutateAsync({
+                  declineMutation.mutateAsync({
                     groupId: invite.groupId,
                   }),
                   {

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import {
   type GetGroupByIdInput,
   getGroupByIdInput,
-} from "$/server/api/routers/groups/queries/byId/input";
+} from "$/server/api/routers/groups/groups/getGroupById/input";
 import LoadingSpinnerIcon from "$/components/Icons/LoadingSpinnerIcon";
 import TimeInMs from "$/enums/TimeInMs";
 import { CogIcon } from "@heroicons/react/outline";
@@ -24,7 +24,7 @@ const GroupDashboardPage: NextPageWithLayout = () => {
   const queryVariables: GetGroupByIdInput = {
     id: groupId,
   };
-  const query = api.groups.getById.useQuery(queryVariables, {
+  const query = api.groups.getGroupById.useQuery(queryVariables, {
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,

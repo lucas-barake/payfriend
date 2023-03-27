@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import handleToastError from "$/components/StyledToaster/handleToastError";
 import Modal from "$/components/Modal";
 import { useRouter } from "next/router";
-import { type GetSettingsInput } from "$/server/api/routers/groups/queries/getSettingsById/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/getSettingsById/input";
 
 type Props = {
   queryVariables: GetSettingsInput;
@@ -16,7 +16,7 @@ const DangerZone: FC<Props> = ({ queryVariables }) => {
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const utils = api.useContext();
-  const deleteMutation = api.groups.deleteOne.useMutation();
+  const deleteMutation = api.groups.deleteGroup.useMutation();
 
   async function handleDelete(): Promise<void> {
     await toast.promise(
@@ -31,7 +31,7 @@ const DangerZone: FC<Props> = ({ queryVariables }) => {
     );
 
     await utils.user.getOwnedGroups.invalidate();
-    await utils.groups.getById.invalidate({
+    await utils.groups.getGroupById.invalidate({
       id: queryVariables.groupId,
     });
 

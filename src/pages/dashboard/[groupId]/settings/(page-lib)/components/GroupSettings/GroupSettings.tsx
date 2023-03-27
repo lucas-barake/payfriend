@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { type GetSettingsInput } from "$/server/api/routers/groups/queries/getSettingsById/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/getSettingsById/input";
 import { api } from "$/utils/api";
 import TimeInMs from "$/enums/TimeInMs";
 import Unauthorized from "$/components/Unauthorized";

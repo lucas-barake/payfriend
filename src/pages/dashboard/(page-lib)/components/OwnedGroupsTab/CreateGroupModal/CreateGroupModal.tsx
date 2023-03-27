@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createGroupInput,
   type CreateGroupInput,
-} from "$/server/api/routers/groups/mutations/create-update/input";
+} from "$/server/api/routers/groups/groups/create-update/input";
 import Modal from "$/components/Modal/Modal";
 import Form from "$/components/Form";
 import Button from "$/components/Button";
@@ -21,7 +21,7 @@ type Props = {
 const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
   const router = useRouter();
   const utils = api.useContext();
-  const create = api.groups.create.useMutation({
+  const create = api.groups.createGroup.useMutation({
     onSuccess: (newTable) => {
       const prevData = utils.user.getOwnedGroups.getData();
 

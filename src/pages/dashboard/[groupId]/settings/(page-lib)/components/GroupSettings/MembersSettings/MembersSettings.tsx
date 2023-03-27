@@ -7,7 +7,7 @@ import {
   sendInviteInput,
   type SendInviteInput,
   sendInviteRoleOptions,
-} from "$/server/api/routers/user/mutations/sendInvite/input";
+} from "$/server/api/routers/user/groupInvites/sendGroupInvite/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react";
 import { z } from "zod";
 import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
-import { type GetSettingsInput } from "$/server/api/routers/groups/queries/getSettingsById/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/getSettingsById/input";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
 import Member from "$/pages/dashboard/[groupId]/settings/(page-lib)/components/GroupSettings/MembersSettings/Member";
 
@@ -31,7 +31,7 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
   const session = useSession();
 
   const utils = api.useContext();
-  const sendInviteMutation = api.user.sendInvite.useMutation();
+  const sendInviteMutation = api.user.sendGroupInvite.useMutation();
 
   const form = useForm<SendInviteInput>({
     defaultValues: {

@@ -1,12 +1,12 @@
 import { type FC } from "react";
 import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
-import { type GetSettingsInput } from "$/server/api/routers/groups/queries/getSettingsById/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/getSettingsById/input";
 import { api } from "$/utils/api";
 import {
   type UpdateDeleteUserValueOptions,
   type UpdateUserRoleInput,
-} from "$/server/api/routers/groups/mutations/updateUserRole/input";
+} from "$/server/api/routers/groups/users/updateUserRole/input";
 import toast from "react-hot-toast";
 import handleToastError from "$/components/StyledToaster/handleToastError";
 import GroupMember from "$/pages/dashboard/[groupId]/(page-lib)/component/GroupMember";
@@ -78,7 +78,7 @@ const Member: FC<Props> = ({ member, queryVariables }) => {
 
     await utils.user.getOwnedGroups.invalidate();
     await utils.user.getSharedGroups.invalidate();
-    await utils.groups.getById.invalidate();
+    await utils.groups.getGroupById.invalidate();
   }
 
   return (

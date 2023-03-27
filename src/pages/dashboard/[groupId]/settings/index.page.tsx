@@ -2,7 +2,7 @@ import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
 import Unauthorized from "$/components/Unauthorized";
 import GoBackButton from "$/components/GoBackButton/GoBackButton";
-import { getSettingsInput } from "$/server/api/routers/groups/queries/getSettingsById/input";
+import { getSettingsInput } from "$/server/api/routers/groups/groups/getSettingsById/input";
 import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
 import Layout from "$/layouts/Layout";
 import GroupSettings from "$/pages/dashboard/[groupId]/settings/(page-lib)/components/GroupSettings";

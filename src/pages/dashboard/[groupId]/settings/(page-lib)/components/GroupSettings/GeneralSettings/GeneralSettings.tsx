@@ -7,12 +7,12 @@ import { SaveIcon } from "@heroicons/react/outline";
 import {
   updateGroupInput,
   type UpdateGroupInput,
-} from "$/server/api/routers/groups/mutations/create-update/input";
+} from "$/server/api/routers/groups/groups/create-update/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import handleToastError from "$/components/StyledToaster/handleToastError";
-import { type GetSettingsInput } from "$/server/api/routers/groups/queries/getSettingsById/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/getSettingsById/input";
 import { type Group } from "@prisma/client";
 
 type Props = {
@@ -27,13 +27,13 @@ const GeneralSettings: FC<Props> = ({
   queryVariables,
 }) => {
   const utils = api.useContext();
-  const updateMutation = api.groups.update.useMutation({
+  const updateMutation = api.groups.updateGroup.useMutation({
     onSuccess: async (updatedGroup) => {
       const prevData = utils.groups.getSettingsById.getData(queryVariables);
       if (prevData == null) return;
 
       await utils.user.getOwnedGroups.invalidate();
-      await utils.groups.getById.invalidate({
+      await utils.groups.getGroupById.invalidate({
         id: queryVariables.groupId,
       });
 

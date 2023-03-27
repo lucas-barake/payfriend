@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type VerifyOTPInput,
   verifyOTPInput,
-} from "$/server/api/routers/user/mutations/verifyOTP/input";
+} from "$/server/api/routers/user/otp/verifyOTP/input";
 import Form from "$/components/Form";
 import { z } from "zod";
 
