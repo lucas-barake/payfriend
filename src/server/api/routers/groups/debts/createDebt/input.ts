@@ -5,7 +5,6 @@ export const createDebtInput = z.object({
   amount: z.number().min(1),
   dueDate: z.date().min(new Date()).optional(),
   borrowerId: z.string().cuid(),
-  lenderId: z.string().cuid(),
   groupId: z.string().cuid(),
 });
 export type CreateDebtInput = z.infer<typeof createDebtInput>;
