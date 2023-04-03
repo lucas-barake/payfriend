@@ -9,6 +9,7 @@ export type LabelProps = {
   warning?: string;
   error?: string;
   label: string;
+  srOnly?: boolean;
 };
 
 const Label: FC<LabelProps & ComponentPropsWithoutRef<"label">> = ({
@@ -19,6 +20,7 @@ const Label: FC<LabelProps & ComponentPropsWithoutRef<"label">> = ({
   className,
   warning,
   error,
+  srOnly = false,
   ...props
 }) => (
   <label
@@ -28,7 +30,9 @@ const Label: FC<LabelProps & ComponentPropsWithoutRef<"label">> = ({
     )}
     {...props}
   >
-    {required ? (
+    {srOnly ? (
+      <span className="sr-only">{label}</span>
+    ) : required ? (
       <div className="flex flex-col">
         <div className="flex items-center gap-1 capitalize">
           {label}

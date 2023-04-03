@@ -4,9 +4,9 @@ import Label, { type LabelProps } from "$/components/Form/Label/Label";
 
 type InputProps = {
   leftIcon?: JSX.Element;
-  dark?: boolean;
   rightElement?: JSX.Element;
   noWidth?: boolean;
+  bare?: boolean;
 } & ComponentPropsWithRef<"input"> &
   Omit<LabelProps, "children">;
 
@@ -20,8 +20,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       error,
       warning,
       rightElement,
-      dark = false,
       noWidth = false,
+      srOnly,
+      bare = false,
       ...props
     },
     ref
@@ -32,6 +33,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       required={props.required}
       error={error}
       warning={warning}
+      srOnly={srOnly}
     >
       <div className="relative flex items-center gap-2">
         {leftIcon !== undefined && (
@@ -43,12 +45,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
           ref={ref}
           className={cs(
-            "rounded border border-solid bg-clip-padding px-3 py-1.5 text-base font-normal transition ease-in-out focus:border-indigo-600 focus:outline-none dark:border-neutral-800 dark:bg-neutral-700 dark:text-gray-100 dark:placeholder-neutral-400/75 dark:focus:border-indigo-400",
+            "bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 placeholder-gray-400/90 transition ease-in-out focus:text-gray-700 focus:outline-none dark:text-gray-100 dark:placeholder-neutral-400/75",
+            bare
+              ? ""
+              : "rounded border border-solid border-gray-300 focus:border-indigo-600 dark:border-neutral-800 dark:bg-neutral-700 dark:focus:border-indigo-400",
             !noWidth && "w-full",
             leftIcon !== undefined && "pl-8",
-            dark
-              ? "border-dim-50 bg-dim-50 text-gray-100 placeholder-neutral-400/75 focus:border-indigo-400"
-              : "border-gray-300 bg-white text-gray-700 placeholder-gray-400/90 focus:border-indigo-600 focus:bg-white focus:text-gray-700",
             className
           )}
         />

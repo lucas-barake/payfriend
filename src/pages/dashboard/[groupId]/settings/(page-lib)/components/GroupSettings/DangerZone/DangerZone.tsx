@@ -51,7 +51,7 @@ const DangerZone: FC<Props> = ({ queryVariables }) => {
 
         <div className="mt-12 flex justify-end gap-2">
           <Button
-            color="gray"
+            color="neutral"
             onClick={() => {
               setShowDeleteModal(false);
             }}
