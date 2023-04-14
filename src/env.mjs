@@ -18,12 +18,11 @@ const server = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string().min(1) : z.string().url()
   ),
-  // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
-  GOOGLE_CLIENT_ID: z.string(),
-  GOOGLE_CLIENT_SECRET: z.string(),
-  SENDGRID_API_KEY: z.string(),
+  GOOGLE_CLIENT_ID: z.string().min(1),
+  GOOGLE_CLIENT_SECRET: z.string().min(1),
+  SENDGRID_API_KEY: z.string().min(1),
   SENDGRID_FROM_EMAIL: z.string().email(),
-  SENDGRID_SANDBOX_MODE: z.literal("true").optional(),
+  SENDGRID_SANDBOX_MODE: z.coerce.boolean().optional().default(false),
 });
 
 /**
@@ -36,7 +35,7 @@ const client = z.object({
 
 /**
  * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
- * middlewares) or client-side so we need to destruct manually.
+ * middlewares) or client-side, so we need to destruct manually.
  *
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
@@ -61,14 +60,15 @@ const merged = server.merge(client);
 /** @typedef {z.infer<typeof merged>} MergedOutput */
 /** @typedef {z.SafeParseReturnType<MergedInput, MergedOutput>} MergedSafeParseReturn */
 
+// @ts-expect-error - Invalid overlap when coercing the env vars
 let env = /** @type {MergedOutput} */ (process.env);
 if (!!process.env.SKIP_ENV_VALIDATION == false) {
   const isServer = typeof window === "undefined";
 
   const parsed = /** @type {MergedSafeParseReturn} */ (
     isServer
-      ? merged.safeParse(processEnv) // on server we can validate all env vars
-      : client.safeParse(processEnv) // on client we can only validate the ones that are exposed
+      ? merged.safeParse(processEnv) // on the server, we can validate all environment variables.
+      : client.safeParse(processEnv) // on the client, we can only validate the environment variables that are exposed.
   );
 
   if (parsed.success === false) {

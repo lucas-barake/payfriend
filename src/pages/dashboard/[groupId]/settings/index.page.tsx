@@ -1,11 +1,11 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
-import Unauthorized from "$/components/Unauthorized";
-import GoBackButton from "$/components/GoBackButton/GoBackButton";
-import { getSettingsInput } from "$/server/api/routers/groups/groups/getSettingsById/input";
-import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
-import Layout from "$/layouts/Layout";
-import GroupSettings from "$/pages/dashboard/[groupId]/settings/(page-lib)/components/GroupSettings";
+import { UnauthorizedView } from "src/components/unauthorized-view";
+import GoBackButton from "$/components/ui/go-back-button/go-back-button";
+import { getSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
+import { AuthLayout } from "$/layouts/auth-layout";
+import { Layout } from "src/layouts/layout";
+import GroupSettings from "src/pages/dashboard/[groupId]/settings/(page-lib)/components/group-settings";
 
 const SettingsPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -15,7 +15,7 @@ const SettingsPage: NextPageWithLayout = () => {
   const groupId = parsedGroupId.success ? parsedGroupId.data : null;
 
   if (groupId === null) {
-    return <Unauthorized />;
+    return <UnauthorizedView />;
   }
 
   return (

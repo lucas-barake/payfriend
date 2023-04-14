@@ -1,12 +1,12 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import Layout from "$/layouts/Layout";
+import { Layout } from "src/layouts/layout";
 import { Tab } from "@headlessui/react";
-import cs from "$/utils/cs";
+import cn from "$/utils/cn";
 import { useRouter } from "next/router";
 import { z } from "zod";
-import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
-import OwnedGroupsTab from "$/pages/dashboard/(page-lib)/components/OwnedGroupsTab";
-import SharedGroupsTab from "$/pages/dashboard/(page-lib)/components/SharedGroupsTab";
+import { AuthLayout } from "$/layouts/auth-layout";
+import OwnedGroupsTab from "src/pages/dashboard/(page-lib)/components/owned-groups-tab";
+import SharedGroupsTab from "src/pages/dashboard/(page-lib)/components/shared-groups-tab";
 
 const tabCategories = [
   {
@@ -52,7 +52,7 @@ const Dashboard: NextPageWithLayout = () => {
             <Tab
               key={category.id}
               className={({ selected }) =>
-                cs(
+                cn(
                   "rounded p-3 text-sm font-bold leading-5 text-neutral-600 transition-colors duration-100 ease-in-out focus:outline-none",
                   selected
                     ? "bg-white text-black shadow dark:bg-neutral-800 dark:text-neutral-100"

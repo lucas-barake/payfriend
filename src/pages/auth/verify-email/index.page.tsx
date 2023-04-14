@@ -1,21 +1,21 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import LoadingPage from "$/components/LoadingPage";
-import DesignLayout from "$/layouts/DesignLayout";
-import Button from "$/components/Button";
+import LoadingPage from "src/components/loading-page";
+import { DesignLayout } from "src/layouts/design-layout";
+import Button from "src/components/ui/button";
 import { CheckIcon, MailIcon } from "@heroicons/react/outline";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
-import handleToastError from "$/components/StyledToaster/handleToastError";
+import { handleToastError } from "$/components/ui/styled-toaster";
 import OtpInput from "react-otp-input";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type VerifyOTPInput,
   verifyOTPInput,
-} from "$/server/api/routers/user/otp/verifyOTP/input";
-import Form from "$/components/Form";
+} from "$/server/api/routers/user/otp/verify-otp/input";
+import { Form } from "src/components/ui/form";
 import { z } from "zod";
 
 const VerifyEmailPage: NextPageWithLayout = () => {

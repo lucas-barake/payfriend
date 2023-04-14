@@ -6,7 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { api } from "$/utils/api";
 import "$/styles/globals.css";
-import StyledToaster from "$/components/StyledToaster";
+import { StyledToaster } from "src/components/ui/styled-toaster";
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,

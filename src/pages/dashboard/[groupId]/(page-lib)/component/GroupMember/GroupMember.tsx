@@ -1,13 +1,13 @@
 import { type FC } from "react";
 import { type GroupRole, type User } from "@prisma/client";
 import Image from "next/image";
-import Form from "$/components/Form";
+import { Form } from "src/components/ui/form";
 import { type Neverify } from "$/types/utility";
 import {
   updateDeleteUserOptions,
   type UpdateDeleteUserValueOptions,
   type UpdateUserRoleInput,
-} from "$/server/api/routers/groups/users/updateUserRole/input";
+} from "$/server/api/routers/groups/users/update-user-role/input";
 
 type UpdateProps = {
   onChange: (v: UpdateDeleteUserValueOptions) => void;

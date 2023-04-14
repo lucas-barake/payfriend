@@ -5,15 +5,15 @@ import { useSession } from "next-auth/react";
 import {
   type GetGroupByIdInput,
   getGroupByIdInput,
-} from "$/server/api/routers/groups/groups/getGroupById/input";
-import LoadingSpinnerIcon from "$/components/Icons/LoadingSpinnerIcon";
-import TimeInMs from "$/enums/TimeInMs";
+} from "$/server/api/routers/groups/groups/get-group-by-id/input";
+import LoadingSpinner from "src/components/ui/icons/loading-spinner";
+import TimeInMs from "$/enums/time-in-ms";
 import { CogIcon } from "@heroicons/react/outline";
 import Link from "next/link";
-import GoBackButton from "$/components/GoBackButton/GoBackButton";
-import AuthLayout from "$/layouts/AuthLayout/AuthLayout";
-import Unauthorized from "$/components/Unauthorized";
-import Layout from "$/layouts/Layout";
+import GoBackButton from "$/components/ui/go-back-button/go-back-button";
+import { AuthLayout } from "$/layouts/auth-layout";
+import { UnauthorizedView } from "src/components/unauthorized-view";
+import { Layout } from "src/layouts/layout";
 import { type ReactElement } from "react";
 
 const GroupDashboardPage: NextPageWithLayout = () => {
@@ -35,7 +35,7 @@ const GroupDashboardPage: NextPageWithLayout = () => {
       ?.role === "OWNER";
 
   if (query.isError) {
-    return <Unauthorized />;
+    return <UnauthorizedView />;
   }
 
   return (
@@ -56,7 +56,7 @@ const GroupDashboardPage: NextPageWithLayout = () => {
 
       {query.isLoading ? (
         <div className="flex h-full flex-col items-center justify-center">
-          <LoadingSpinnerIcon />
+          <LoadingSpinner />
         </div>
       ) : (
         <p>{query.data?.name}</p>
@@ -72,7 +72,9 @@ const QueryWrapper = (page: ReactElement) => {
   );
   const groupId = parsedGroupId.success ? parsedGroupId.data : null;
 
-  return <AuthLayout>{groupId === null ? <Unauthorized /> : page}</AuthLayout>;
+  return (
+    <AuthLayout>{groupId === null ? <UnauthorizedView /> : page}</AuthLayout>
+  );
 };
 
 GroupDashboardPage.getLayout = QueryWrapper;

@@ -10,7 +10,7 @@ const CUSTOM_EXCEPTIONS = {
   BAD_REQUEST: (message?: string) => {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: message ?? "Algún error ocurrió.",
+      message: message ?? "Ocurrió algún error.",
     });
   },
 };

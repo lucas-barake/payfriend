@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "$/server/api/trpc";
-import sendOTP from "$/server/api/routers/user/otp/sendOTP/handler";
-import verifyOTP from "$/server/api/routers/user/otp/verifyOTP/handler";
+import sendOTP from "$/server/api/routers/user/otp/send-otp/handler";
+import verifyOTP from "$/server/api/routers/user/otp/verify-otp/handler";
 
 const OTPSubRouter = createTRPCRouter({
   sendOTP,

@@ -1,7 +1,7 @@
 import { protectedVerifiedProcedure } from "$/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { createGroupInput } from "$/server/api/routers/groups/groups/create-update/input";
-import { getUserGroupsSelect } from "$/server/api/routers/user/groups/getOwnedOrSharedGroups/handler";
+import { getUserGroupsSelect } from "$/server/api/routers/user/groups/get-owned-or-shared-groups/handler";
 
 const createGroup = protectedVerifiedProcedure
   .input(createGroupInput)

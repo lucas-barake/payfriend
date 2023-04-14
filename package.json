@@ -22,6 +22,8 @@
     "@trpc/next": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
+    "class-variance-authority": "^0.5.1",
+    "clsx": "^1.2.1",
     "epayco-sdk-node": "^1.2.1",
     "framer-motion": "^10.10.0",
     "luxon": "^3.3.0",
@@ -34,6 +36,7 @@
     "react-hot-toast": "^2.4.0",
     "react-otp-input": "^3.0.0",
     "superjson": "1.9.1",
+    "tailwind-merge": "^1.12.0",
     "zod": "^3.20.6"
   },
   "devDependencies": {
