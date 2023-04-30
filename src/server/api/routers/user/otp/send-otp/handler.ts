@@ -8,13 +8,13 @@ import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 const sendOTP = protectedProcedure.mutation(async ({ ctx }) => {
   const isInSandBoxMode = env.SENDGRID_SANDBOX_MODE;
 
-  if (ctx.session.user.emailVerified != null) {
+  if (ctx.session.user.emailVerified !== null) {
     throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
       "El correo electrónico ya está verificado"
     );
   }
 
-  if (ctx.session.user.email == null) {
+  if (!Boolean(ctx.session.user.email)) {
     throw CUSTOM_EXCEPTIONS.BAD_REQUEST();
   }
 
@@ -29,7 +29,7 @@ const sendOTP = protectedProcedure.mutation(async ({ ctx }) => {
   }
 
   const { otpUpdatedAt } = lastOTPQuery;
-  if (otpUpdatedAt != null && !isInSandBoxMode) {
+  if (otpUpdatedAt !== null && !isInSandBoxMode) {
     const now = new Date();
     const diff = Math.abs(now.getTime() - otpUpdatedAt.getTime());
     const minutes = Math.floor(diff / 1000 / 60);
@@ -44,7 +44,7 @@ const sendOTP = protectedProcedure.mutation(async ({ ctx }) => {
 
   const fourDigitGeneratedOTP = String(Math.floor(1000 + Math.random() * 9000));
   const msg: MailDataRequired = {
-    to: ctx.session.user.email,
+    to: ctx.session.user.email ?? undefined,
     from: env.SENDGRID_FROM_EMAIL,
     subject: "Código de verificación para tu cuenta de Deudamigo",
     text: `Tu código de verificación es: ${fourDigitGeneratedOTP}`,
@@ -58,7 +58,9 @@ const sendOTP = protectedProcedure.mutation(async ({ ctx }) => {
 
   if (isInSandBoxMode) {
     console.log(
-      `Se envió el código de verificación ${fourDigitGeneratedOTP} a ${ctx.session.user.email}`
+      `Se envió el código de verificación ${fourDigitGeneratedOTP} a ${
+        ctx.session.user.email ?? "undefined"
+      }`
     );
   }
 

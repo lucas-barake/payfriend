@@ -126,7 +126,7 @@ const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  if (ctx.session.user.emailVerified == null) {
+  if (ctx.session.user.emailVerified === null) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "UNVERIFIED_EMAIL",

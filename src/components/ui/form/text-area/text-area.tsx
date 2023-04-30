@@ -20,7 +20,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
       <textarea
         ref={ref}
         className={cn(
-          "block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-indigo-600 focus:bg-white focus:text-gray-700 focus:outline-none dark:border-neutral-800 dark:bg-neutral-700 dark:text-gray-100 dark:placeholder-neutral-400/75 dark:focus:border-indigo-400",
+          "flex h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-input-focus focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         {...props}

@@ -15,7 +15,7 @@ const StyledToaster: FC = () => (
       <Transition
         appear
         show={t.visible}
-        className="mt-6 flex max-w-lg items-center gap-3 rounded-md bg-white py-2 px-4 text-black shadow-md dark:bg-neutral-800 dark:text-white"
+        className="mt-6 flex max-w-lg items-center gap-3 rounded-md border border-border bg-background py-2 px-4 text-foreground text-black dark:bg-background-secondary"
         enter="transition-all duration-150"
         enterFrom="opacity-0 scale-50"
         enterTo="opacity-100 scale-100"

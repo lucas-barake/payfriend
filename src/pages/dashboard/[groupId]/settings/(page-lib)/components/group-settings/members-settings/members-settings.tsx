@@ -1,7 +1,6 @@
 import { type FC } from "react";
-import { Form } from "src/components/ui/form";
-import Button from "src/components/ui/button";
-import { PlusCircleIcon } from "@heroicons/react/outline";
+import { Form } from "$/components/ui/form";
+import { Button } from "$/components/ui/button";
 import { Controller, useForm } from "react-hook-form";
 import {
   sendInviteInput,
@@ -19,6 +18,7 @@ import { type AppRouter } from "$/server/api/root";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
 import Member from "src/pages/dashboard/[groupId]/settings/(page-lib)/components/group-settings/members-settings/member";
+import { PlusCircle } from "lucide-react";
 
 type Props = {
   members: NonNullable<
@@ -75,10 +75,9 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
       success: "Invitación enviada",
       error: handleToastError,
     });
-    if (res == null) return;
 
     const prevSettings = utils.groups.getSettingsById.getData(queryVariables);
-    if (prevSettings == null) return;
+    if (prevSettings === undefined) return;
 
     void utils.user.getOwnedGroups.invalidate();
 
@@ -130,12 +129,8 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
             )}
           />
 
-          <Button
-            color="green"
-            type="submit"
-            className="flex items-center gap-2"
-          >
-            <PlusCircleIcon className="h-6 w-6 text-neutral-100" />
+          <Button type="submit" variant="success" size="sm">
+            <PlusCircle className="h-6 w-6" />
             <span className="sr-only">Agregar</span>
           </Button>
         </div>

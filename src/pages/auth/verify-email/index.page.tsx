@@ -1,10 +1,9 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import LoadingPage from "src/components/loading-page";
+import LoadingPage from "src/components/pages/loading-page";
 import { DesignLayout } from "src/layouts/design-layout";
-import Button from "src/components/ui/button";
-import { CheckIcon, MailIcon } from "@heroicons/react/outline";
+import { Button } from "$/components/ui/button";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
@@ -17,6 +16,7 @@ import {
 } from "$/server/api/routers/user/otp/verify-otp/input";
 import { Form } from "src/components/ui/form";
 import { z } from "zod";
+import { Check, Mail } from "lucide-react";
 
 const VerifyEmailPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -85,14 +85,13 @@ const VerifyEmailPage: NextPageWithLayout = () => {
 
             <Button
               color="emerald"
-              noPadding
               className="flex items-center gap-2 px-2 py-1"
               loading={sendOTP.isLoading}
               onClick={() => {
                 void sendVerificationEmail();
               }}
             >
-              <MailIcon className="h-6 w-6" />
+              <Mail className="h-6 w-6" />
               Enviar Código
             </Button>
           </div>
@@ -143,7 +142,7 @@ const VerifyEmailPage: NextPageWithLayout = () => {
                 loading={verifyOTP.isLoading}
                 type="submit"
               >
-                <CheckIcon className="h-6 w-6" />
+                <Check className="h-6 w-6" />
                 Verificar
               </Button>
             </div>

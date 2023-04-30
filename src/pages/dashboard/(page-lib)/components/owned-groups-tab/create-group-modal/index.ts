@@ -1,1 +1,1 @@
-export { default } from "./CreateGroupModal";
+export { default } from "./create-group-modal";

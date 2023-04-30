@@ -28,6 +28,7 @@ const Member: FC<Props> = ({ member, queryVariables }) => {
     userId: UpdateUserRoleInput["userId"]
   ): Promise<void> {
     const prevData = utils.groups.getSettingsById.getData(queryVariables);
+    if (prevData === undefined) return;
 
     if (newRole === "REMOVE") {
       const res = await toast.promise(
@@ -42,7 +43,6 @@ const Member: FC<Props> = ({ member, queryVariables }) => {
           error: handleToastError,
         }
       );
-      if (prevData == null || res === undefined) return;
 
       utils.groups.getSettingsById.setData(queryVariables, {
         ...prevData,
@@ -61,7 +61,6 @@ const Member: FC<Props> = ({ member, queryVariables }) => {
           error: handleToastError,
         }
       );
-      if (res?.role == null || prevData == null) return;
 
       utils.groups.getSettingsById.setData(queryVariables, {
         ...prevData,
@@ -88,7 +87,7 @@ const Member: FC<Props> = ({ member, queryVariables }) => {
       role={member.role}
       pending={member.isPending}
       onChange={(v) => {
-        if (v === undefined || member.email == null) return;
+        if (v === undefined || member.email === null) return;
         void handleRoleChange(v, member.id);
       }}
       updating={updateRoleMutation.isLoading}

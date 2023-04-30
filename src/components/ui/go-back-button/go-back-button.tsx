@@ -1,21 +1,26 @@
 import { type FC } from "react";
-import { ArrowLeftIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
+import { Button, type ButtonProps } from "$/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import cn from "$/utils/cn";
 
-const GoBackButton: FC = () => {
+type Props = ButtonProps;
+
+const GoBackButton: FC<Props> = ({ className, ...rest }) => {
   const router = useRouter();
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="secondary"
       onClick={() => {
         void router.back();
       }}
-      className="flex items-center gap-3 self-start rounded-full bg-neutral-100 p-2.5 transition-transform duration-200 active:scale-95 dark:bg-neutral-700"
+      className={cn("rounded-full p-2.5", className)}
+      {...rest}
     >
-      <ArrowLeftIcon className="h-6 w-6" />
-    </button>
+      <ArrowLeft className="h-5 w-5" />
+    </Button>
   );
 };
 
-export default GoBackButton;
+export { GoBackButton };

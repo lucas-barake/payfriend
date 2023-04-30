@@ -1,8 +1,7 @@
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "src/components/ui/form";
-import Button from "src/components/ui/button";
-import { SaveIcon } from "@heroicons/react/outline";
+import { Button } from "$/components/ui/button";
 import {
   updateGroupInput,
   type UpdateGroupInput,
@@ -29,7 +28,7 @@ const GeneralSettings: FC<Props> = ({
   const updateMutation = api.groups.updateGroup.useMutation({
     onSuccess: async (updatedGroup) => {
       const prevData = utils.groups.getSettingsById.getData(queryVariables);
-      if (prevData == null) return;
+      if (prevData === undefined) return;
 
       await utils.user.getOwnedGroups.invalidate();
       await utils.groups.getGroupById.invalidate({
@@ -82,13 +81,12 @@ const GeneralSettings: FC<Props> = ({
       />
 
       <Button
-        color="green"
         type="submit"
-        className="flex items-center gap-2 self-end"
+        variant={!form.formState.isDirty ? "secondary" : "success"}
+        className="self-end"
         loading={updateMutation.isLoading}
         disabled={!form.formState.isDirty}
       >
-        <SaveIcon className="h-6 w-6 text-neutral-100" />
         Guardar
       </Button>
     </Form>

@@ -1,12 +1,13 @@
 import React, { type FC } from "react";
 import Link from "next/link";
-import Button from "src/components/ui/button";
-import { CalendarIcon, EyeIcon } from "@heroicons/react/outline";
+import { Button } from "$/components/ui/button";
 import truncateString from "$/utils/truncate-string";
 import { DateTime } from "luxon";
 import { type InferMutationResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
 import Image from "next/image";
+import { Calendar, Eye } from "lucide-react";
+import { Skeleton } from "$/components/ui/skeleton";
 
 type Props = {
   group: NonNullable<
@@ -20,7 +21,7 @@ const GroupCard: FC<Props> & {
   return (
     <Link
       key={group.id}
-      className="flex flex-col gap-2 rounded-lg bg-white p-6 shadow transition-colors duration-200 ease-in-out hover:bg-neutral-50 dark:bg-neutral-900/30 dark:text-neutral-100 dark:hover:bg-neutral-900/50"
+      className="flex flex-col gap-2 rounded-lg bg-background-secondary p-6 shadow transition-colors duration-200 ease-in-out hover:bg-background-secondary/80"
       href={`/dashboard/${group.id}`}
     >
       <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
@@ -28,7 +29,7 @@ const GroupCard: FC<Props> & {
 
         <div className="flex -space-x-2 overflow-hidden p-2">
           {group?.users?.map(({ user }) =>
-            user.image == null ? (
+            user.image === null ? (
               <div
                 key={user.name}
                 className="tranform inline-block w-7 rounded-full bg-neutral-200 text-center ring-2 ring-white duration-100 hover:scale-105 dark:bg-neutral-600 dark:ring-neutral-800 md:w-8"
@@ -55,7 +56,7 @@ const GroupCard: FC<Props> & {
 
       <div className="mt-auto flex items-center justify-between">
         <span className="flex items-center gap-1 text-sm">
-          <CalendarIcon className="h-4 w-4" />
+          <Calendar className="h-4 w-4" />
           {DateTime.fromJSDate(group.createdAt).toLocaleString({
             month: "long",
             day: "numeric",
@@ -63,30 +64,25 @@ const GroupCard: FC<Props> & {
           })}
         </span>
 
-        <Button
-          color="indigo"
-          type="button"
-          noPadding
-          className="flex items-center gap-2 px-3 py-0.5"
-        >
+        <Button color="indigo" type="button" size="sm">
+          <Eye className="mr-2 h-5 w-5" />
           Ver
-          <EyeIcon className="h-5 w-5" />
         </Button>
       </div>
     </Link>
   );
 };
 
-const Skeleton: FC = () => (
-  <div className="flex h-60 animate-pulse flex-col gap-2 rounded-lg bg-white p-6 shadow transition-transform duration-200 ease-in-out hover:scale-105 dark:bg-neutral-900/30 dark:text-neutral-100">
-    <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
-      <div className="h-4 w-1/2 rounded bg-neutral-300 dark:bg-neutral-700" />
-      <div className="h-4 w-1/4 rounded bg-neutral-300 dark:bg-neutral-700" />
-    </div>
+const GroupCardSkeleton: FC = () => (
+  <Skeleton className="flex h-48 flex-col gap-2 rounded-lg p-6 shadow transition-transform duration-200 ease-in-out hover:scale-105 dark:text-neutral-100">
+    <Skeleton className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
+      <Skeleton className="h-4 w-1/2 rounded" />
+      <Skeleton className="h-4 w-1/4 rounded" />
+    </Skeleton>
 
-    <div className="mt-4 h-12 w-full rounded bg-neutral-300 dark:bg-neutral-700" />
-  </div>
+    <Skeleton className="mt-4 h-12 w-full rounded" />
+  </Skeleton>
 );
 
-GroupCard.Skeleton = Skeleton;
+GroupCard.Skeleton = GroupCardSkeleton;
 export default GroupCard;

@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type FC, type ReactNode } from "react";
 import dynamic from "next/dynamic";
-import LoadingPage from "src/components/loading-page";
+import LoadingPage from "src/components/pages/loading-page";
 
 type Props = {
   children: ReactNode;
@@ -19,7 +19,7 @@ const AuthWrapper: FC<Props> = ({ children }) => {
 
   if (session.status === "loading") return <LoadingPage />;
 
-  if (session.data?.user.emailVerified == null) {
+  if (session.data?.user.emailVerified === null) {
     void router.push("/auth/verify-email");
     return <LoadingPage />;
   }

@@ -8,13 +8,14 @@ import {
 } from "$/server/api/routers/groups/groups/get-group-by-id/input";
 import LoadingSpinner from "src/components/ui/icons/loading-spinner";
 import TimeInMs from "$/enums/time-in-ms";
-import { CogIcon } from "@heroicons/react/outline";
 import Link from "next/link";
-import GoBackButton from "$/components/ui/go-back-button/go-back-button";
+import { GoBackButton } from "$/components/ui/go-back-button";
 import { AuthLayout } from "$/layouts/auth-layout";
-import { UnauthorizedView } from "src/components/unauthorized-view";
+import { UnauthorizedView } from "src/components/pages/unauthorized-view";
 import { Layout } from "src/layouts/layout";
 import { type ReactElement } from "react";
+import { buttonVariants } from "$/components/ui/button";
+import { Settings } from "lucide-react";
 
 const GroupDashboardPage: NextPageWithLayout = () => {
   const session = useSession();
@@ -45,10 +46,10 @@ const GroupDashboardPage: NextPageWithLayout = () => {
 
         {isOwner && (
           <Link
-            className="flex transform items-center gap-2 rounded bg-indigo-600 px-4 py-1.5 font-medium text-white transition duration-200 ease-in-out hover:bg-indigo-700 active:translate-y-0.5"
+            className={buttonVariants()}
             href={`/dashboard/${groupId}/settings`}
           >
-            <CogIcon className="h-6 w-6" />
+            <Settings className="mr-2 h-6 w-6" />
             Configuración
           </Link>
         )}

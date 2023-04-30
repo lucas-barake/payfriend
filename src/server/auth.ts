@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,

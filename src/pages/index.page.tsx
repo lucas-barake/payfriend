@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { DesignLayout } from "src/layouts/design-layout";
-import LoadingPage from "src/components/loading-page";
+import LoadingPage from "src/components/pages/loading-page";
 
 const Home: NextPage = () => {
   const session = useSession();

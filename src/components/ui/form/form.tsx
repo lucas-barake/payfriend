@@ -9,10 +9,19 @@ import RequiredStar from "./required-star";
 import FileInput from "./file-input";
 import Switch from "./switch";
 import ListBox from "./list-box";
+import { cva, type VariantProps } from "class-variance-authority";
 
-type FormProps = {
-  row?: boolean;
-} & ComponentPropsWithoutRef<"form">;
+const formVariants = cva("flex gap-2", {
+  variants: {
+    row: {
+      default: "flex-col",
+      true: "flex-row",
+      false: "flex-col",
+    },
+  },
+});
+type FormProps = ComponentPropsWithoutRef<"form"> &
+  VariantProps<typeof formVariants>;
 
 type FormDefinition = FC<FormProps> & {
   Input: typeof Input;
@@ -25,7 +34,6 @@ type FormDefinition = FC<FormProps> & {
   Switch: typeof Switch;
   ListBox: typeof ListBox;
 };
-
 const Form: FormDefinition = ({
   className,
   row = false,
@@ -34,7 +42,7 @@ const Form: FormDefinition = ({
 }) => (
   <form
     {...props}
-    className={cn("flex gap-2", row ? "flex-row" : "flex-col", className)}
+    className={cn("flex gap-2", formVariants({ className, row }))}
   >
     {children}
   </form>

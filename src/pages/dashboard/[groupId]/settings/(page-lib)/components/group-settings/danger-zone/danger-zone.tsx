@@ -1,12 +1,12 @@
-import { type FC, useState } from "react";
-import Button from "src/components/ui/button";
+import { type FC } from "react";
+import { Button } from "$/components/ui/button";
 import { TrashIcon } from "@heroicons/react/outline";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
-import { Modal } from "src/components/ui/modal";
 import { useRouter } from "next/router";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
+import { Dialog } from "$/components/ui/dialog";
 
 type Props = {
   queryVariables: GetSettingsInput;
@@ -14,7 +14,6 @@ type Props = {
 
 const DangerZone: FC<Props> = ({ queryVariables }) => {
   const router = useRouter();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const utils = api.useContext();
   const deleteMutation = api.groups.deleteGroup.useMutation();
 
@@ -39,51 +38,45 @@ const DangerZone: FC<Props> = ({ queryVariables }) => {
   }
 
   return (
-    <div className="flex w-full flex-col gap-3">
-      <Modal
-        show={showDeleteModal}
-        onClose={setShowDeleteModal}
-        title="Eliminar grupo"
-      >
-        <p className="text-lg">
-          ¿Estás seguro de que quieres eliminar este grupo?
-        </p>
+    <Dialog modal>
+      <Dialog.Content className="w-1/5">
+        <div className="flex w-full flex-col gap-3">
+          <Dialog.Title>Eliminar Grupo</Dialog.Title>
 
-        <div className="mt-12 flex justify-end gap-2">
-          <Button
-            color="neutral"
-            onClick={() => {
-              setShowDeleteModal(false);
-            }}
-          >
-            Cancelar
-          </Button>
+          <Dialog.Description>
+            ¿Estás seguro de que quieres eliminar este grupo?
+          </Dialog.Description>
 
-          <Button
-            color="red"
-            onClick={() => {
-              void handleDelete();
-            }}
-            loading={deleteMutation.isLoading}
-          >
-            Eliminar
-          </Button>
+          <Dialog.Footer className="mt-6 flex justify-end gap-2">
+            <Button
+              variant="destructive"
+              onClick={() => {
+                void handleDelete();
+              }}
+              loading={deleteMutation.isLoading}
+            >
+              Eliminar
+            </Button>
+
+            <Dialog.Trigger asChild>
+              <Button variant="secondary">Cancelar</Button>
+            </Dialog.Trigger>
+          </Dialog.Footer>
         </div>
-      </Modal>
+      </Dialog.Content>
 
-      <h1 className="text-2xl font-bold">Zona de Peligro</h1>
+      <h1 className="self-start text-2xl font-bold">Zona de Peligro</h1>
 
-      <Button
-        color="red"
-        className="flex items-center gap-2 self-start"
-        onClick={() => {
-          setShowDeleteModal(true);
-        }}
-      >
-        <TrashIcon className="h-6 w-6" />
-        Eliminar grupo
-      </Button>
-    </div>
+      <Dialog.Trigger asChild>
+        <Button
+          variant="destructive"
+          className="flex items-center gap-2 self-start"
+        >
+          <TrashIcon className="h-6 w-6" />
+          Eliminar grupo
+        </Button>
+      </Dialog.Trigger>
+    </Dialog>
   );
 };
 

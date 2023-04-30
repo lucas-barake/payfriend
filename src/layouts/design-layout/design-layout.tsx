@@ -1,5 +1,5 @@
 import { type FC, type ReactNode } from "react";
-import Button from "src/components/ui/button";
+import { Button } from "$/components/ui/button";
 import { signOut } from "next-auth/react";
 
 type Props = {

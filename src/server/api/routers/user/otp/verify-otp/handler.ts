@@ -6,7 +6,7 @@ import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 const verifyOTP = protectedProcedure
   .input(verifyOTPInput)
   .mutation(async ({ input, ctx }) => {
-    if (ctx.session.user.emailVerified != null) {
+    if (ctx.session.user.emailVerified !== null) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El email ya está verificado");
     }
 
@@ -22,7 +22,7 @@ const verifyOTP = protectedProcedure
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No se encontró el usuario");
     }
 
-    if (userQuery.otp == null || userQuery.otpUpdatedAt == null) {
+    if (userQuery.otp === null || userQuery.otpUpdatedAt === null) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("Solicita el código de verificación");
     }
 

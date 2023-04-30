@@ -5,7 +5,6 @@ import Label, { type LabelProps } from "$/components/ui/form/label/label";
 type InputProps = {
   leftIcon?: JSX.Element;
   rightElement?: JSX.Element;
-  noWidth?: boolean;
   bare?: boolean;
 } & ComponentPropsWithRef<"input"> &
   Omit<LabelProps, "children">;
@@ -20,9 +19,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       error,
       warning,
       rightElement,
-      noWidth = false,
       srOnly,
-      bare = false,
       ...props
     },
     ref
@@ -45,11 +42,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
           ref={ref}
           className={cn(
-            "bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 placeholder-gray-400/90 transition ease-in-out focus:text-gray-700 focus:outline-none dark:text-gray-100 dark:placeholder-neutral-400/75",
-            bare
-              ? ""
-              : "rounded border border-solid border-gray-300 focus:border-indigo-600 dark:border-neutral-800 dark:bg-neutral-700 dark:focus:border-indigo-400",
-            !noWidth && "w-full",
+            "flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus:border-input-focus focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
             leftIcon !== undefined && "pl-8",
             className
           )}

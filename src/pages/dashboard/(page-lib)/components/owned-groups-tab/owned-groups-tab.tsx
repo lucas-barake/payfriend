@@ -1,14 +1,13 @@
-import React, { type FC, useState } from "react";
+import React, { type FC } from "react";
 import { api } from "$/utils/api";
 import TimeInMs from "$/enums/time-in-ms";
 import CreateGroupModal from "src/pages/dashboard/(page-lib)/components/owned-groups-tab/create-group-modal";
-import Button from "src/components/ui/button";
+import { Button } from "$/components/ui/button";
 import { PlusIcon } from "@heroicons/react/solid";
 import Groups from "src/pages/dashboard/(page-lib)/components/groups";
+import { Dialog } from "$/components/ui/dialog";
 
 const OwnedGroupsTab: FC = () => {
-  const [showCreate, setShowCreate] = useState(false);
-
   const query = api.user.getOwnedGroups.useQuery(undefined, {
     staleTime: TimeInMs.ThirtySeconds,
     refetchOnWindowFocus: true,
@@ -17,26 +16,17 @@ const OwnedGroupsTab: FC = () => {
   const groups = query.data ?? [];
 
   return (
-    <>
-      <CreateGroupModal
-        show={showCreate}
-        onClose={() => {
-          setShowCreate(false);
-        }}
-      />
+    <Dialog>
+      <CreateGroupModal />
 
       <div className="flex items-center justify-between">
         <div className="relative">
-          <Button
-            color="indigo"
-            className="flex items-center gap-1"
-            onClick={() => {
-              setShowCreate(true);
-            }}
-          >
-            <PlusIcon className="h-5 w-5" />
-            Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
-          </Button>
+          <Dialog.Trigger asChild>
+            <Button color="indigo" className="flex items-center gap-1">
+              <PlusIcon className="h-5 w-5" />
+              Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
+            </Button>
+          </Dialog.Trigger>
 
           {!query.isFetching && query.data?.length === 0 && (
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">
@@ -52,7 +42,7 @@ const OwnedGroupsTab: FC = () => {
       </div>
 
       <Groups loading={query.isLoading} groups={groups} />
-    </>
+    </Dialog>
   );
 };
 

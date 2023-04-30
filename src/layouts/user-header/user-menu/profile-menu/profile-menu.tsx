@@ -1,10 +1,11 @@
 import { type FC, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { ChevronDownIcon, UserCircleIcon } from "@heroicons/react/solid";
 import cn from "$/utils/cn";
 import { signOut, useSession } from "next-auth/react";
 import { LockClosedIcon } from "@heroicons/react/outline";
+import { buttonVariants } from "$/components/ui/button";
+import { ChevronDown, User } from "lucide-react";
 
 const ProfileMenu: FC = () => {
   const session = useSession();
@@ -12,7 +13,13 @@ const ProfileMenu: FC = () => {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="transform-all group flex inline-flex items-center items-center justify-center gap-2 rounded px-3 py-2 text-sm font-medium text-gray-700 duration-200 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-neutral-100">
+      <Menu.Button
+        className={buttonVariants({
+          variant: "ghost",
+          size: "sm",
+          className: "flex items-center gap-2",
+        })}
+      >
         {userImage !== undefined ? (
           <Image
             src={userImage}
@@ -22,17 +29,11 @@ const ProfileMenu: FC = () => {
             height={24}
           />
         ) : (
-          <UserCircleIcon className="h-8 w-8 cursor-pointer" />
+          <User className="h-8 w-8 cursor-pointer" />
         )}
 
-        <span className="hidden font-bold dark:text-white sm:inline-block">
-          {session.data?.user?.name != null
-            ? session.data.user.name.trim().split(" ").slice(0, 2).join(" ")
-            : "Usuario"}
-        </span>
-
-        <ChevronDownIcon
-          className="h-3 w-3 text-black dark:text-neutral-200"
+        <ChevronDown
+          className="h-4 w-4 text-black dark:text-neutral-200"
           aria-hidden="true"
         />
       </Menu.Button>
@@ -46,14 +47,14 @@ const ProfileMenu: FC = () => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-neutral-700">
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md border border-border bg-background ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="divide-y divide-gray-100 py-1">
             <Menu.Item>
               {({ active }) => (
                 <button
                   type="button"
                   className={cn(
-                    active && "bg-gray-100 dark:bg-neutral-600",
+                    active && "bg-background-secondary",
                     "flex w-full items-center gap-1 self-stretch px-4 py-2 text-sm"
                   )}
                   onClick={() => {

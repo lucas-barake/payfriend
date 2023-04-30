@@ -5,20 +5,15 @@ import {
   createGroupInput,
   type CreateGroupInput,
 } from "$/server/api/routers/groups/groups/create-update/input";
-import { Modal } from "$/components/ui/modal";
 import { Form } from "src/components/ui/form";
-import Button from "src/components/ui/button";
+import { Button } from "$/components/ui/button";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { useRouter } from "next/router";
+import { Dialog } from "$/components/ui/dialog";
 
-type Props = {
-  show: boolean;
-  onClose: () => void;
-};
-
-const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
+const CreateGroupModal: FC = () => {
   const router = useRouter();
   const utils = api.useContext();
   const create = api.groups.createGroup.useMutation({
@@ -27,7 +22,7 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
 
       utils.user.getOwnedGroups.setData(
         undefined,
-        prevData != null ? [newTable, ...prevData] : [newTable]
+        prevData !== undefined ? [newTable, ...prevData] : [newTable]
       );
 
       void router.push(`/dashboard/${newTable.id}`);
@@ -44,28 +39,16 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
     resolver: zodResolver(createGroupInput),
   });
 
-  function afterClose(): void {
-    form.reset();
-    create.reset();
-  }
-
   async function handleSubmit(data: CreateGroupInput): Promise<void> {
     await toast.promise(create.mutateAsync(data), {
       loading: "Creando grupo...",
       success: "Grupo creado",
       error: handleToastError,
     });
-
-    onClose();
   }
 
   return (
-    <Modal
-      show={show}
-      onClose={onClose}
-      afterClose={afterClose}
-      title="Crear Grupo"
-    >
+    <Dialog.Content>
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <Form onSubmit={form.handleSubmit(handleSubmit)}>
         <Form.Input
@@ -86,9 +69,8 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
           </span>
         )}
 
-        <div className="mt-4 flex items-center gap-2">
+        <Dialog.Footer className="mt-4">
           <Button
-            color="indigo"
             type="submit"
             loading={create.isLoading}
             className="flex flex-1 items-center justify-center py-2"
@@ -96,17 +78,17 @@ const CreateGroupModal: FC<Props> = ({ show, onClose }) => {
             Crear Grupo
           </Button>
 
-          <Button
-            color="neutral"
-            outline
-            onClick={onClose}
-            className="flex flex-1 items-center justify-center py-2"
-          >
-            Cancelar
-          </Button>
-        </div>
+          <Dialog.Trigger asChild>
+            <Button
+              variant="secondary"
+              className="flex flex-1 items-center justify-center py-2"
+            >
+              Cancelar
+            </Button>
+          </Dialog.Trigger>
+        </Dialog.Footer>
       </Form>
-    </Modal>
+    </Dialog.Content>
   );
 };
 

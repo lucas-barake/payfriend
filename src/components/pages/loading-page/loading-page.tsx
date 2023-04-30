@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import LoadingSpinner from "src/components/ui/icons/loading-spinner";
+import LoadingSpinner from "$/components/ui/icons/loading-spinner";
 
 const LoadingPage: FC = () => (
   <div className="flex h-screen items-center justify-center dark:bg-neutral-800">

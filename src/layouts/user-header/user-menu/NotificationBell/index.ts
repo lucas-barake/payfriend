@@ -1,1 +1,1 @@
-export { default } from "./NotificationBell";
+export { default } from "./notification-bell";

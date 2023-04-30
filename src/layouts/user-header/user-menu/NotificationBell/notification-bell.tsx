@@ -1,16 +1,17 @@
 import { type FC, Fragment } from "react";
-import { BellIcon } from "@heroicons/react/outline";
 import { Menu, Transition } from "@headlessui/react";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";
-import PendingInviteRow from "$/layouts/user-header/user-menu/NotificationBell/PendingInviteRow";
+import PendingInviteRow from "src/layouts/user-header/user-menu/NotificationBell/pending-invite-row";
 import TimeInMs from "$/enums/time-in-ms";
+import { buttonVariants } from "$/components/ui/button";
+import { Bell } from "lucide-react";
 
 const NotificationBell: FC = () => {
   const session = useSession();
 
   const query = api.user.getGroupInvites.useQuery(undefined, {
-    enabled: session.data?.user.emailVerified != null,
+    enabled: Boolean(session.data?.user.emailVerified),
     staleTime: TimeInMs.TenSeconds,
     refetchOnWindowFocus: true,
     retry: false,
@@ -19,9 +20,9 @@ const NotificationBell: FC = () => {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="transform-all group flex inline-flex items-center items-center justify-center gap-2 rounded px-3 py-2 text-sm font-medium text-gray-700 duration-200 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-neutral-100">
+      <Menu.Button className={buttonVariants({ size: "sm", variant: "ghost" })}>
         <div className="relative inline-flex">
-          <BellIcon className="h-5 w-5" />
+          <Bell className="h-5 w-5" />
 
           {allPendingInvites.length > 0 && (
             <span className="absolute top-0.5 right-0.5 -mt-1 -mr-1 flex h-2 w-2">
@@ -43,7 +44,7 @@ const NotificationBell: FC = () => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute -right-28 z-10 mt-2 w-72 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-neutral-700">
+        <Menu.Items className="absolute -right-28 z-10 mt-2 w-72 origin-top-right rounded-md border border-border bg-background ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="divide-y divide-gray-100 py-1">
             {allPendingInvites.length === 0 ? (
               <Menu.Item

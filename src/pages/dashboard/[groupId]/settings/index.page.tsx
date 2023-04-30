@@ -1,7 +1,7 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
-import { UnauthorizedView } from "src/components/unauthorized-view";
-import GoBackButton from "$/components/ui/go-back-button/go-back-button";
+import { UnauthorizedView } from "src/components/pages/unauthorized-view";
+import { GoBackButton } from "$/components/ui/go-back-button";
 import { getSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
 import { AuthLayout } from "$/layouts/auth-layout";
 import { Layout } from "src/layouts/layout";
@@ -20,7 +20,7 @@ const SettingsPage: NextPageWithLayout = () => {
 
   return (
     <Layout className="flex flex-col gap-6">
-      <GoBackButton />
+      <GoBackButton className="self-start" />
 
       <GroupSettings groupId={groupId} />
     </Layout>
