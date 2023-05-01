@@ -2,21 +2,19 @@ import { type FC } from "react";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
 import { api } from "$/utils/api";
 import TimeInMs from "$/enums/time-in-ms";
-import { UnauthorizedView } from "src/components/pages/unauthorized-view";
-import LoadingPage from "src/components/pages/loading-page";
-import GeneralSettings from "src/pages/dashboard/[groupId]/settings/(page-lib)/components/group-settings/general-settings";
-import MembersSettings from "src/pages/dashboard/[groupId]/settings/(page-lib)/components/group-settings/members-settings";
-import DangerZone from "src/pages/dashboard/[groupId]/settings/(page-lib)/components/group-settings/danger-zone";
 import { Settings } from "lucide-react";
+import MembersSettings from "src/pages/dashboard/[groupId]/(page-lib)/component/group-settings/members-settings";
+import GeneralSettings from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings/general-settings";
+import DangerZone from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings/danger-zone";
 
 type Props = {
   groupId: GetSettingsInput["groupId"];
 };
 
 const GroupSettings: FC<Props> = ({ groupId }) => {
-  const queryVariables: GetSettingsInput = {
-    groupId: groupId,
-  };
+  const queryVariables = {
+    groupId,
+  } satisfies GetSettingsInput;
   const query = api.groups.getSettingsById.useQuery(queryVariables, {
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
@@ -25,13 +23,7 @@ const GroupSettings: FC<Props> = ({ groupId }) => {
   });
   const groupSettings = query.data;
 
-  if (query.error?.data?.code === "UNAUTHORIZED") {
-    return <UnauthorizedView />;
-  }
-
-  if (query.isInitialLoading || groupSettings === undefined) {
-    return <LoadingPage />;
-  }
+  if (groupSettings === undefined) return null;
 
   return (
     <div className="mx-auto flex flex-col items-center justify-center gap-8">

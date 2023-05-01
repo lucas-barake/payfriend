@@ -9,7 +9,7 @@ import {
 } from "$/server/api/routers/groups/users/update-user-role/input";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
-import GroupMember from "src/pages/dashboard/[groupId]/(page-lib)/component/group-member";
+import GroupMember from "$/pages/dashboard/[groupId]/(page-lib)/component/group-member";
 
 type Props = {
   member: NonNullable<

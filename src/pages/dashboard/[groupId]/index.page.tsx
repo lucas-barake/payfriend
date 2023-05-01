@@ -8,14 +8,15 @@ import {
 } from "$/server/api/routers/groups/groups/get-group-by-id/input";
 import LoadingSpinner from "src/components/ui/icons/loading-spinner";
 import TimeInMs from "$/enums/time-in-ms";
-import Link from "next/link";
 import { GoBackButton } from "$/components/ui/go-back-button";
 import { AuthLayout } from "$/components/layouts/auth-layout";
 import { UnauthorizedView } from "src/components/pages/unauthorized-view";
 import { Layout } from "$/components/layouts/layout";
 import { type ReactElement } from "react";
-import { buttonVariants } from "$/components/ui/button";
+import { Button } from "$/components/ui/button";
 import { Settings } from "lucide-react";
+import { Sheet } from "$/components/ui/sheet";
+import GroupSettings from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings";
 
 const GroupDashboardPage: NextPageWithLayout = () => {
   const session = useSession();
@@ -44,15 +45,20 @@ const GroupDashboardPage: NextPageWithLayout = () => {
       <div className="flex items-center justify-between">
         <GoBackButton />
 
-        {isOwner && (
-          <Link
-            className={buttonVariants()}
-            href={`/dashboard/${groupId}/settings`}
-          >
-            <Settings className="mr-2 h-6 w-6" />
-            Configuración
-          </Link>
-        )}
+        <Sheet>
+          {isOwner && (
+            <Sheet.Trigger asChild>
+              <Button>
+                <Settings className="mr-2 h-5 w-5" />
+                Configuración
+              </Button>
+            </Sheet.Trigger>
+          )}
+
+          <Sheet.Content position="right" size="sm">
+            <GroupSettings groupId={groupId} />
+          </Sheet.Content>
+        </Sheet>
       </div>
 
       {query.isLoading ? (

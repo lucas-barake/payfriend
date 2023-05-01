@@ -17,7 +17,7 @@ import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQue
 import { type AppRouter } from "$/server/api/root";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
-import Member from "src/pages/dashboard/[groupId]/settings/(page-lib)/components/group-settings/members-settings/member";
+import Member from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings/members-settings/member";
 import { PlusCircle } from "lucide-react";
 
 type Props = {
