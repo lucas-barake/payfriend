@@ -19,6 +19,7 @@ The project is structured as follows:
 - [`/src/server`](./src/server) contains all server-side code, specially `tRPC` mutations and queries (note that `tRPC` procedures are mapped via HTTPS routes through the `/src/pages/api` directory).
 - [`/src/types`](./src/types) contains all utility typescript types.
 - [`/src/styles`](./src/styles) contains the global styles for the application, such as color variables.
+- [`/prisma`](./prisma) contains the Prisma schema and migrations.
 
 # Technologies
 
