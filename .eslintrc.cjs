@@ -47,6 +47,7 @@ const config = {
     "prefer-const": "error",
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "object-shorthand": "error",
   },
 };
 
