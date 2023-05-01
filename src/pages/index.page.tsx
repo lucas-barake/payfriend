@@ -1,8 +1,9 @@
 import { type NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { DesignLayout } from "src/layouts/design-layout";
+import { DesignLayout } from "$/components/layouts/design-layout";
 import LoadingPage from "src/components/pages/loading-page";
+import { Button } from "$/components/ui/button";
 
 const Home: NextPage = () => {
   const session = useSession();
@@ -28,16 +29,16 @@ const Home: NextPage = () => {
           </p>
 
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <button
+            <Button
               onClick={() => {
                 void signIn("google", {
                   callbackUrl: "/dashboard",
                 });
               }}
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              size="lg"
             >
               Empezar ahora
-            </button>
+            </Button>
           </div>
         </div>
       </div>

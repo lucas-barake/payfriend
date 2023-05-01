@@ -22,7 +22,7 @@ const config = {
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {
     "@typescript-eslint/consistent-type-imports": [
-      "warn",
+      "error",
       {
         prefer: "type-imports",
         fixStyle: "inline-type-imports",

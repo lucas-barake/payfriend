@@ -1,10 +1,10 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import { Layout } from "src/layouts/layout";
+import { Layout } from "$/components/layouts/layout";
 import { Tab } from "@headlessui/react";
 import cn from "$/utils/cn";
 import { useRouter } from "next/router";
 import { z } from "zod";
-import { AuthLayout } from "$/layouts/auth-layout";
+import { AuthLayout } from "$/components/layouts/auth-layout";
 import OwnedGroupsTab from "src/pages/dashboard/(page-lib)/components/owned-groups-tab";
 import SharedGroupsTab from "src/pages/dashboard/(page-lib)/components/shared-groups-tab";
 

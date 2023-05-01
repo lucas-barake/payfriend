@@ -1,6 +1,6 @@
 import { type FC, type ReactNode } from "react";
-import { AuthWrapper } from "src/layouts/auth-wrapper";
-import { UserHeader } from "src/layouts/user-header";
+import { AuthWrapper } from "$/components/layouts/auth-wrapper";
+import { UserHeader } from "$/components/layouts/user-header";
 import Head from "next/head";
 
 type Props = {

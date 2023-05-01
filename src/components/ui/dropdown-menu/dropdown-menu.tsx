@@ -223,48 +223,22 @@ const DropdownMenuShortcut: DropdownMenuShortcutDefinition = ({
 };
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 
-type DropdownMenuDefinition = {
-  Trigger: React.ForwardRefExoticComponent<
-    DropdownMenuPrimitive.DropdownMenuTriggerProps &
-      React.RefAttributes<HTMLButtonElement>
-  >;
-  Content: DropdownMenuContentDefinition;
-  Item: DropdownMenuItemDefinition;
-  CheckboxItem: DropdownMenuCheckboxItemDefinition;
-  RadioItem: DropdownMenuRadioItemDefinition;
-  Label: DropdownMenuLabelDefinition;
-  Separator: DropdownMenuSeparatorDefinition;
-  Shortcut: DropdownMenuShortcutDefinition;
-  Group: React.ForwardRefExoticComponent<
-    DropdownMenuPrimitive.DropdownMenuGroupProps &
-      React.RefAttributes<HTMLDivElement>
-  >;
-  Portal: React.FC<DropdownMenuPrimitive.DropdownMenuPortalProps>;
-  Sub: React.FC<DropdownMenuPrimitive.DropdownMenuSubProps>;
-  SubTrigger: DropdownMenuSubTriggerDefinition;
-  SubContent: DropdownMenuSubContentDefinition;
-  RadioGroup: React.ForwardRefExoticComponent<
-    DropdownMenuPrimitive.DropdownMenuRadioGroupProps &
-      React.RefAttributes<HTMLDivElement>
-  >;
-} & React.FC<DropdownMenuPrimitive.DropdownMenuProps>;
-
-// @ts-expect-error DropdownMenuContentDefinition is not assignable to type 'FC<DropdownMenuProps>'
-const DropdownMenu: DropdownMenuDefinition = DropdownMenuPrimitive.Root;
-DropdownMenu.Trigger = DropdownMenuPrimitive.Trigger;
-DropdownMenu.Content = DropdownMenuContent;
-DropdownMenu.Item = DropdownMenuItem;
-DropdownMenu.CheckboxItem = DropdownMenuCheckboxItem;
-DropdownMenu.RadioItem = DropdownMenuRadioItem;
-DropdownMenu.Label = DropdownMenuLabel;
-DropdownMenu.Separator = DropdownMenuSeparator;
-DropdownMenu.Shortcut = DropdownMenuShortcut;
-DropdownMenu.Group = DropdownMenuPrimitive.Group;
-DropdownMenu.Portal = DropdownMenuPrimitive.Portal;
-DropdownMenu.Sub = DropdownMenuPrimitive.Sub;
-DropdownMenu.SubTrigger = DropdownMenuSubTrigger;
-DropdownMenu.SubContent = DropdownMenuSubContent;
-DropdownMenu.RadioGroup = DropdownMenuPrimitive.RadioGroup;
+const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
+  Trigger: DropdownMenuPrimitive.Trigger,
+  Content: DropdownMenuContent,
+  Item: DropdownMenuItem,
+  CheckboxItem: DropdownMenuCheckboxItem,
+  RadioItem: DropdownMenuRadioItem,
+  Label: DropdownMenuLabel,
+  Separator: DropdownMenuSeparator,
+  Shortcut: DropdownMenuShortcut,
+  Group: DropdownMenuPrimitive.Group,
+  Portal: DropdownMenuPrimitive.Portal,
+  Sub: DropdownMenuPrimitive.Sub,
+  SubTrigger: DropdownMenuSubTrigger,
+  SubContent: DropdownMenuSubContent,
+  RadioGroup: DropdownMenuPrimitive.RadioGroup,
+});
 
 export {
   DropdownMenu,

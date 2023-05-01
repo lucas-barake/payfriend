@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import { UnauthorizedView } from "src/components/pages/unauthorized-view";
 import { GoBackButton } from "$/components/ui/go-back-button";
 import { getSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
-import { AuthLayout } from "$/layouts/auth-layout";
-import { Layout } from "src/layouts/layout";
+import { AuthLayout } from "$/components/layouts/auth-layout";
+import { Layout } from "$/components/layouts/layout";
 import GroupSettings from "src/pages/dashboard/[groupId]/settings/(page-lib)/components/group-settings";
 
 const SettingsPage: NextPageWithLayout = () => {

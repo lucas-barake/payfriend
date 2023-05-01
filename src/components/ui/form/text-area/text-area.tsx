@@ -2,9 +2,10 @@ import { type ComponentPropsWithRef, forwardRef } from "react";
 import cn from "$/utils/cn";
 import Label, { type LabelProps } from "$/components/ui/form/label/label";
 
-type Props = ComponentPropsWithRef<"textarea"> & Omit<LabelProps, "children">;
+export type TextAreaProps = ComponentPropsWithRef<"textarea"> &
+  Omit<LabelProps, "children">;
 
-const TextArea = forwardRef<HTMLTextAreaElement, Props>(
+const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     { label, className, description, error, warning, srOnly, ...props },
     ref
@@ -31,4 +32,4 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
 
 TextArea.displayName = "TextArea";
 
-export default TextArea;
+export { TextArea };

@@ -1,13 +1,12 @@
 import { type ComponentPropsWithRef, forwardRef } from "react";
 import cn from "$/utils/cn";
 
-type Props = {
+type CheckboxProps = {
   label: string;
   labelClassName?: string;
 } & ComponentPropsWithRef<"input">;
 
-// eslint-disable-next-line react/display-name
-const Checkbox = forwardRef<HTMLInputElement, Props>(
+const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ label, className, labelClassName, ...props }, ref) => (
     <label className={cn("flex items-center gap-1 capitalize", labelClassName)}>
       <input
@@ -24,4 +23,6 @@ const Checkbox = forwardRef<HTMLInputElement, Props>(
   )
 );
 
-export default Checkbox;
+Checkbox.displayName = "Checkbox";
+
+export { Checkbox };

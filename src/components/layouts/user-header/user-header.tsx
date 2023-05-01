@@ -2,7 +2,7 @@ import { type FC, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { Button } from "$/components/ui/button";
-import UserMenu from "src/layouts/user-header/user-menu";
+import UserMenu from "$/components/layouts/user-header/user-menu";
 import Link from "next/link";
 import { Moon, Sun } from "lucide-react";
 

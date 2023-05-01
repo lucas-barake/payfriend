@@ -2,7 +2,7 @@ import { type FC, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { api } from "$/utils/api";
 import { useSession } from "next-auth/react";
-import PendingInviteRow from "src/layouts/user-header/user-menu/NotificationBell/pending-invite-row";
+import PendingInviteRow from "$/components/layouts/user-header/user-menu/notification-bell/pending-invite-row";
 import TimeInMs from "$/enums/time-in-ms";
 import { buttonVariants } from "$/components/ui/button";
 import { Bell } from "lucide-react";

@@ -2,10 +2,11 @@ import { type ComponentPropsWithRef, forwardRef } from "react";
 import cn from "$/utils/cn";
 import Label, { type LabelProps } from "$/components/ui/form/label/label";
 
-type Props = ComponentPropsWithRef<"select"> & Omit<LabelProps, "children">;
+export type SelectProps = ComponentPropsWithRef<"select"> &
+  Omit<LabelProps, "children">;
 
 // eslint-disable-next-line react/display-name
-const Select = forwardRef<HTMLSelectElement, Props>(
+const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, className, description, error, warning, ...props }, ref) => (
     <Label
       required={props.required}
@@ -26,4 +27,4 @@ const Select = forwardRef<HTMLSelectElement, Props>(
   )
 );
 
-export default Select;
+export { Select };

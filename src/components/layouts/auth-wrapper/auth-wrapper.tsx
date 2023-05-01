@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type FC, type ReactNode } from "react";
 import dynamic from "next/dynamic";
-import LoadingPage from "src/components/pages/loading-page";
+import LoadingPage from "$/components/pages/loading-page";
 
 type Props = {
   children: ReactNode;

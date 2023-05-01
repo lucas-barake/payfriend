@@ -2,7 +2,7 @@ import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import LoadingPage from "src/components/pages/loading-page";
-import { DesignLayout } from "src/layouts/design-layout";
+import { DesignLayout } from "$/components/layouts/design-layout";
 import { Button } from "$/components/ui/button";
 import { api } from "$/utils/api";
 import toast from "react-hot-toast";

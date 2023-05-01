@@ -1,11 +1,11 @@
 import { type FC } from "react";
 import ProfileMenu from "./profile-menu";
-import NotificationBell from "./NotificationBell";
+import NotificationBell from "./notification-bell";
 
 const UserMenu: FC = () => (
   <div className="flex items-center gap-2">
-    <NotificationBell />
     <ProfileMenu />
+    <NotificationBell />
   </div>
 );
 
