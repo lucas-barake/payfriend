@@ -11,9 +11,9 @@ import { api } from "$/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { useRouter } from "next/router";
-import { Dialog } from "$/components/ui/dialog";
+import { Modal, type ModalStateProps } from "$/components/ui/modal";
 
-const CreateGroupModal: FC = () => {
+const CreateGroupModal: FC<ModalStateProps> = ({ show, onClose }) => {
   const router = useRouter();
   const utils = api.useContext();
   const create = api.groups.createGroup.useMutation({
@@ -39,6 +39,10 @@ const CreateGroupModal: FC = () => {
     resolver: zodResolver(createGroupInput),
   });
 
+  function afterClose(): void {
+    form.reset();
+  }
+
   async function handleSubmit(data: CreateGroupInput): Promise<void> {
     await toast.promise(create.mutateAsync(data), {
       loading: "Creando grupo...",
@@ -48,7 +52,12 @@ const CreateGroupModal: FC = () => {
   }
 
   return (
-    <Dialog.Content>
+    <Modal
+      title="Crear Grupo"
+      show={show}
+      onClose={onClose}
+      afterClose={afterClose}
+    >
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <Form onSubmit={form.handleSubmit(handleSubmit)}>
         <Form.Input
@@ -69,7 +78,7 @@ const CreateGroupModal: FC = () => {
           </span>
         )}
 
-        <Dialog.Footer className="mt-4">
+        <div className="mt-4 flex items-center gap-2">
           <Button
             type="submit"
             loading={create.isLoading}
@@ -78,17 +87,16 @@ const CreateGroupModal: FC = () => {
             Crear Grupo
           </Button>
 
-          <Dialog.Trigger asChild>
-            <Button
-              variant="secondary"
-              className="flex flex-1 items-center justify-center py-2"
-            >
-              Cancelar
-            </Button>
-          </Dialog.Trigger>
-        </Dialog.Footer>
+          <Button
+            variant="secondary"
+            className="flex flex-1 items-center justify-center py-2"
+            onClick={() => onClose(false)}
+          >
+            Cancelar
+          </Button>
+        </div>
       </Form>
-    </Dialog.Content>
+    </Modal>
   );
 };
 

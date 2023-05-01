@@ -109,7 +109,7 @@ const sheetVariants = cva(
       {
         position: ["right", "left"],
         size: "sm",
-        class: "w-full lg:w-1/3",
+        class: "w-full lg:w-1/4",
       },
       {
         position: ["right", "left"],
@@ -206,7 +206,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-base text-muted-foreground", className)}
     {...props}
   />
 ));

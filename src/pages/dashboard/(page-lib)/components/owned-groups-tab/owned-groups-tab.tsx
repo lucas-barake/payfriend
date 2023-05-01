@@ -8,6 +8,7 @@ import Groups from "src/pages/dashboard/(page-lib)/components/groups";
 import { Dialog } from "$/components/ui/dialog";
 
 const OwnedGroupsTab: FC = () => {
+  const [showCreateGroupModal, setShowCreateGroupModal] = React.useState(false);
   const query = api.user.getOwnedGroups.useQuery(undefined, {
     staleTime: TimeInMs.ThirtySeconds,
     refetchOnWindowFocus: true,
@@ -17,16 +18,21 @@ const OwnedGroupsTab: FC = () => {
 
   return (
     <Dialog>
-      <CreateGroupModal />
+      <CreateGroupModal
+        show={showCreateGroupModal}
+        onClose={setShowCreateGroupModal}
+      />
 
       <div className="flex items-center justify-between">
         <div className="relative">
-          <Dialog.Trigger asChild>
-            <Button color="indigo" className="flex items-center gap-1">
-              <PlusIcon className="h-5 w-5" />
-              Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
-            </Button>
-          </Dialog.Trigger>
+          <Button
+            color="indigo"
+            className="flex items-center gap-1"
+            onClick={() => setShowCreateGroupModal(true)}
+          >
+            <PlusIcon className="h-5 w-5" />
+            Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
+          </Button>
 
           {!query.isFetching && query.data?.length === 0 && (
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">

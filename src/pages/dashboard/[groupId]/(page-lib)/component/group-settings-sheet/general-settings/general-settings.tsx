@@ -65,7 +65,7 @@ const GeneralSettings: FC<Props> = ({
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <Form className="w-full" onSubmit={form.handleSubmit(handleSubmit)}>
-      <h1 className="text-2xl font-bold">General</h1>
+      <span className="text-xl font-bold">General</span>
 
       <Form.Input
         label="Nombre"

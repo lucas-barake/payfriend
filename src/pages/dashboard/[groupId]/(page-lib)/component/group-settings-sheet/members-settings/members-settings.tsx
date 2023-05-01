@@ -17,7 +17,7 @@ import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQue
 import { type AppRouter } from "$/server/api/root";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
-import Member from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings/members-settings/member";
+import Member from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings-sheet/members-settings/member";
 import { PlusCircle } from "lucide-react";
 
 type Props = {
@@ -102,7 +102,7 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <Form onSubmit={form.handleSubmit(handleSubmit)} className="self-start">
-      <h1 className="text-2xl font-bold">Miembros</h1>
+      <span className="text-xl font-bold">Miembros</span>
 
       <div className="flex items-end gap-2">
         <Form.Input
