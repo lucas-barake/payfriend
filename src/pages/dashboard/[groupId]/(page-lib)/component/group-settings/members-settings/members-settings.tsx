@@ -101,7 +101,7 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <Form onSubmit={form.handleSubmit(handleSubmit)}>
+    <Form onSubmit={form.handleSubmit(handleSubmit)} className="self-start">
       <h1 className="text-2xl font-bold">Miembros</h1>
 
       <div className="flex items-end gap-2">
