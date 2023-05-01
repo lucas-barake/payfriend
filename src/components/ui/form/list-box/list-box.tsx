@@ -10,6 +10,7 @@ type Option = {
 export type ListBoxOptions = Option[] | Readonly<Option[]>;
 export type ListBoxProps = {
   buttonClassName?: string;
+  optionClassName?: string;
   options: ListBoxOptions;
   value: string | undefined;
   displayValue: string | undefined;
@@ -23,6 +24,7 @@ const ListBox: FC<ListBoxProps> = ({
   value,
   displayValue,
   buttonClassName,
+  optionClassName,
   disabled = false,
 }) => (
   <HeadlessListbox
@@ -47,13 +49,20 @@ const ListBox: FC<ListBoxProps> = ({
       </span>
     </HeadlessListbox.Button>
 
-    <HeadlessListbox.Options className="absolute z-10 mt-1 max-h-60 w-40 overflow-auto rounded-md border border-input bg-transparent py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+    <HeadlessListbox.Options
+      className={cn(
+        "absolute z-10 mt-1 max-h-60 w-40 overflow-auto rounded-md border border-input bg-transparent py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm",
+        optionClassName
+      )}
+    >
       {options.map((option) => (
         <HeadlessListbox.Option key={option.value} value={option.value}>
           {({ selected, active }) => (
             <div
               className={cn(
-                active ? "bg-primary text-white" : "text-gray-900",
+                active
+                  ? "bg-primary text-white"
+                  : "bg-background text-gray-900",
                 "relative cursor-default select-none py-2 pl-3 pr-9 dark:text-neutral-100"
               )}
             >
@@ -73,4 +82,4 @@ const ListBox: FC<ListBoxProps> = ({
   </HeadlessListbox>
 );
 
-export default ListBox;
+export { ListBox };

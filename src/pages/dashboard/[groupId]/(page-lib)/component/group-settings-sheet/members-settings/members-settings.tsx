@@ -125,13 +125,14 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
                     (option) => option.value === field.value
                   )?.label
                 }
+                buttonClassName="xs:w-36"
               />
             )}
           />
 
           <Button type="submit" variant="success" size="sm">
             <PlusCircle className="h-6 w-6" />
-            <span className="sr-only">Agregar</span>
+            <span className="sr-only">Agregar Miembro</span>
           </Button>
         </div>
       </div>

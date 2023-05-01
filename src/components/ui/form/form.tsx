@@ -8,7 +8,7 @@ import Group from "./group";
 import RequiredStar from "./required-star";
 import FileInput from "./file-input";
 import Switch from "./switch";
-import ListBox from "./list-box";
+import { ListBox } from "./list-box";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const formVariants = cva("flex gap-2", {
