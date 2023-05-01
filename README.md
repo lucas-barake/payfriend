@@ -7,7 +7,7 @@ This document provides an overview of the project, including its architecture, t
 The project is structured as follows:
 
 - [`src/components`](./src/components) contains all reusable and atomic components. It is divided into three subdirectories:
-  - [`src/components/layouts`](./src/components/layouts) contains components such as nvabars, headers, and footers.
+  - [`src/components/layouts`](./src/components/layouts) contains components such as navbars, headers, and footers.
   - [`src/components/pages`](./src/components/pages) contains components that render entire pages (protected views, loading screens, etc.).
   - [`src/components/ui`](./src/components/ui) contains components such as buttons, sheets, and dialogs.
 - [`src/pages`](./src/pages) contains the pages themselves. Some recommendations:
