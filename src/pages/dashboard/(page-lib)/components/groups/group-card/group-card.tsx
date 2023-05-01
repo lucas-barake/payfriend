@@ -21,7 +21,7 @@ const GroupCard: FC<Props> & {
   return (
     <Link
       key={group.id}
-      className="flex flex-col gap-2 rounded-lg bg-background-secondary p-6 shadow transition-colors duration-200 ease-in-out hover:bg-background-secondary/80"
+      className="flex flex-col gap-2 rounded-lg border border-border p-6 shadow-sm transition-colors duration-200 ease-in hover:bg-background-secondary/70"
       href={`/dashboard/${group.id}`}
     >
       <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
@@ -74,14 +74,7 @@ const GroupCard: FC<Props> & {
 };
 
 const GroupCardSkeleton: FC = () => (
-  <Skeleton className="flex h-48 flex-col gap-2 rounded-lg p-6 shadow transition-transform duration-200 ease-in-out hover:scale-105 dark:text-neutral-100">
-    <Skeleton className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
-      <Skeleton className="h-4 w-1/2 rounded" />
-      <Skeleton className="h-4 w-1/4 rounded" />
-    </Skeleton>
-
-    <Skeleton className="mt-4 h-12 w-full rounded" />
-  </Skeleton>
+  <Skeleton className="flex h-48 flex-col gap-2 rounded-lg p-6" />
 );
 
 GroupCard.Skeleton = GroupCardSkeleton;
