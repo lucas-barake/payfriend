@@ -1,28 +1,31 @@
-# Create T3 App
+# Introduction
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This document provides an overview of the project, including its architecture, technologies, and features.
 
-## What's next? How do I make an app with this?
+# Architecture
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+The project is structured as follows:
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- [`src/components`](./src/components) contains all reusable and atomic components. It is divided into three subdirectories:
+  - [`src/components/layouts`](./src/components/layouts) contains components such as nvabars, headers, and footers.
+  - [`src/components/pages`](./src/components/pages) contains components that render entire pages (protected views, loading screens, etc.).
+  - [`src/components/ui`](./src/components/ui) contains components such as buttons, sheets, and dialogs.
+- [`src/pages`](./src/pages) contains the pages themselves. Some recommendations:
+  - Each page must be exported with default and have the .page.tsx extension for them to be recognized as pages.
+  - Each page may have a `(page-lib)` directory, which contains all the logic for the page. This directory is not required, but is recommended for pages that require code and components that are specific to them. If a page has a `(page-lib)` directory, it must follow the convention of having subdirectories for `components`, `hooks`, `utils`, etc. (if applicable).
+  - Components created in the `(page-lib)` directory should be imported into the page itself and used there. They should not be shared with other pages unless the page is a child of the page that created the component.
+  - Components must be exported with `default` as Next.js does not support named exports within the `/pages` directory (**this only applies for `.tsx` files**).
+- [`/src/pages/api`](./src/pages/api) contains all API routes.
+- [`/src/server`](./src/server) contains all server-side code, specially `tRPC` mutations and queries (note that `tRPC` procedures are mapped via HTTPS routes through the `/src/pages/api` directory).
+- [`/src/types`](./src/types) contains all utility typescript types.
+- [`/src/styles`](./src/styles) contains the global styles for the application, such as color variables.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+# Technologies
 
-## Learn More
+The project uses the following technologies:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [Next.js](https://nextjs.org/) as the React framework.
+- [tRPC](https://trpc.io/) as the API framework.
+- [TailwindCSS](https://tailwindcss.com/) as the CSS framework.
+- [Prisma](https://www.prisma.io/) as the ORM.
+- [next-auth](https://next-auth.js.org/) as the authentication framework.
