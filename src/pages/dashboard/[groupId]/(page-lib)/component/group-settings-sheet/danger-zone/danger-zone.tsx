@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import { Button } from "$/components/ui/button";
 import { TrashIcon } from "@heroicons/react/outline";
 import { api } from "$/utils/api";
@@ -6,11 +6,11 @@ import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { useRouter } from "next/router";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
-import { Sheet } from "$/components/ui/sheet";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form } from "$/components/ui/form";
+import { Sheet } from "src/components/ui/sheet";
 
 type Props = {
   queryVariables: GetSettingsInput;
@@ -20,6 +20,7 @@ const DangerZone: FC<Props> = ({ queryVariables }) => {
   const router = useRouter();
   const utils = api.useContext();
   const deleteMutation = api.groups.deleteGroup.useMutation();
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -60,52 +61,58 @@ const DangerZone: FC<Props> = ({ queryVariables }) => {
   }
 
   return (
-    <Sheet
-      onOpenChange={() => {
-        form.reset();
-      }}
-    >
-      <Sheet.Content size="sm">
-        <div className="flex w-full flex-col gap-3">
-          <Sheet.Title>Eliminar Grupo</Sheet.Title>
+    <>
+      <Sheet
+        open={showConfirmation}
+        setOpen={setShowConfirmation}
+        afterClose={() => {
+          form.reset();
+        }}
+      >
+        <Sheet.Title>Eliminar Grupo</Sheet.Title>
 
-          {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-          <Form onSubmit={form.handleSubmit(handleDelete)}>
-            <Form.Input
-              label="Escribe 'eliminar' para confirmar"
-              {...form.register("confirmation")}
-            />
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+        <Form onSubmit={form.handleSubmit(handleDelete)}>
+          <Form.Input
+            label="Escribe 'Eliminar' para confirmar"
+            {...form.register("confirmation")}
+          />
 
-            <div className="mt-4 flex items-center justify-end gap-4">
-              <Button
-                variant="destructive"
-                type="submit"
-                loading={deleteMutation.isLoading}
-                disabled={!form.formState.isValid}
-              >
-                Eliminar
-              </Button>
+          <div className="mt-4 flex items-center justify-end gap-4">
+            <Button
+              variant="destructive"
+              type="submit"
+              loading={deleteMutation.isLoading}
+              disabled={!form.formState.isValid}
+            >
+              Eliminar
+            </Button>
 
-              <Sheet.Trigger asChild>
-                <Button variant="secondary">Cancelar</Button>
-              </Sheet.Trigger>
-            </div>
-          </Form>
-        </div>
-      </Sheet.Content>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowConfirmation(false);
+              }}
+            >
+              Cancelar
+            </Button>
+          </div>
+        </Form>
+      </Sheet>
 
       <span className="self-start text-xl font-bold">Zona de Peligro</span>
 
-      <Sheet.Trigger asChild>
-        <Button
-          variant="destructive"
-          className="flex items-center gap-2 self-start"
-        >
-          <TrashIcon className="h-6 w-6" />
-          Eliminar grupo
-        </Button>
-      </Sheet.Trigger>
-    </Sheet>
+      <Button
+        variant="destructive"
+        className="flex items-center gap-2 self-start"
+        onClick={() => {
+          setShowConfirmation(true);
+        }}
+      >
+        <TrashIcon className="h-6 w-6" />
+        Eliminar grupo
+      </Button>
+    </>
   );
 };
 

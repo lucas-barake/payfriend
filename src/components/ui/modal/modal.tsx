@@ -45,7 +45,7 @@ const Modal: FC<ModalProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-all duration-100" />
+            <Dialog.Overlay className="fixed inset-0 bg-background/60 backdrop-blur-sm transition-all duration-100" />
           </Transition.Child>
 
           <span
@@ -66,7 +66,7 @@ const Modal: FC<ModalProps> = ({
           >
             <Dialog.Panel
               className={cn(
-                "inline-block w-full transform rounded-md bg-background p-6 text-left align-middle shadow-xl transition-all sm:max-w-lg",
+                "inline-block w-full transform rounded-md border border-border bg-background p-6 text-left align-middle transition-all sm:max-w-lg",
                 className
               )}
             >

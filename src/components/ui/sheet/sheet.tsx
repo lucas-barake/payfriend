@@ -1,224 +1,95 @@
-import * as React from "react";
-import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { type VariantProps, cva } from "class-variance-authority";
+import { Dialog, Transition } from "@headlessui/react";
+import React, { type FC, Fragment, type ReactNode } from "react";
 import { X } from "lucide-react";
 import cn from "$/utils/cn";
 
-const portalVariants = cva("fixed inset-0 z-50 flex", {
-  variants: {
-    position: {
-      top: "items-start",
-      bottom: "items-end",
-      left: "justify-start",
-      right: "justify-end",
-    },
-  },
-  defaultVariants: { position: "right" },
-});
-
-type SheetPortalProps = SheetPrimitive.DialogPortalProps &
-  VariantProps<typeof portalVariants>;
-
-const SheetPortal = ({
-  position,
-  className,
-  children,
-  ...props
-}: SheetPortalProps) => (
-  <SheetPrimitive.Portal className={cn(className)} {...props}>
-    <div className={portalVariants({ position })}>{children}</div>
-  </SheetPrimitive.Portal>
-);
-SheetPortal.displayName = SheetPrimitive.Portal.displayName;
-
-const SheetOverlay = React.forwardRef<
-  React.ElementRef<typeof SheetPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
->(({ className, children: _children, ...props }, ref) => (
-  <SheetPrimitive.Overlay
-    className={cn(
-      "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in",
-      className
-    )}
-    {...props}
-    ref={ref}
-  />
-));
-SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
-
-const sheetVariants = cva(
-  "fixed z-50 scale-100 gap-4 bg-background p-6 opacity-100 shadow-lg border",
-  {
-    variants: {
-      position: {
-        top: "animate-in slide-in-from-top w-full duration-300",
-        bottom: "animate-in slide-in-from-bottom w-full duration-300",
-        left: "animate-in slide-in-from-left h-full duration-300",
-        right: "animate-in slide-in-from-right h-full duration-300",
-      },
-      size: {
-        content: "",
-        default: "",
-        sm: "",
-        lg: "",
-        xl: "",
-        full: "",
-      },
-    },
-    compoundVariants: [
-      {
-        position: ["top", "bottom"],
-        size: "content",
-        class: "max-h-screen",
-      },
-      {
-        position: ["top", "bottom"],
-        size: "default",
-        class: "h-1/3",
-      },
-      {
-        position: ["top", "bottom"],
-        size: "sm",
-        class: "h-1/4",
-      },
-      {
-        position: ["top", "bottom"],
-        size: "lg",
-        class: "h-1/2",
-      },
-      {
-        position: ["top", "bottom"],
-        size: "xl",
-        class: "h-5/6",
-      },
-      {
-        position: ["top", "bottom"],
-        size: "full",
-        class: "h-screen",
-      },
-      {
-        position: ["right", "left"],
-        size: "content",
-        class: "max-w-screen",
-      },
-      {
-        position: ["right", "left"],
-        size: "default",
-        class: "w-1/3",
-      },
-      {
-        position: ["right", "left"],
-        size: "sm",
-        class: "w-full lg:w-1/4",
-      },
-      {
-        position: ["right", "left"],
-        size: "lg",
-        class: "w-1/2",
-      },
-      {
-        position: ["right", "left"],
-        size: "xl",
-        class: "w-5/6",
-      },
-      {
-        position: ["right", "left"],
-        size: "full",
-        class: "w-screen",
-      },
-    ],
-    defaultVariants: {
-      position: "right",
-      size: "default",
-    },
-  }
-);
-
-export type DialogContentProps = React.ComponentPropsWithoutRef<
-  typeof SheetPrimitive.Content
-> &
-  VariantProps<typeof sheetVariants>;
-
-const SheetContent = React.forwardRef<
-  React.ElementRef<typeof SheetPrimitive.Content>,
-  DialogContentProps
->(({ position, size, className, children, ...props }, ref) => (
-  <SheetPortal position={position}>
-    <SheetOverlay />
-    <SheetPrimitive.Content
-      ref={ref}
-      className={cn(sheetVariants({ position, size }), className)}
-      {...props}
+const Title: React.FC<{
+  className?: string;
+  children: ReactNode;
+}> = ({ children, className }) => {
+  return (
+    <Dialog.Title
+      className={cn("text-lg font-bold leading-6 text-foreground", className)}
     >
       {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-        <X className="h-5 w-5" />
-        <span className="sr-only">Close</span>
-      </SheetPrimitive.Close>
-    </SheetPrimitive.Content>
-  </SheetPortal>
-));
-SheetContent.displayName = SheetPrimitive.Content.displayName;
+    </Dialog.Title>
+  );
+};
 
-const SheetHeader = ({
+export type SheetProps = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  children: ReactNode;
+  afterClose?: () => void;
+  className?: string;
+};
+
+const BaseSheet: FC<SheetProps> = ({
+  open,
+  setOpen,
+  children,
+  afterClose,
   className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "flex flex-col space-y-2 text-center sm:text-left",
-      className
-    )}
-    {...props}
-  />
-);
-SheetHeader.displayName = "SheetHeader";
+}) => {
+  return (
+    <Transition.Root show={open} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <Dialog.Overlay className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-all duration-100" />
+        </Transition.Child>
 
-const SheetFooter = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className
-    )}
-    {...props}
-  />
-);
-SheetFooter.displayName = "SheetFooter";
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+              <Transition.Child
+                as={Fragment}
+                enter="transform transition ease-in-out duration-300"
+                enterFrom="translate-x-full"
+                enterTo="translate-x-0"
+                leave="transform transition ease-in-out duration-200 sm:duration-300"
+                leaveFrom="translate-x-0"
+                leaveTo="translate-x-full"
+                afterLeave={afterClose}
+              >
+                <Dialog.Panel
+                  className={cn(
+                    "pointer-events-auto flex w-screen max-w-md flex-col border border-border",
+                    className
+                  )}
+                >
+                  <div className="h-full flex-1 overflow-y-scroll bg-background py-6 px-4 sm:px-6">
+                    {children}
 
-const SheetTitle = React.forwardRef<
-  React.ElementRef<typeof SheetPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <SheetPrimitive.Title
-    ref={ref}
-    className={cn("text-lg font-semibold text-foreground", className)}
-    {...props}
-  />
-));
-SheetTitle.displayName = SheetPrimitive.Title.displayName;
+                    <button
+                      type="button"
+                      className="absolute right-6 top-6 text-gray-400 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-200 md:right-8"
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                    >
+                      <span className="sr-only">Cerrar Configuración</span>
+                      <X className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+    </Transition.Root>
+  );
+};
 
-const SheetDescription = React.forwardRef<
-  React.ElementRef<typeof SheetPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
->(({ className, ...props }, ref) => (
-  <SheetPrimitive.Description
-    ref={ref}
-    className={cn("text-base text-muted-foreground", className)}
-    {...props}
-  />
-));
-SheetDescription.displayName = SheetPrimitive.Description.displayName;
-
-const Sheet = Object.assign(SheetPrimitive.Root, {
-  Trigger: SheetPrimitive.Trigger,
-  Content: SheetContent,
-  Header: SheetHeader,
-  Title: SheetTitle,
-  Description: SheetDescription,
-  Footer: SheetFooter,
+const Sheet = Object.assign(BaseSheet, {
+  Title,
 });
 
 export { Sheet };
