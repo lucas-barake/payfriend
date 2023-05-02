@@ -44,7 +44,7 @@ const NotificationBell: FC = () => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute -right-28 z-10 mt-2 w-72 origin-top-right rounded-md border border-border bg-background ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute -right-8 z-10 mt-2 w-60 origin-top-right rounded-md border border-border bg-background ring-1 ring-black ring-opacity-5 focus:outline-none xs:w-72 sm:w-80">
           <div className="divide-y divide-gray-100 py-1">
             {allPendingInvites.length === 0 ? (
               <Menu.Item

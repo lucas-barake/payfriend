@@ -5,9 +5,10 @@ import cn from "$/utils/cn";
 import truncateString from "$/utils/truncate-string";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
-import { CheckIcon, XIcon } from "@heroicons/react/outline";
 import { Menu } from "@headlessui/react";
 import { api } from "$/utils/api";
+import { Check, X } from "lucide-react";
+import { Badge } from "$/components/ui/badge";
 
 type Props = {
   invite: NonNullable<
@@ -51,21 +52,22 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
       {({ active }) => (
         <div
           className={cn(
-            active && "bg-gray-100 dark:bg-neutral-600",
+            active && "bg-background-secondary dark:bg-background-tertiary",
             "flex w-full items-center justify-between gap-1 self-stretch px-4 py-2 text-sm"
           )}
         >
-          <div className="flex flex-col font-medium">
-            {invite.owner}
-            <span className="font-normal dark:text-neutral-200">
-              Grupo {truncateString(invite.groupName, 14)}
-            </span>
+          <div className="flex flex-col gap-1.5 font-medium">
+            <span>{invite.owner} te invitó al grupo</span>
+
+            <Badge className="self-start rounded-sm">
+              {truncateString(invite.groupName, 14)}
+            </Badge>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="rounded-full border border-green-500 p-0.5 text-green-500 hover:bg-green-100 hover:dark:bg-green-900"
+              className="rounded-full border-2 border-success p-0.5 text-success hover:bg-success/10"
               onClick={() => {
                 void toast.promise(
                   acceptMutation.mutateAsync({
@@ -79,12 +81,12 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
                 );
               }}
             >
-              <CheckIcon className="h-6 w-6" />
+              <Check className="h-6 w-6" />
             </button>
 
             <button
               type="button"
-              className="rounded-full border border-neutral-500 p-0.5 text-neutral-500 hover:bg-neutral-200 dark:border-neutral-400 dark:text-neutral-400 hover:dark:bg-neutral-700"
+              className="rounded-full border-2 border-destructive p-0.5 text-destructive hover:bg-destructive/10"
               onClick={() => {
                 void toast.promise(
                   declineMutation.mutateAsync({
@@ -98,7 +100,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
                 );
               }}
             >
-              <XIcon className="h-6 w-6" />
+              <X className="h-6 w-6" />
             </button>
           </div>
         </div>
