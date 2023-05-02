@@ -1,14 +1,21 @@
 import { type FC, type ReactNode } from "react";
 import { Button } from "$/components/ui/button";
 import { signOut } from "next-auth/react";
+import cn from "$/utils/cn";
 
 type Props = {
   children: ReactNode;
   showSignOut?: boolean;
+  mainClassName?: string;
 };
 
-const DesignLayout: FC<Props> = ({ children, showSignOut }) => (
-  <main className="relative isolate h-screen overflow-hidden px-6 pt-14 lg:px-8">
+const DesignLayout: FC<Props> = ({ children, showSignOut, mainClassName }) => (
+  <main
+    className={cn(
+      "relative isolate h-screen overflow-hidden px-6 pt-14 lg:px-8",
+      mainClassName
+    )}
+  >
     <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
       <svg
         className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
