@@ -4,13 +4,14 @@ import { useRouter } from "next/router";
 import { DesignLayout } from "$/components/layouts/design-layout";
 import LoadingPage from "src/components/pages/loading-page";
 import { Button } from "$/components/ui/button";
+import { Pages } from "$/enums/pages";
 
 const Home: NextPage = () => {
   const session = useSession();
   const router = useRouter();
 
   if (session.status === "authenticated") {
-    void router.push("/dashboard");
+    void router.push(Pages.DASHBOARD);
     return <LoadingPage />;
   }
 
@@ -33,6 +34,7 @@ const Home: NextPage = () => {
               onClick={() => {
                 void signIn("google", {
                   callbackUrl: "/dashboard",
+                  redirect: true,
                 });
               }}
               size="lg"

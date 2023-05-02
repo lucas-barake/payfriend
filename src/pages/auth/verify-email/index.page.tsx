@@ -17,13 +17,14 @@ import {
 import { Form } from "src/components/ui/form";
 import { z } from "zod";
 import { Check, Mail } from "lucide-react";
+import { Pages } from "$/enums/pages";
 
 const VerifyEmailPage: NextPageWithLayout = () => {
   const router = useRouter();
   const session = useSession({
     required: true,
     onUnauthenticated() {
-      void router.push("/");
+      void router.push(Pages.HOME);
     },
   });
 
