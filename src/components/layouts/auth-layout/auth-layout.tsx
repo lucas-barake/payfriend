@@ -1,7 +1,10 @@
 import { type FC, type ReactNode } from "react";
 import { AuthWrapper } from "$/components/layouts/auth-wrapper";
 import { UserHeader } from "$/components/layouts/user-header";
-import { CustomHead, CustomHeadProps } from "$/components/layouts/custom-head";
+import {
+  CustomHead,
+  type CustomHeadProps,
+} from "$/components/layouts/custom-head";
 
 type Props = {
   children: ReactNode;

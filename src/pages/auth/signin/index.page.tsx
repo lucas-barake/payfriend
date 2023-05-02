@@ -1,5 +1,8 @@
-import { NextPageWithLayout } from "$/pages/_app.page";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { type NextPageWithLayout } from "$/pages/_app.page";
+import {
+  type GetServerSidePropsContext,
+  type InferGetServerSidePropsType,
+} from "next";
 import { authOptions } from "$/server/auth";
 import { getServerSession } from "next-auth";
 import { getProviders, signIn } from "next-auth/react";
@@ -51,7 +54,9 @@ const SignIn: NextPageWithLayout<
       </h1>
 
       <Button
-        onClick={() => signIn(google.id)}
+        onClick={() => {
+          void signIn(google.id);
+        }}
         className="bg-white text-black hover:bg-gray-100"
       >
         <svg
