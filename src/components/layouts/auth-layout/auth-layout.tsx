@@ -1,21 +1,15 @@
 import { type FC, type ReactNode } from "react";
 import { AuthWrapper } from "$/components/layouts/auth-wrapper";
 import { UserHeader } from "$/components/layouts/user-header";
-import Head from "next/head";
+import { CustomHead, CustomHeadProps } from "$/components/layouts/custom-head";
 
 type Props = {
   children: ReactNode;
-};
+} & CustomHeadProps;
 
-const AuthLayout: FC<Props> = ({ children }) => (
+const AuthLayout: FC<Props> = ({ children, ...customHeadProps }) => (
   <AuthWrapper>
-    <Head>
-      <title>Deudamigo</title>
-      <meta
-        name="description"
-        content="Deudamigo es una aplicación gratuita que te ayuda a controlar y dividir las deudas con tus amigos y familiares. Crea grupos, añade gastos y liquida saldos fácilmente con Deudamigo."
-      />
-    </Head>
+    <CustomHead {...customHeadProps} />
 
     <UserHeader />
 
