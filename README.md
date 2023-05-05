@@ -29,7 +29,7 @@ Copy the template found in the `.env.example` file over to a new `.env` file.
 cp .env.example .env
 ```
 
-Replace the values in the .env file with your own configuration.
+Replace the values in the `.env` file with your own configuration.
 
 3. Start the server:
 
