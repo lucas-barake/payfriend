@@ -13,6 +13,8 @@ Before proceeding with the installation, please make sure you have the following
 - A running Postgresql instance.
 - ESLint and Prettier extensions in your preferred editor.
 
+## Installation Steps
+
 1. Install the dependencies:
 
 ```bash
