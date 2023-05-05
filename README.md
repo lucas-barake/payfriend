@@ -2,6 +2,39 @@
 
 This document provides an overview of the project, including its architecture, technologies, and features.
 
+# Installation Guide
+
+## Prerequisites:
+
+Before proceeding with the installation, please make sure you have the following software installed on your machine:
+
+- Node.js.
+- NPM
+- A running Postgresql instance.
+- ESLint and Prettier extensions in your preferred editor.
+
+1. Install the dependencies:
+
+```bash
+npm install
+```
+
+2. Set up your environment variables
+
+Copy the template found in the `.env.example` file over to a new `.env` file.
+
+```bash
+cp .env.example .env
+```
+
+Replace the values in the .env file with your own configuration.
+
+3. Start the server:
+
+```bash
+npm run dev
+```
+
 # Architecture
 
 The project is structured as follows:
