@@ -48,6 +48,10 @@ const config = {
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "object-shorthand": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "no-implicit-coercion": "error",
+    "@typescript-eslint/return-await": "error",
+    "@typescript-eslint/explicit-function-return-type": "error",
   },
 };
 
