@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
-    "lint": "next lint",
     "start": "next start",
-    "make-pretty": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,md,mjs,cjs}'"
+    "build": "next build",
+    "lint": "next lint",
+    "make-pretty": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,md,mjs,cjs}'",
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
