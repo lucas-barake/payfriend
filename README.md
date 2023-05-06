@@ -12,13 +12,14 @@ Before proceeding with the installation, please make sure you have the following
 - NPM
 - A running Postgresql instance.
 - ESLint and Prettier extensions in your preferred editor.
+- pnpm installed `npm i -g pnpm`
 
 ## Installation Steps
 
 1. Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 2. Set up your environment variables
@@ -34,7 +35,7 @@ Replace the values in the `.env` file with your own configuration.
 3. Start the server:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 # Architecture
