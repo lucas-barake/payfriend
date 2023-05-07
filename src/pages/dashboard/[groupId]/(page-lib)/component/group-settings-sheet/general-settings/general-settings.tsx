@@ -7,7 +7,7 @@ import {
   type UpdateGroupInput,
 } from "$/server/api/routers/groups/groups/create-update/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "$/utils/api";
+import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";

@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, type FC } from "react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 
 type LayoutProps = ComponentPropsWithoutRef<"main">;
 

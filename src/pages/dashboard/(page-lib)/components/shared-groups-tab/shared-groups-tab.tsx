@@ -1,6 +1,6 @@
 import React, { type FC } from "react";
-import { api } from "$/utils/api";
-import TimeInMs from "$/enums/time-in-ms";
+import { api } from "$/lib/utils/api";
+import TimeInMs from "$/lib/enums/time-in-ms";
 import Groups from "src/pages/dashboard/(page-lib)/components/groups";
 
 const SharedGroupsTab: FC = () => {

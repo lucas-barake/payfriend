@@ -1,12 +1,12 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import { api } from "$/utils/api";
+import { api } from "$/lib/utils/api";
 import { useSession } from "next-auth/react";
 import {
   type GetGroupByIdInput,
   getGroupByIdInput,
 } from "$/server/api/routers/groups/groups/get-group-by-id/input";
 import LoadingSpinner from "src/components/ui/icons/loading-spinner";
-import TimeInMs from "$/enums/time-in-ms";
+import TimeInMs from "$/lib/enums/time-in-ms";
 import { GoBackButton } from "$/components/ui/go-back-button";
 import { AuthLayout } from "$/components/layouts/auth-layout";
 import { UnauthorizedView } from "src/components/pages/unauthorized-view";

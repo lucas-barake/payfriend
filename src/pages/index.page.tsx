@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { DesignLayout } from "$/components/layouts/design-layout";
 import LoadingPage from "src/components/pages/loading-page";
 import { Button } from "$/components/ui/button";
-import { Pages } from "$/enums/pages";
+import { Pages } from "$/lib/enums/pages";
 
 const Home: NextPage = () => {
   const session = useSession();

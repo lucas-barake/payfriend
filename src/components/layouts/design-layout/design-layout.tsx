@@ -1,7 +1,7 @@
 import { type FC, type ReactNode } from "react";
 import { Button } from "$/components/ui/button";
 import { signOut } from "next-auth/react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 
 type Props = {
   children: ReactNode;
@@ -50,7 +50,7 @@ const DesignLayout: FC<Props> = ({ children, showSignOut, mainClassName }) => (
       {showSignOut && (
         <Button
           color="indigo"
-          onClick={() => {
+          onClick={(): void => {
             void signOut();
           }}
           className="font-semibold tracking-wide"

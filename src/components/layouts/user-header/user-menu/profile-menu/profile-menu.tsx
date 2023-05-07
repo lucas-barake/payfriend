@@ -1,7 +1,7 @@
 import { type FC, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 import { signOut, useSession } from "next-auth/react";
 import { LockClosedIcon } from "@heroicons/react/outline";
 import { buttonVariants } from "$/components/ui/button";
