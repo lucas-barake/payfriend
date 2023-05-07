@@ -1,6 +1,6 @@
 import { protectedProcedure } from "$/server/api/trpc";
 import { DateTime } from "luxon";
-import { verifyOTPInput } from "$/server/api/routers/user/otp/verify-otp/input";
+import { verifyOTPInput } from "$/server/api/routers/user/phone-otp/verify-otp/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
 const verifyOTP = protectedProcedure

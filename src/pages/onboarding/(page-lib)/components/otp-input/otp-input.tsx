@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import {
   verifyOTPInput,
   type VerifyOTPInput,
-} from "$/server/api/routers/user/otp/verify-otp/input";
+} from "$/server/api/routers/user/phone-otp/verify-otp/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
