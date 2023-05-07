@@ -1,19 +1,12 @@
-import { type FC, useMemo } from "react";
+import React from "react";
 import { useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
-import { Button } from "$/components/ui/button";
 import UserMenu from "$/components/layouts/user-header/user-menu";
 import Link from "next/link";
-import { Moon, Sun } from "lucide-react";
+import { ThemeSwitch } from "$/components/common/theme-switch";
 
-const UserHeader: FC = () => {
+const UserHeader: React.FC = () => {
   const session = useSession();
   const isAuthenticated = session.status === "authenticated";
-  const theme = useTheme();
-  const currentTheme = useMemo(
-    () => (theme.theme === "system" ? theme.systemTheme : theme.theme),
-    [theme.theme, theme.systemTheme]
-  );
 
   return (
     <header className="fixed top-0 z-10 w-full">
@@ -25,29 +18,7 @@ const UserHeader: FC = () => {
         <div className="flex items-baseline gap-2">
           {isAuthenticated && <UserMenu />}
 
-          {currentTheme === "dark" ? (
-            <Button
-              variant="ghost"
-              onClick={() => {
-                theme.setTheme("light");
-              }}
-              className="active:translate-y-0.5"
-              size="sm"
-            >
-              <Sun className="h-5 w-5" />
-            </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              className="active:translate-y-0.5"
-              onClick={() => {
-                theme.setTheme("dark");
-              }}
-              size="sm"
-            >
-              <Moon className="h-5 w-5" />
-            </Button>
-          )}
+          <ThemeSwitch />
         </div>
       </div>
     </header>
