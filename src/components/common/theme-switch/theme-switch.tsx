@@ -2,12 +2,13 @@ import React from "react";
 import { useTheme } from "next-themes";
 import { Button, type ButtonProps } from "$/components/ui/button";
 import { Moon, Sun } from "lucide-react";
+import dynamic from "next/dynamic";
 
 type Props = {
   variant?: ButtonProps["variant"];
 };
 
-const ThemeSwitch: React.FC<Props> = ({ variant = "ghost" }) => {
+const BaseTheme: React.FC<Props> = ({ variant = "ghost" }) => {
   const theme = useTheme();
   const currentTheme = React.useMemo(
     () => (theme.theme === "system" ? theme.systemTheme : theme.theme),
@@ -34,5 +35,9 @@ const ThemeSwitch: React.FC<Props> = ({ variant = "ghost" }) => {
     </Button>
   );
 };
+
+const ThemeSwitch = dynamic(() => Promise.resolve(BaseTheme), {
+  ssr: false,
+});
 
 export { ThemeSwitch };
