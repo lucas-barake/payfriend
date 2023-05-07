@@ -1,7 +1,6 @@
 import { protectedProcedure } from "$/server/api/trpc";
-import sendGridMail from "@sendgrid/mail";
+import sendGridMail, { type MailDataRequired } from "@sendgrid/mail";
 import { env } from "$/env.mjs";
-import { type MailDataRequired } from "@sendgrid/helpers/classes/mail";
 import { DateTime } from "luxon";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
@@ -43,7 +42,7 @@ const sendOTP = protectedProcedure.mutation(async ({ ctx }) => {
   }
 
   const fourDigitGeneratedOTP = String(Math.floor(1000 + Math.random() * 9000));
-  const msg: MailDataRequired = {
+  const msg = {
     to: ctx.session.user.email ?? undefined,
     from: env.SENDGRID_FROM_EMAIL,
     subject: "Código de verificación para tu cuenta de Deudamigo",
@@ -54,7 +53,7 @@ const sendOTP = protectedProcedure.mutation(async ({ ctx }) => {
         enable: isInSandBoxMode,
       },
     },
-  };
+  } satisfies MailDataRequired;
 
   if (isInSandBoxMode) {
     console.log(
