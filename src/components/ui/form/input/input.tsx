@@ -1,11 +1,12 @@
 import { type ComponentPropsWithRef, forwardRef } from "react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 import Label, { type LabelProps } from "$/components/ui/form/label/label";
 
 type InputProps = {
   leftIcon?: JSX.Element;
   rightElement?: JSX.Element;
   bare?: boolean;
+  labelClassName?: string;
 } & ComponentPropsWithRef<"input"> &
   Omit<LabelProps, "children">;
 
@@ -20,6 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       warning,
       rightElement,
       srOnly,
+      labelClassName,
       ...props
     },
     ref
@@ -31,6 +33,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       error={error}
       warning={warning}
       srOnly={srOnly}
+      className={labelClassName}
     >
       <div className="relative flex items-center gap-2">
         {leftIcon !== undefined && (
