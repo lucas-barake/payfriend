@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { parsePhoneNumber } from "libphonenumber-js/min";
 import { format } from "libphonenumber-js";
+import { countriesWithCodes } from "$/pages/onboarding/(page-lib)/lib/countries-with-codes";
+import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
 
 function addPhoneIssue(ctx: z.RefinementCtx) {
   ctx.addIssue({
@@ -10,15 +12,22 @@ function addPhoneIssue(ctx: z.RefinementCtx) {
   });
 }
 
+const countryCodes = countriesWithCodes.map((c) => c.code_2);
+const countryCode = createManyUnion(
+  countryCodes as typeof countryCodes & [string, string, ...string[]],
+  {
+    required_error: "Debes seleccionar un código de país",
+    invalid_type_error: "Debes seleccionar un código de país válido",
+  }
+);
+
 export const sendPhoneOtpInput = z
   .object({
     phone: z
       .string()
       .trim()
       .min(2, { message: "El número de teléfono no es válido" }),
-    countryCode: z.union([z.literal("CO"), z.literal("US"), z.literal("MX")], {
-      invalid_type_error: "El código de país no es válido",
-    }),
+    countryCode,
   })
   .superRefine((val, ctx) => {
     try {
