@@ -11,6 +11,23 @@ import { countriesWithCodes } from "$/pages/onboarding/(page-lib)/lib/countries-
 import cn from "$/lib/utils/cn";
 import { Form } from "$/components/ui/form";
 import { Virtuoso } from "react-virtuoso";
+import { useForm } from "react-hook-form";
+import {
+  sendPhoneOtpInput,
+  type SendPhoneOtpInput,
+} from "$/server/api/routers/user/phone-otp/send-otp/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+function normalizeString(str: string): string {
+  return (
+    str
+      .toLowerCase()
+      // Normalize to decomposed form
+      .normalize("NFD")
+      // Remove diacritical marks
+      .replace(/[\u0300-\u036f]/g, "")
+  );
+}
 
 type Props = {
   setView: React.Dispatch<React.SetStateAction<View>>;
@@ -29,7 +46,7 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
       countriesWithCodes.filter((c) => {
         return countryQuery === undefined
           ? true
-          : c.name_es.toLowerCase().includes(countryQuery.toLowerCase());
+          : normalizeString(c.name_es).includes(normalizeString(countryQuery));
       }),
     [countryQuery]
   );
