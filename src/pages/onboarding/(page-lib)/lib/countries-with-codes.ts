@@ -10,6 +10,7 @@ export type CountryWithCode = {
   code_3: string;
   tld: string;
   emoji: string;
+  placeholder: string;
 };
 
 export const countriesWithCodes = [
@@ -25,6 +26,7 @@ export const countriesWithCodes = [
     code_3: "COL",
     tld: ".co",
     emoji: "🇨🇴",
+    placeholder: "300 123 4567",
   },
   {
     name_en: "Mexico",
@@ -38,6 +40,7 @@ export const countriesWithCodes = [
     code_3: "MEX",
     tld: ".mx",
     emoji: "🇲🇽",
+    placeholder: "55 1234 5678",
   },
   {
     name_en: "United States",
@@ -51,5 +54,6 @@ export const countriesWithCodes = [
     code_3: "USA",
     tld: ".us",
     emoji: "🇺🇸",
+    placeholder: "(555) 123-4567",
   },
 ] as const satisfies readonly CountryWithCode[];

@@ -1,8 +1,6 @@
 import React from "react";
 import { View } from "$/pages/onboarding/(page-lib)/enums/view";
 import { api } from "$/lib/utils/api";
-import toast from "react-hot-toast";
-import { handleToastError } from "$/components/ui/styled-toaster";
 import { Button } from "$/components/ui/button";
 import { Popover } from "$/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -11,12 +9,13 @@ import { countriesWithCodes } from "$/pages/onboarding/(page-lib)/lib/countries-
 import cn from "$/lib/utils/cn";
 import { Form } from "$/components/ui/form";
 import { Virtuoso } from "react-virtuoso";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   sendPhoneOtpInput,
   type SendPhoneOtpInput,
 } from "$/server/api/routers/user/phone-otp/send-otp/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AsYouType } from "libphonenumber-js";
 
 function normalizeString(str: string): string {
   return (
@@ -51,13 +50,24 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
     [countryQuery]
   );
 
+  const form = useForm<SendPhoneOtpInput>({
+    defaultValues: {
+      phone: "",
+      countryCode: "CO",
+    },
+    resolver: zodResolver(sendPhoneOtpInput),
+    mode: "onSubmit",
+  });
+
   const sendOTPMutation = api.user.sendPhoneOTP.useMutation();
+
   async function _sendOTP(): Promise<void> {
-    await toast.promise(sendOTPMutation.mutateAsync(), {
+    // TODO: Implement sendOTP mutation
+    /*await toast.promise(sendOTPMutation.mutateAsync(), {
       loading: "Enviando código...",
       success: "Código enviado",
       error: handleToastError,
-    });
+    });*/
   }
 
   return (
@@ -68,7 +78,14 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
         ingreses.
       </p>
 
-      <div className="mt-2 flex w-full max-w-sm flex-col items-center justify-center gap-8">
+      <Form
+        className="mt-2 flex w-full max-w-sm flex-col items-center justify-center"
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={form.handleSubmit((data) => {
+          console.log(data);
+          setView(View.OTP_INPUT);
+        })}
+      >
         <div className="flex w-full items-center gap-1">
           <Popover
             open={openCombobox}
@@ -116,6 +133,7 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
                           onSelect={(): void => {
                             setSelectedCountry(item);
                             setOpenCombobox(false);
+                            form.setValue("countryCode", item.code_2);
                           }}
                           className="cursor-pointer"
                         >
@@ -137,26 +155,54 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
             </Popover.Content>
           </Popover>
 
-          <Form.Input
-            label="Número de celular"
-            srOnly
-            type="tel"
-            placeholder="Número de celular"
-            labelClassName="flex-1"
+          <Controller
+            name="phone"
+            control={form.control}
+            render={({ field }) => {
+              return (
+                <Form.Input
+                  label="Número de celular"
+                  placeholder={selectedCountry.placeholder}
+                  labelClassName="flex-1"
+                  value={field.value}
+                  onChange={(e) => {
+                    let newValue = e.target.value;
+                    const newFormattedValue = new AsYouType(
+                      selectedCountry.code_2
+                    ).input(newValue);
+                    if (
+                      newValue.length < field.value.length &&
+                      newFormattedValue === field.value
+                    ) {
+                      newValue = newValue.slice(0, -1);
+                    }
+                    field.onChange(
+                      new AsYouType(selectedCountry.code_2).input(newValue)
+                    );
+                  }}
+                  type="tel"
+                  srOnly
+                />
+              );
+            }}
           />
         </div>
 
+        {form.formState.errors.phone && (
+          <span className="mt-2 text-sm font-bold text-destructive">
+            {form.formState.errors.phone.message}
+          </span>
+        )}
+
         <Button
+          type="submit"
           variant="tertiary"
-          className="flex w-full gap-2 self-center"
+          className="mt-8 flex w-full gap-2 self-center"
           loading={sendOTPMutation.isLoading}
-          onClick={() => {
-            setView(View.OTP_INPUT);
-          }}
         >
           Continuar
         </Button>
-      </div>
+      </Form>
     </>
   );
 };
