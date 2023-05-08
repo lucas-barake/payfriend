@@ -1,4 +1,4 @@
-import { type Primitive, z, type ZodLiteral } from "zod";
+import { type Primitive, type RawCreateParams, z, type ZodLiteral } from "zod";
 
 type MappedZodLiterals<T extends readonly Primitive[]> = {
   -readonly [K in keyof T]: ZodLiteral<T[K]>;
@@ -6,9 +6,10 @@ type MappedZodLiterals<T extends readonly Primitive[]> = {
 
 function createManyUnion<
   A extends Readonly<[Primitive, Primitive, ...Primitive[]]>
->(literals: A) {
+>(literals: A, params?: RawCreateParams) {
   return z.union(
-    literals.map((value) => z.literal(value)) as MappedZodLiterals<A>
+    literals.map((value) => z.literal(value)) as MappedZodLiterals<A>,
+    params
   );
 }
 
