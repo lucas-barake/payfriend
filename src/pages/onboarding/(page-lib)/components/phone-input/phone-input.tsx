@@ -11,63 +11,67 @@ import { Form } from "$/components/ui/form";
 import { Virtuoso } from "react-virtuoso";
 import { Controller, useForm } from "react-hook-form";
 import {
-  sendPhoneOtpInput,
-  type SendPhoneOtpInput,
-} from "$/server/api/routers/user/phone-otp/send-otp/input";
+  type SendPhoneCodeInput,
+  sendPhoneCodeInput,
+} from "$/server/api/routers/user/phone/send-code/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AsYouType } from "libphonenumber-js";
-
-function normalizeString(str: string): string {
-  return (
-    str
-      .toLowerCase()
-      // Normalize to decomposed form
-      .normalize("NFD")
-      // Remove diacritical marks
-      .replace(/[\u0300-\u036f]/g, "")
-  );
-}
+import toast from "react-hot-toast";
+import { handleToastError } from "$/components/ui/styled-toaster";
+import { strTransformer } from "$/lib/utils/str-transformer";
+import { type VerifyPhoneInput } from "$/server/api/routers/user/phone/verify/input";
 
 type Props = {
   setView: React.Dispatch<React.SetStateAction<View>>;
+  setPhone: (phone: VerifyPhoneInput["phone"]) => void;
 };
 
-const PhoneInput: React.FC<Props> = ({ setView }) => {
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const initCountry = countriesWithCodes.find((c) => c.name_es === "Colombia")!;
+
+const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
   const [openCombobox, setOpenCombobox] = React.useState(false);
 
-  const [selectedCountry, setSelectedCountry] = React.useState<
-    typeof countriesWithCodes[number]
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  >(countriesWithCodes.find((c) => c.name_es === "Colombia")!);
+  const [selectedCountry, setSelectedCountry] =
+    React.useState<typeof countriesWithCodes[number]>(initCountry);
   const [countryQuery, setCountryQuery] = React.useState<string>();
   const filteredCountries = React.useMemo(
     () =>
       countriesWithCodes.filter((c) => {
         return countryQuery === undefined
           ? true
-          : normalizeString(c.name_es).includes(normalizeString(countryQuery));
+          : strTransformer
+              .normalize(c.name_es)
+              .includes(strTransformer.normalize(countryQuery));
       }),
     [countryQuery]
   );
 
-  const form = useForm<SendPhoneOtpInput>({
+  const form = useForm<SendPhoneCodeInput>({
     defaultValues: {
-      phone: "",
-      countryCode: "CO",
+      phone: {
+        phoneNumber: "",
+        countryCode: initCountry.code_2,
+      },
     },
-    resolver: zodResolver(sendPhoneOtpInput),
+    resolver: zodResolver(sendPhoneCodeInput),
     mode: "onSubmit",
   });
 
-  const sendOTPMutation = api.user.sendPhoneOTP.useMutation();
+  const sendCodeMutation = api.user.sendPhoneCode.useMutation();
 
-  async function _sendOTP(): Promise<void> {
-    // TODO: Implement sendOTP mutation
-    /*await toast.promise(sendOTPMutation.mutateAsync(), {
-      loading: "Enviando código...",
-      success: "Código enviado",
-      error: handleToastError,
-    });*/
+  async function sendCode(input: SendPhoneCodeInput): Promise<void> {
+    try {
+      await toast.promise(sendCodeMutation.mutateAsync(input), {
+        loading: "Enviando código...",
+        success: "Código enviado",
+        error: handleToastError,
+      });
+
+      setPhone(input.phone);
+    } finally {
+      setView(View.OTP_INPUT);
+    }
   }
 
   return (
@@ -81,10 +85,7 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
       <Form
         className="mt-2 flex w-full max-w-sm flex-col items-center justify-center"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={form.handleSubmit((data) => {
-          console.log(data);
-          setView(View.OTP_INPUT);
-        })}
+        onSubmit={form.handleSubmit(sendCode)}
       >
         <div className="flex w-full items-center gap-1">
           <Popover
@@ -133,7 +134,7 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
                           onSelect={(): void => {
                             setSelectedCountry(item);
                             setOpenCombobox(false);
-                            form.setValue("countryCode", item.code_2);
+                            form.setValue("phone.countryCode", item.code_2);
                           }}
                           className="cursor-pointer"
                         >
@@ -156,7 +157,7 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
           </Popover>
 
           <Controller
-            name="phone"
+            name="phone.phoneNumber"
             control={form.control}
             render={({ field }) => {
               return (
@@ -188,9 +189,9 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
           />
         </div>
 
-        {form.formState.errors.phone && (
+        {form.formState.errors.phone?.phoneNumber && (
           <span className="mt-2 text-sm font-bold text-destructive">
-            {form.formState.errors.phone.message}
+            {form.formState.errors.phone.phoneNumber.message}
           </span>
         )}
 
@@ -198,7 +199,7 @@ const PhoneInput: React.FC<Props> = ({ setView }) => {
           type="submit"
           variant="tertiary"
           className="mt-8 flex w-full gap-2 self-center"
-          loading={sendOTPMutation.isLoading}
+          loading={sendCodeMutation.isLoading}
         >
           Continuar
         </Button>

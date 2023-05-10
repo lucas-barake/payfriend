@@ -11,6 +11,7 @@ Before proceeding with the installation, please make sure you have the following
 - Node.js.
 - NPM
 - A running Postgresql instance.
+- A running Redis instance.
 - ESLint and Prettier extensions in your preferred editor.
 - pnpm installed `npm i -g pnpm`
 

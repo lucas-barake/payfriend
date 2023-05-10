@@ -2,9 +2,9 @@ import React from "react";
 import { View } from "$/pages/onboarding/(page-lib)/enums/view";
 import { Controller, useForm } from "react-hook-form";
 import {
-  verifyOTPInput,
-  type VerifyOTPInput,
-} from "$/server/api/routers/user/phone-otp/verify-otp/input";
+  verifyPhoneInput,
+  type VerifyPhoneInput,
+} from "$/server/api/routers/user/phone/verify/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
@@ -13,50 +13,48 @@ import { z } from "zod";
 import { Form } from "$/components/ui/form";
 import OTPInput from "react-otp-input";
 import { Button } from "$/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 type Props = {
   setView: React.Dispatch<React.SetStateAction<View>>;
+  phone: VerifyPhoneInput["phone"] | undefined;
 };
 
-const OtpInput: React.FC<Props> = ({ setView }) => {
-  const form = useForm<VerifyOTPInput>({
+const OtpInput: React.FC<Props> = ({ setView, phone }) => {
+  const form = useForm<VerifyPhoneInput>({
     defaultValues: {
+      phone,
       otp: "",
     },
     mode: "onSubmit",
     reValidateMode: "onChange",
-    resolver: zodResolver(verifyOTPInput),
+    resolver: zodResolver(verifyPhoneInput),
   });
-  const verifyOTP = api.user.verifyPhoneOTP.useMutation();
+  const verifyPhoneMutation = api.user.verifyPhone.useMutation();
 
-  async function _verifyPhone(data: VerifyOTPInput): Promise<void> {
-    await toast.promise(
-      verifyOTP.mutateAsync({
-        otp: data.otp,
-      }),
-      {
-        loading: "Verificando...",
-        success: () => {
-          // Can't update user state without hard redirecting
-          window.location.href = "/dashboard";
-          return "¡Celular verificado!";
-        },
-        error: handleToastError,
-      }
-    );
+  async function verifyPhone(input: VerifyPhoneInput): Promise<void> {
+    await toast.promise(verifyPhoneMutation.mutateAsync(input), {
+      loading: "Verificando...",
+      success: () => {
+        // Can't update user state without hard redirecting
+        window.location.href = "/dashboard";
+        return "¡Celular verificado!";
+      },
+      error: handleToastError,
+    });
   }
 
   return (
     <>
       <p className="text-center">
-        Ingresa el código que te enviamos a tu celular
+        ¡Perfecto! Hemos enviado un código a tu número de celular. Si aún no lo
+        has recibido, espera un momento más. Una vez que lo tengas, ingrésalo
+        aquí para verificar tu celular.
       </p>
 
       <Form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={form.handleSubmit((data) => {
-          console.log(data);
-        })}
+        onSubmit={form.handleSubmit(verifyPhone)}
       >
         <Controller
           control={form.control}
@@ -101,6 +99,7 @@ const OtpInput: React.FC<Props> = ({ setView }) => {
             variant="secondary"
             onClick={(): void => setView(View.PHONE_INPUT)}
           >
+            <ChevronLeft className="mr-2 h-4 w-4" />
             Regresar
           </Button>
 

@@ -1,3 +1,6 @@
+import Redis from "ioredis";
+import { env } from "$/env.mjs";
+
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
  * 1. You want to modify request context (see Part 1).
@@ -35,9 +38,12 @@ type CreateContextOptions = {
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
+  const redis = new Redis(env.REDIS_URL);
+
   return {
     session: opts.session,
     prisma,
+    redis,
   };
 };
 
@@ -72,6 +78,12 @@ import { ZodError } from "zod";
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
+    if (error.code === "INTERNAL_SERVER_ERROR") {
+      return {
+        ...shape,
+        message: "Internal server error",
+      };
+    }
     return {
       ...shape,
       data: {
@@ -126,10 +138,10 @@ const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  if (ctx.session.user.emailVerified === null) {
+  if (ctx.session.user.phoneVerified === null) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "UNVERIFIED_EMAIL",
+      message: "UNVERIFIED_PHONE",
     });
   }
 

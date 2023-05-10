@@ -1,13 +1,11 @@
 import React, { type FC } from "react";
 import GroupCard from "$/pages/dashboard/(page-lib)/components/groups/group-card";
-import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
+import { type inferProcedureOutput } from "@trpc/server";
 
 type Props = {
   loading: boolean;
-  groups: NonNullable<
-    InferQueryResult<AppRouter["user"]["getOwnedGroups"]>["data"]
-  >;
+  groups: inferProcedureOutput<AppRouter["user"]["getOwnedGroups"]>;
 };
 
 const Groups: FC<Props> = ({ loading, groups }) => {

@@ -98,8 +98,8 @@ model User {
   name            String?
   email           String?              @unique
   emailVerified   DateTime?
-  otp             String?
-  otpUpdatedAt    DateTime?            @db.Timestamptz(6)
+  phoneNumber     String?              @unique
+  phoneVerified   DateTime?            @db.Timestamptz(6)
   image           String?
   accounts        Account[]
   sessions        Session[]

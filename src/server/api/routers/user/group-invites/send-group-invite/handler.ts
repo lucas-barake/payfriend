@@ -62,7 +62,7 @@ const sendGroupInvite = protectedVerifiedProcedure
     }
 
     try {
-      return ctx.prisma.pendingInvite.create({
+      return await ctx.prisma.pendingInvite.create({
         data: {
           userId: user.id,
           groupId: input.groupId,

@@ -1,17 +1,13 @@
 import { type FC, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { api } from "$/lib/utils/api";
-import { useSession } from "next-auth/react";
 import PendingInviteRow from "$/components/layouts/user-header/user-menu/notification-bell/pending-invite-row";
 import TimeInMs from "$/lib/enums/time-in-ms";
 import { buttonVariants } from "$/components/ui/button";
 import { Bell } from "lucide-react";
 
 const NotificationBell: FC = () => {
-  const session = useSession();
-
   const query = api.user.getGroupInvites.useQuery(undefined, {
-    enabled: Boolean(session.data?.user.emailVerified),
     staleTime: TimeInMs.TenSeconds,
     refetchOnWindowFocus: true,
     retry: false,

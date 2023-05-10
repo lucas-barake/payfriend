@@ -15,7 +15,7 @@ const AuthWrapper: FC<Props> = ({ children }) => {
 
   if (session.status === "loading") return <LoadingPage />;
 
-  if (session.data?.user.emailVerified === null) {
+  if (session.data?.user.phoneVerified === null) {
     void router.push(Pages.ONBOARDING);
     return <LoadingPage />;
   }
