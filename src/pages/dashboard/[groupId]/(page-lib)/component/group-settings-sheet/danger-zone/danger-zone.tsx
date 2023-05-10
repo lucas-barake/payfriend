@@ -1,7 +1,7 @@
 import { type FC, useState } from "react";
 import { Button } from "$/components/ui/button";
 import { TrashIcon } from "@heroicons/react/outline";
-import { api } from "$/utils/api";
+import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { useRouter } from "next/router";

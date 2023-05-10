@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, type FC, type ReactNode } from "react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 import RequiredStar from "src/components/ui/form/required-star";
 
 export type LabelProps = {

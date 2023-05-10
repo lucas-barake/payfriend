@@ -1,8 +1,7 @@
 import { type FC } from "react";
-import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
-import { api } from "$/utils/api";
+import { api } from "$/lib/utils/api";
 import {
   type UpdateDeleteUserValueOptions,
   type UpdateUserRoleInput,
@@ -10,10 +9,11 @@ import {
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import GroupMember from "$/pages/dashboard/[groupId]/(page-lib)/component/group-member";
+import { type inferProcedureOutput } from "@trpc/server";
 
 type Props = {
-  member: NonNullable<
-    InferQueryResult<AppRouter["groups"]["getSettingsById"]>["data"]
+  member: inferProcedureOutput<
+    AppRouter["groups"]["getSettingsById"]
   >["members"][number];
   queryVariables: GetSettingsInput;
 };

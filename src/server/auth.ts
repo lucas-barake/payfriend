@@ -23,11 +23,13 @@ declare module "next-auth" {
       // ...other properties
       // role: UserRole;
       emailVerified: Date | null;
+      phoneVerified: Date | null;
     } & DefaultSession["user"];
   }
 
   interface User {
     emailVerified: Date | null;
+    phoneVerified: Date | null;
     // ...other properties
     // role: UserRole;
   }
@@ -44,6 +46,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = user.id;
         session.user.emailVerified = user.emailVerified;
+        session.user.phoneVerified = user.phoneVerified;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;

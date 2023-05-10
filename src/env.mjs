@@ -23,6 +23,7 @@ const server = z.object({
   SENDGRID_API_KEY: z.string().min(1),
   SENDGRID_FROM_EMAIL: z.string().email(),
   SENDGRID_SANDBOX_MODE: z.coerce.boolean().optional().default(false),
+  REDIS_URL: z.string().min(1),
 });
 
 /**
@@ -49,6 +50,7 @@ const processEnv = {
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL,
   SENDGRID_SANDBOX_MODE: process.env.SENDGRID_SANDBOX_MODE,
+  REDIS_URL: process.env.REDIS_URL,
 };
 
 // Don't touch the part below

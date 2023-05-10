@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { type FC, Fragment, type ReactNode } from "react";
 import { X } from "lucide-react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 
 const Title: React.FC<{
   className?: string;

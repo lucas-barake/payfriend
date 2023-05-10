@@ -1,7 +1,9 @@
 import { type FC, type ReactNode } from "react";
 import { Button } from "$/components/ui/button";
 import { signOut } from "next-auth/react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
+import { ThemeSwitch } from "$/components/common/theme-switch";
+import { LogOut } from "lucide-react";
 
 type Props = {
   children: ReactNode;
@@ -47,17 +49,23 @@ const DesignLayout: FC<Props> = ({ children, showSignOut, mainClassName }) => (
         deudamigo
       </h1>
 
-      {showSignOut && (
-        <Button
-          color="indigo"
-          onClick={() => {
-            void signOut();
-          }}
-          className="font-semibold tracking-wide"
-        >
-          Cerrar sesión
-        </Button>
-      )}
+      <div className="flex items-center gap-2">
+        {showSignOut && (
+          <Button
+            variant="outline"
+            onClick={(): void => {
+              void signOut();
+            }}
+            className="font-semibold tracking-wide"
+            size="sm"
+          >
+            <LogOut className="h-4 w-4 xs:mr-2" />
+            <span className="sr-only xs:not-sr-only">Cerrar sesión</span>
+          </Button>
+        )}
+
+        <ThemeSwitch variant="outline" />
+      </div>
     </header>
 
     {children}

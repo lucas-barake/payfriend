@@ -28,11 +28,16 @@ const config = {
         fixStyle: "inline-type-imports",
       },
     ],
-    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-    "no-unused-vars": [
+    "@typescript-eslint/no-unused-vars": [
       "error",
-      { argsIgnorePattern: "^_", vars: "all", args: "all" },
+      {
+        argsIgnorePattern: "^_",
+        vars: "all",
+        args: "all",
+        varsIgnorePattern: "^_",
+      },
     ],
+    "no-unused-vars": "off",
     "no-dupe-else-if": "error",
     "no-dupe-keys": "error",
     "no-duplicate-imports": "error",
@@ -51,7 +56,6 @@ const config = {
     "@typescript-eslint/no-explicit-any": "error",
     "no-implicit-coercion": "error",
     "@typescript-eslint/return-await": "error",
-    "@typescript-eslint/explicit-function-return-type": "error",
   },
 };
 

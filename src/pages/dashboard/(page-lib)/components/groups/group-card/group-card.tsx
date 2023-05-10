@@ -1,18 +1,16 @@
 import React, { type FC } from "react";
 import Link from "next/link";
 import { Button } from "$/components/ui/button";
-import truncateString from "$/utils/truncate-string";
+import truncateString from "$/lib/utils/truncate-string";
 import { DateTime } from "luxon";
-import { type InferMutationResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
 import Image from "next/image";
 import { Calendar, Eye } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
+import { type inferProcedureOutput } from "@trpc/server";
 
 type Props = {
-  group: NonNullable<
-    InferMutationResult<AppRouter["user"]["getOwnedGroups"]>["data"]
-  >[number];
+  group: inferProcedureOutput<AppRouter["user"]["getOwnedGroups"]>[number];
 };
 
 const GroupCard: FC<Props> & {

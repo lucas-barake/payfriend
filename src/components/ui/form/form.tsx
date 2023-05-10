@@ -1,5 +1,5 @@
 import React from "react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 import Input from "src/components/ui/form/input";
 import { Select } from "src/components/ui/form/select";
 import { Checkbox } from "src/components/ui/form/checkbox";

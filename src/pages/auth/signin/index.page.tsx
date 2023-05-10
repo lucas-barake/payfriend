@@ -7,7 +7,7 @@ import { authOptions } from "$/server/auth";
 import { getServerSession } from "next-auth";
 import { getProviders, signIn } from "next-auth/react";
 import { Button } from "$/components/ui/button";
-import { Pages } from "$/enums/pages";
+import { Pages } from "$/lib/enums/pages";
 import { CustomHead } from "$/components/layouts/custom-head";
 import { DesignLayout } from "$/components/layouts/design-layout";
 

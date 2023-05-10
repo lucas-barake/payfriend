@@ -1,5 +1,5 @@
 import { type ComponentPropsWithRef, forwardRef } from "react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 import Label, { type LabelProps } from "$/components/ui/form/label/label";
 
 export type TextAreaProps = ComponentPropsWithRef<"textarea"> &

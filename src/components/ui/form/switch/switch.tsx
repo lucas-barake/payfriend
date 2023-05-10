@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, FC } from "react";
 import { Switch as HeadlessSwitch } from "@headlessui/react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 import StyledSwitch from "$/components/ui/form/switch/styled-switch/StyledSwitch";
 
 type Props = {

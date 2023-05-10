@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Switch as HeadlessSwitch } from "@headlessui/react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 
 type StyledSwitchProps = {
   checked: boolean;

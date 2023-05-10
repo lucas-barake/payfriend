@@ -11,6 +11,7 @@ Before proceeding with the installation, please make sure you have the following
 - Node.js.
 - NPM
 - A running Postgresql instance.
+- A running Redis instance.
 - ESLint and Prettier extensions in your preferred editor.
 - pnpm installed `npm i -g pnpm`
 
@@ -53,7 +54,7 @@ The project is structured as follows:
   - Components must be exported with `default` as Next.js does not support named exports within the `/pages` directory (**this only applies for `.tsx` files**).
 - [`/src/pages/api`](./src/pages/api) contains all API routes.
 - [`/src/server`](./src/server) contains all server-side code, specially `tRPC` mutations and queries (note that `tRPC` procedures are mapped via HTTPS routes through the `/src/pages/api` directory).
-- [`/src/types`](./src/types) contains all utility typescript types.
+- [`/src/types`](src/lib/types) contains all utility typescript types.
 - [`/src/styles`](./src/styles) contains the global styles for the application, such as color variables.
 - [`/prisma`](./prisma) contains the Prisma schema and migrations.
 

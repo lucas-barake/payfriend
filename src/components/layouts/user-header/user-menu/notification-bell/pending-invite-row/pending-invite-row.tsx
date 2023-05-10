@@ -1,19 +1,17 @@
 import { type FC } from "react";
-import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
-import cn from "$/utils/cn";
-import truncateString from "$/utils/truncate-string";
+import cn from "$/lib/utils/cn";
+import truncateString from "$/lib/utils/truncate-string";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { Menu } from "@headlessui/react";
-import { api } from "$/utils/api";
+import { api } from "$/lib/utils/api";
 import { Check, X } from "lucide-react";
 import { Badge } from "$/components/ui/badge";
+import { type inferProcedureOutput } from "@trpc/server";
 
 type Props = {
-  invite: NonNullable<
-    InferQueryResult<AppRouter["user"]["getGroupInvites"]>["data"]
-  >[number];
+  invite: inferProcedureOutput<AppRouter["user"]["getGroupInvites"]>[number];
 };
 
 const PendingInviteRow: FC<Props> = ({ invite }) => {

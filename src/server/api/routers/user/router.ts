@@ -1,10 +1,10 @@
 import { mergeTRPCRouters } from "$/server/api/trpc";
-import OTPSubRouter from "$/server/api/routers/user/otp/subrouter";
+import phoneSubRouter from "$/server/api/routers/user/phone/subrouter";
 import groupInvitesSubRouter from "$/server/api/routers/user/group-invites/subrouter";
 import groupsSubRouter from "$/server/api/routers/user/groups/subrouter";
 
 const userRouter = mergeTRPCRouters(
-  OTPSubRouter,
+  phoneSubRouter,
   groupInvitesSubRouter,
   groupsSubRouter
 );

@@ -8,21 +8,21 @@ import {
   sendInviteRoleOptions,
 } from "$/server/api/routers/user/group-invites/send-group-invite/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "$/utils/api";
+import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { useSession } from "next-auth/react";
 import { z } from "zod";
-import { type InferQueryResult } from "@trpc/react-query/src/utils/inferReactQueryProcedure";
 import { type AppRouter } from "$/server/api/root";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
 import Member from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings-sheet/members-settings/member";
 import { PlusCircle } from "lucide-react";
+import { type inferProcedureOutput } from "@trpc/server";
 
 type Props = {
-  members: NonNullable<
-    InferQueryResult<AppRouter["groups"]["getSettingsById"]>["data"]
+  members: inferProcedureOutput<
+    AppRouter["groups"]["getSettingsById"]
   >["members"];
   queryVariables: GetSettingsInput;
 };

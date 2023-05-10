@@ -1,6 +1,6 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { Tab } from "@headlessui/react";
-import cn from "$/utils/cn";
+import cn from "$/lib/utils/cn";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { AuthLayout } from "$/components/layouts/auth-layout";

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const verifyOTPInput = z.object({
+export const verifyEmailInput = z.object({
   otp: z
     .string()
     .trim()
@@ -8,4 +8,4 @@ export const verifyOTPInput = z.object({
       message: "El código debe ser de 4 dígitos",
     }),
 });
-export type VerifyOTPInput = z.infer<typeof verifyOTPInput>;
+export type VerifyEmailInput = z.infer<typeof verifyEmailInput>;

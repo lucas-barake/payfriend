@@ -4,7 +4,7 @@ import { type NextPage } from "next";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { api } from "$/utils/api";
+import { api } from "$/lib/utils/api";
 import "$/styles/globals.css";
 import { StyledToaster } from "src/components/ui/styled-toaster";
 
