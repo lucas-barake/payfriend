@@ -7,7 +7,7 @@ import { phoneCodeKey } from "$/server/api/routers/user/phone/lib/phone-code-key
 const sendPhoneCode = protectedProcedure
   .input(sendPhoneCodeInput)
   .mutation(async ({ ctx, input }) => {
-    const isInDev = env.REDIS_DEV_MODE;
+    const isInDev = env.NODE_ENV === "development";
 
     if (ctx.session.user.phoneVerified !== null) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El celular ya está verificado");

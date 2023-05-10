@@ -24,7 +24,6 @@ const server = z.object({
   SENDGRID_FROM_EMAIL: z.string().email(),
   SENDGRID_SANDBOX_MODE: z.coerce.boolean().optional().default(false),
   REDIS_URL: z.string().min(1),
-  REDIS_DEV_MODE: z.coerce.boolean().optional().default(false),
 });
 
 /**
@@ -52,7 +51,6 @@ const processEnv = {
   SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL,
   SENDGRID_SANDBOX_MODE: process.env.SENDGRID_SANDBOX_MODE,
   REDIS_URL: process.env.REDIS_URL,
-  REDIS_DEV_MODE: process.env.REDIS_DEV_MODE,
 };
 
 // Don't touch the part below
