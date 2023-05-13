@@ -4,7 +4,7 @@ import { DesignLayout } from "$/components/layouts/design-layout";
 import LoadingPage from "src/components/pages/loading-page";
 import { Button } from "$/components/ui/button";
 import { Pages } from "$/lib/enums/pages";
-import { NextPageWithLayout } from "$/pages/_app.page";
+import { type NextPageWithLayout } from "$/pages/_app.page";
 import { CustomHead } from "$/components/layouts/custom-head";
 
 const Home: NextPageWithLayout = () => {

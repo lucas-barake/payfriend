@@ -11,6 +11,7 @@ const config = {
       files: ["*.ts", "*.tsx"],
       parserOptions: {
         project: path.join(__dirname, "tsconfig.json"),
+        tsconfigRootDir: __dirname,
       },
     },
   ],
