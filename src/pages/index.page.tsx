@@ -1,12 +1,13 @@
-import { type NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { DesignLayout } from "$/components/layouts/design-layout";
 import LoadingPage from "src/components/pages/loading-page";
 import { Button } from "$/components/ui/button";
 import { Pages } from "$/lib/enums/pages";
+import { NextPageWithLayout } from "$/pages/_app.page";
+import { CustomHead } from "$/components/layouts/custom-head";
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
   const session = useSession();
   const router = useRouter();
 
@@ -45,6 +46,15 @@ const Home: NextPage = () => {
         </div>
       </div>
     </DesignLayout>
+  );
+};
+
+Home.getLayout = (page) => {
+  return (
+    <>
+      <CustomHead />
+      {page}
+    </>
   );
 };
 

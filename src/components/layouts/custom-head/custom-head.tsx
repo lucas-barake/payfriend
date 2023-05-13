@@ -8,7 +8,7 @@ type CustomHeadProps = {
 };
 
 const CustomHead: FC<CustomHeadProps> = ({ title, content }) => {
-  const titleText = title !== undefined ? `${title} | Prestemos` : "Prestemos";
+  const titleText = title !== undefined ? `${title} | ${APP_NAME}` : APP_NAME;
   const contentText =
     content !== undefined
       ? content
