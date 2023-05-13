@@ -4,6 +4,7 @@ import { signOut } from "next-auth/react";
 import cn from "$/lib/utils/cn";
 import { ThemeSwitch } from "$/components/common/theme-switch";
 import { LogOut } from "lucide-react";
+import { APP_NAME } from "$/lib/constants/app-name";
 
 type Props = {
   children: ReactNode;
@@ -46,7 +47,7 @@ const DesignLayout: FC<Props> = ({ children, showSignOut, mainClassName }) => (
 
     <header className="flex items-center justify-between md:mx-12">
       <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-200">
-        deudamigo
+        {APP_NAME}
       </h1>
 
       <div className="flex items-center gap-2">
