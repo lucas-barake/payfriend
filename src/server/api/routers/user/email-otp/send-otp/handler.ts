@@ -4,6 +4,7 @@ import { env } from "$/env.mjs";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import TimeInMs from "$/lib/enums/time-in-ms";
 import { emailCodeKey } from "$/server/api/routers/user/email-otp/lib/email-code-key";
+import { APP_NAME } from "$/lib/constants/app-name";
 
 const sendEmailOTP = protectedProcedure.mutation(async ({ ctx }) => {
   const isInSandBoxMode = env.SENDGRID_SANDBOX_MODE;
@@ -33,7 +34,7 @@ const sendEmailOTP = protectedProcedure.mutation(async ({ ctx }) => {
   const msg = {
     to: ctx.session.user.email ?? undefined,
     from: env.SENDGRID_FROM_EMAIL,
-    subject: "Código de verificación para tu cuenta de Deudamigo",
+    subject: `Código de verificación para tu cuenta de ${APP_NAME}`,
     text: `Tu código de verificación es: ${fourDigitGeneratedCode}`,
     html: `<strong>Tu código de verificación es: ${fourDigitGeneratedCode}</strong>`,
     mailSettings: {

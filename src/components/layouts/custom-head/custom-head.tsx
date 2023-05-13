@@ -1,5 +1,6 @@
 import { type FC } from "react";
 import Head from "next/head";
+import { APP_NAME } from "$/lib/constants/app-name";
 
 type CustomHeadProps = {
   title?: string;
@@ -7,11 +8,11 @@ type CustomHeadProps = {
 };
 
 const CustomHead: FC<CustomHeadProps> = ({ title, content }) => {
-  const titleText = title !== undefined ? `${title} | Deudamigo` : "Deudamigo";
+  const titleText = title !== undefined ? `${title} | Prestemos` : "Prestemos";
   const contentText =
     content !== undefined
       ? content
-      : "Deudamigo es una aplicación gratuita que te ayuda a controlar y dividir las deudas con tus amigos y familiares. Crea grupos, añade gastos y liquida saldos fácilmente con Deudamigo.";
+      : `${APP_NAME} es una aplicación gratuita que te ayuda a controlar y dividir las deudas con tus amigos y familiares. Crea grupos, añade gastos y liquida saldos fácilmente con ${APP_NAME}.`;
 
   return (
     <Head>
