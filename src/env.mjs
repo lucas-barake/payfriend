@@ -24,6 +24,10 @@ const server = z.object({
   SENDGRID_FROM_EMAIL: z.string().email(),
   SENDGRID_SANDBOX_MODE: z.coerce.boolean().optional().default(false),
   REDIS_URL: z.string().min(1),
+  TWILIO_ACCOUNT_SID: z.string().min(1),
+  TWILIO_AUTH_TOKEN: z.string().min(1),
+  TWILIO_FROM_WHATSAPP_NUMBER: z.string().startsWith("whatsapp:"),
+  TWILIO_DEV_TO_WHATSAPP_NUMBER: z.string().startsWith("whatsapp:").optional(),
 });
 
 /**
@@ -51,6 +55,10 @@ const processEnv = {
   SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL,
   SENDGRID_SANDBOX_MODE: process.env.SENDGRID_SANDBOX_MODE,
   REDIS_URL: process.env.REDIS_URL,
+  TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+  TWILIO_FROM_WHATSAPP_NUMBER: process.env.TWILIO_FROM_WHATSAPP_NUMBER,
+  TWILIO_DEV_TO_WHATSAPP_NUMBER: process.env.TWILIO_DEV_TO_WHATSAPP_NUMBER,
 };
 
 // Don't touch the part below
@@ -64,6 +72,7 @@ const merged = server.merge(client);
 
 // @ts-expect-error - Invalid overlap when coercing the env vars
 let env = /** @type {MergedOutput} */ (process.env);
+// eslint-disable-next-line no-implicit-coercion, eqeqeq
 if (!!process.env.SKIP_ENV_VALIDATION == false) {
   const isServer = typeof window === "undefined";
 
