@@ -13,6 +13,12 @@ const CUSTOM_EXCEPTIONS = {
       message: message ?? "Ocurrió algún error.",
     });
   },
+  INTERNAL_SERVER_ERROR: (message?: string) => {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: message ?? "Ocurrió algún error.",
+    });
+  },
 };
 
 export default CUSTOM_EXCEPTIONS;
