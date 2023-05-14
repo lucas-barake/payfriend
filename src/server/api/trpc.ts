@@ -1,4 +1,5 @@
 import Redis from "ioredis";
+import Twilio from "twilio";
 import { env } from "$/env.mjs";
 
 /**
@@ -9,7 +10,6 @@ import { env } from "$/env.mjs";
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-
 /**
  * 1. CONTEXT
  *
@@ -22,6 +22,16 @@ import { type Session } from "next-auth";
 
 import { getServerAuthSession } from "$/server/auth";
 import { prisma } from "$/server/db";
+/**
+ * 2. INITIALIZATION
+ *
+ * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
+ * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
+ * errors on the backend.
+ */
+import { initTRPC, TRPCError } from "@trpc/server";
+import superjson from "superjson";
+import { ZodError } from "zod";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -39,11 +49,13 @@ type CreateContextOptions = {
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   const redis = new Redis(env.REDIS_URL);
+  const twilio = Twilio(env.TWILIO_ACCOUNT_SID, env.TWILIO_AUTH_TOKEN);
 
   return {
     session: opts.session,
     prisma,
     redis,
+    twilio,
   };
 };
 
@@ -63,17 +75,6 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     session,
   });
 };
-
-/**
- * 2. INITIALIZATION
- *
- * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
- * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
- * errors on the backend.
- */
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
-import { ZodError } from "zod";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
