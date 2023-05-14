@@ -1,7 +1,7 @@
 import { type FC, useState } from "react";
 import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
 import { api } from "$/lib/utils/api";
-import TimeInMs from "$/lib/enums/time-in-ms";
+import { TimeInMs } from "$/lib/enums/time";
 import { Settings } from "lucide-react";
 import MembersSettings from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings-sheet/members-settings";
 import GeneralSettings from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings-sheet/general-settings";

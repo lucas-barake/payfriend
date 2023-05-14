@@ -2,7 +2,7 @@ import { protectedProcedure } from "$/server/api/trpc";
 import sendGridMail, { type MailDataRequired } from "@sendgrid/mail";
 import { env } from "$/env.mjs";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import TimeInMs from "$/lib/enums/time-in-ms";
+import { TimeInMs } from "$/lib/enums/time";
 import { emailCodeKey } from "$/server/api/routers/user/email-otp/lib/email-code-key";
 import { APP_NAME } from "$/lib/constants/app-name";
 

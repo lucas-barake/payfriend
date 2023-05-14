@@ -1,6 +1,6 @@
 import React, { type FC } from "react";
 import { api } from "$/lib/utils/api";
-import TimeInMs from "$/lib/enums/time-in-ms";
+import { TimeInMs } from "$/lib/enums/time";
 import CreateGroupModal from "src/pages/dashboard/(page-lib)/components/owned-groups-tab/create-group-modal";
 import { Button } from "$/components/ui/button";
 import { PlusIcon } from "@heroicons/react/solid";
