@@ -13,13 +13,13 @@ import { Controller, useForm } from "react-hook-form";
 import {
   type SendPhoneCodeInput,
   sendPhoneCodeInput,
-} from "$/server/api/routers/user/phone/send-code/input";
+  type VerifyPhoneInput,
+} from "$/server/api/routers/user/phone/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AsYouType } from "libphonenumber-js";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { strTransformer } from "$/lib/utils/str-transformer";
-import { type VerifyPhoneInput } from "$/server/api/routers/user/phone/verify/input";
 
 type Props = {
   setView: React.Dispatch<React.SetStateAction<View>>;
@@ -58,7 +58,7 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
     mode: "onSubmit",
   });
 
-  const sendCodeMutation = api.user.sendPhoneCode.useMutation();
+  const sendCodeMutation = api.user.sendPhoneVerificationCode.useMutation();
 
   async function sendCode(input: SendPhoneCodeInput): Promise<void> {
     try {

@@ -37,3 +37,15 @@ export const sendPhoneCodeInput = z.object({
     })),
 });
 export type SendPhoneCodeInput = z.infer<typeof sendPhoneCodeInput>;
+
+export const verifyPhoneInput = sendPhoneCodeInput.merge(
+  z.object({
+    otp: z
+      .string()
+      .trim()
+      .regex(/^[0-9]{4}$/, {
+        message: "El código debe ser de 4 dígitos",
+      }),
+  })
+);
+export type VerifyPhoneInput = z.infer<typeof verifyPhoneInput>;
