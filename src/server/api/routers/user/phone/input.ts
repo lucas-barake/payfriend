@@ -3,6 +3,7 @@ import { parsePhoneNumber } from "libphonenumber-js/min";
 import { format } from "libphonenumber-js";
 import { countriesWithCodes } from "$/pages/onboarding/(page-lib)/lib/countries-with-codes";
 import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
+import { strTransformer } from "$/lib/utils/str-transformer";
 
 const countryCodes = countriesWithCodes.map((c) => c.code_2);
 const countryCode = createManyUnion(
@@ -32,7 +33,9 @@ export const sendPhoneCodeInput = z.object({
       return phoneNumber.isValid();
     })
     .transform((v) => ({
-      phoneNumber: format(v.phoneNumber, v.countryCode, "INTERNATIONAL"),
+      phoneNumber: strTransformer.removeWhitespace(
+        format(v.phoneNumber, v.countryCode, "INTERNATIONAL")
+      ),
       countryCode: v.countryCode,
     })),
 });
