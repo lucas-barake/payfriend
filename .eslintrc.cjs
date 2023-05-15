@@ -85,7 +85,7 @@ const config = {
         labelComponents: ["Label"],
         labelAttributes: ["label"],
         controlComponents: ["Input", "Select"],
-        depth: 1,
+        depth: 2,
         required: {
           some: ["nesting", "id"],
         },

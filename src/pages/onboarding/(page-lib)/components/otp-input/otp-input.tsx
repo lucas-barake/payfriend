@@ -97,7 +97,9 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
           <Button
             className="flex-1"
             variant="secondary"
-            onClick={(): void => setView(View.PHONE_INPUT)}
+            onClick={() => {
+              setView(View.PHONE_INPUT);
+            }}
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Regresar

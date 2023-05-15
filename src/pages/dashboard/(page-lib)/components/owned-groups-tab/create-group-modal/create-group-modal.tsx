@@ -90,7 +90,9 @@ const CreateGroupModal: FC<ModalStateProps> = ({ show, onClose }) => {
           <Button
             variant="secondary"
             className="flex flex-1 items-center justify-center py-2"
-            onClick={() => onClose(false)}
+            onClick={() => {
+              onClose(false);
+            }}
           >
             Cancelar
           </Button>

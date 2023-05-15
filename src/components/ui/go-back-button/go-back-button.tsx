@@ -13,7 +13,7 @@ const GoBackButton: FC<Props> = ({ className, ...rest }) => {
     <Button
       variant="secondary"
       onClick={() => {
-        void router.back();
+        router.back();
       }}
       className={cn("rounded-full p-2.5", className)}
       {...rest}
