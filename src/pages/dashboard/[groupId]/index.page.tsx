@@ -17,6 +17,7 @@ import {
 } from "next";
 import { Layout } from "$/components/layouts/layout";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const getServerSideProps = (context: GetServerSidePropsContext) => {
   const { groupId } = context.query;
 

@@ -30,7 +30,7 @@ const Dashboard: NextPageWithLayout = () => {
     (category) => category.id === groupId
   );
 
-  function handleTabChange(index: number) {
+  function handleTabChange(index: number): void {
     void router.push({
       pathname: "/dashboard",
       query: {

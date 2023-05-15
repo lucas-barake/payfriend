@@ -23,7 +23,7 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppPropsWithLayout) => {
+}: AppPropsWithLayout): JSX.Element => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (

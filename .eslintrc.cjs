@@ -53,6 +53,14 @@ const config = {
     "prefer-const": "error",
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
+    "consistent-return": "error",
+    "@typescript-eslint/explicit-function-return-type": [
+      "warn",
+      {
+        allowExpressions: true,
+        allowTypedFunctionExpressions: true,
+      },
+    ],
     "object-shorthand": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "no-implicit-coercion": "error",

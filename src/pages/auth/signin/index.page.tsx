@@ -21,7 +21,10 @@ type Providers = {
   };
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
   if (session !== null) {
@@ -40,7 +43,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       providers,
     },
   };
-}
+};
 
 const SignIn: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
