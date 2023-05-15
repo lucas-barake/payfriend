@@ -9,7 +9,7 @@ import { View } from "$/pages/onboarding/(page-lib)/enums/view";
 import PhoneInput from "$/pages/onboarding/(page-lib)/components/phone-input";
 import { CustomHead } from "$/components/layouts/custom-head";
 import OtpInput from "$/pages/onboarding/(page-lib)/components/otp-input";
-import { type VerifyPhoneInput } from "$/server/api/routers/user/phone/verify/input";
+import { type VerifyPhoneInput } from "$/server/api/routers/user/phone/input";
 
 const Onboard: NextPageWithLayout = () => {
   const router = useRouter();
