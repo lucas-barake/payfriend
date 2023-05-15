@@ -5,7 +5,7 @@ import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { useRouter } from "next/router";
-import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/queries/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";

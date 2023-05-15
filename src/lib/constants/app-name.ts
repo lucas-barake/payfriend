@@ -1,1 +1,1 @@
-export const APP_NAME = "Payfriend";
+export const APP_NAME = "PayFriend";

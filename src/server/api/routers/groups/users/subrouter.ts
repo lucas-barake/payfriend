@@ -1,10 +1,4 @@
-import { createTRPCRouter } from "$/server/api/trpc";
-import updateUserRole from "$/server/api/routers/groups/users/update-user-role/handler";
-import removeUser from "$/server/api/routers/groups/users/remove-user/handler";
+import { mergeTRPCRouters } from "$/server/api/trpc";
+import { groupUsersMutations } from "$/server/api/routers/groups/users/mutations";
 
-const usersSubRouter = createTRPCRouter({
-  removeUser,
-  updateUserRole,
-});
-
-export default usersSubRouter;
+export const usersSubRouter = mergeTRPCRouters(groupUsersMutations);

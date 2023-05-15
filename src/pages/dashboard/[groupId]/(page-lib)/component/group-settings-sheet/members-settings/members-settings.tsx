@@ -3,10 +3,10 @@ import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";
 import { Controller, useForm } from "react-hook-form";
 import {
-  sendInviteInput,
-  type SendInviteInput,
+  sendGroupInviteInput,
+  type SendGroupInviteInput,
   sendInviteRoleOptions,
-} from "$/server/api/routers/user/group-invites/send-group-invite/input";
+} from "$/server/api/routers/user/group-invites/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
@@ -14,7 +14,7 @@ import { handleToastError } from "$/components/ui/styled-toaster";
 import { useSession } from "next-auth/react";
 import { z } from "zod";
 import { type AppRouter } from "$/server/api/root";
-import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/queries/input";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
 import Member from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings-sheet/members-settings/member";
 import { PlusCircle } from "lucide-react";
@@ -33,7 +33,7 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
   const utils = api.useContext();
   const sendInviteMutation = api.user.sendGroupInvite.useMutation();
 
-  const form = useForm<SendInviteInput>({
+  const form = useForm<SendGroupInviteInput>({
     defaultValues: {
       groupId: queryVariables.groupId,
       role: "COLLABORATOR",
@@ -41,7 +41,7 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
     mode: "onSubmit",
     reValidateMode: "onChange",
     resolver: zodResolver(
-      sendInviteInput.superRefine((val, ctx) => {
+      sendGroupInviteInput.superRefine((val, ctx) => {
         if (val.email === session.data?.user.email) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -69,7 +69,7 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
     ),
   });
 
-  async function handleSubmit(data: SendInviteInput): Promise<void> {
+  async function handleSubmit(data: SendGroupInviteInput): Promise<void> {
     const res = await toast.promise(sendInviteMutation.mutateAsync(data), {
       loading: "Enviando invitación",
       success: "Invitación enviada",

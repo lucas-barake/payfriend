@@ -19,7 +19,7 @@ const config = {
   parserOptions: {
     project: path.join(__dirname, "tsconfig.json"),
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "tailwindcss"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {
     "@typescript-eslint/consistent-type-imports": [
@@ -52,11 +52,61 @@ const config = {
     "no-var": "error",
     "prefer-const": "error",
     "@typescript-eslint/no-floating-promises": "error",
-    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
+    "consistent-return": "error",
+    "@typescript-eslint/explicit-function-return-type": [
+      "warn",
+      {
+        allowExpressions: true,
+        allowTypedFunctionExpressions: true,
+      },
+    ],
     "object-shorthand": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "no-implicit-coercion": "error",
     "@typescript-eslint/return-await": "error",
+    "no-unneeded-ternary": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: ["../"],
+      },
+    ],
+    "@typescript-eslint/no-confusing-void-expression": "error",
+    "@typescript-eslint/no-meaningless-void-operator": "warn",
+    "react/function-component-definition": [
+      "error",
+      {
+        namedComponents: ["arrow-function"],
+        unnamedComponents: "arrow-function",
+      },
+    ],
+    "no-plusplus": [
+      "error",
+      {
+        allowForLoopAfterthoughts: true,
+      },
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        labelComponents: ["Label"],
+        labelAttributes: ["label"],
+        controlComponents: ["Input", "Select"],
+        depth: 2,
+        required: {
+          some: ["nesting", "id"],
+        },
+      },
+    ],
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        components: ["Link"],
+        specialLink: ["hrefLeft", "hrefRight"],
+        aspects: ["invalidHref", "preferButton"],
+      },
+    ],
   },
 };
 

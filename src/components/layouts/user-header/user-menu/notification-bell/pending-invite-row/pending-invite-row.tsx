@@ -1,7 +1,6 @@
 import { type FC } from "react";
 import { type AppRouter } from "$/server/api/root";
 import cn from "$/lib/utils/cn";
-import truncateString from "$/lib/utils/truncate-string";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { Menu } from "@headlessui/react";
@@ -9,6 +8,7 @@ import { api } from "$/lib/utils/api";
 import { Check, X } from "lucide-react";
 import { Badge } from "$/components/ui/badge";
 import { type inferProcedureOutput } from "@trpc/server";
+import { strTransformer } from "$/lib/utils/str-transformer";
 
 type Props = {
   invite: inferProcedureOutput<AppRouter["user"]["getGroupInvites"]>[number];
@@ -58,7 +58,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
             <span>{invite.owner} te invitó al grupo</span>
 
             <Badge className="self-start rounded-sm">
-              {truncateString(invite.groupName, 14)}
+              {strTransformer.truncate(invite.groupName, 14)}
             </Badge>
           </div>
 

@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import {
   verifyPhoneInput,
   type VerifyPhoneInput,
-} from "$/server/api/routers/user/phone/input";
+} from "$/server/api/routers/user/phone/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
@@ -97,7 +97,9 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
           <Button
             className="flex-1"
             variant="secondary"
-            onClick={(): void => setView(View.PHONE_INPUT)}
+            onClick={() => {
+              setView(View.PHONE_INPUT);
+            }}
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Regresar

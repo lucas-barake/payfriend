@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createGroupInput,
   type CreateGroupInput,
-} from "$/server/api/routers/groups/groups/create-update/input";
+} from "$/server/api/routers/groups/groups/mutations/input";
 import { Form } from "src/components/ui/form";
 import { Button } from "$/components/ui/button";
 import { api } from "$/lib/utils/api";
@@ -90,7 +90,9 @@ const CreateGroupModal: FC<ModalStateProps> = ({ show, onClose }) => {
           <Button
             variant="secondary"
             className="flex flex-1 items-center justify-center py-2"
-            onClick={() => onClose(false)}
+            onClick={() => {
+              onClose(false);
+            }}
           >
             Cancelar
           </Button>

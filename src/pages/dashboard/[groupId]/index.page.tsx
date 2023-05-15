@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import {
   type GetGroupByIdInput,
   getGroupByIdInput,
-} from "$/server/api/routers/groups/groups/get-group-by-id/input";
+} from "$/server/api/routers/groups/groups/queries/input";
 import LoadingSpinner from "src/components/ui/icons/loading-spinner";
 import { TimeInMs } from "$/lib/enums/time";
 import { GoBackButton } from "$/components/ui/go-back-button";
@@ -17,6 +17,7 @@ import {
 } from "next";
 import { Layout } from "$/components/layouts/layout";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const getServerSideProps = (context: GetServerSidePropsContext) => {
   const { groupId } = context.query;
 

@@ -4,6 +4,7 @@ type MappedZodLiterals<T extends readonly Primitive[]> = {
   -readonly [K in keyof T]: ZodLiteral<T[K]>;
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function createManyUnion<
   A extends Readonly<[Primitive, Primitive, ...Primitive[]]>
 >(literals: A, params?: RawCreateParams) {

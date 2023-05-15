@@ -1,13 +1,13 @@
 import React, { type FC } from "react";
 import Link from "next/link";
 import { Button } from "$/components/ui/button";
-import truncateString from "$/lib/utils/truncate-string";
 import { DateTime } from "luxon";
 import { type AppRouter } from "$/server/api/root";
 import Image from "next/image";
 import { Calendar, Eye } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
 import { type inferProcedureOutput } from "@trpc/server";
+import { strTransformer } from "$/lib/utils/str-transformer";
 
 type Props = {
   group: inferProcedureOutput<AppRouter["user"]["getOwnedGroups"]>[number];
@@ -48,8 +48,8 @@ const GroupCard: FC<Props> & {
         </div>
       </div>
 
-      <span className="mt-2 mb-6 pr-2 lg:pr-3 xl:pr-6">
-        {truncateString(group.description, 80)}
+      <span className="mb-6 mt-2 pr-2 lg:pr-3 xl:pr-6">
+        {strTransformer.truncate(group.description, 80)}
       </span>
 
       <div className="mt-auto flex items-center justify-between">

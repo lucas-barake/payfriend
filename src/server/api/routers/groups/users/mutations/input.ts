@@ -1,12 +1,21 @@
 import { z } from "zod";
 
+export const removeUserFromGroupFromInput = z.object({
+  groupId: z.string().cuid(),
+  userId: z.string().cuid(),
+  isPending: z.boolean(),
+});
+export type RemoveUserFromGroupFromInput = z.infer<
+  typeof removeUserFromGroupFromInput
+>;
+
 export const updateDeleteUserOptions = [
   { value: "VIEWER", label: "Solo ver" },
   { value: "COLLABORATOR", label: "Ver y editar" },
   { value: "REMOVE", label: "Eliminar usuario" },
 ] as const;
 export type UpdateDeleteUserValueOptions =
-  (typeof updateDeleteUserOptions)[number]["value"];
+  typeof updateDeleteUserOptions[number]["value"];
 
 export const updateUserRoleInput = z.object({
   groupId: z.string().cuid(),
