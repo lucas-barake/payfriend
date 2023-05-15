@@ -1,12 +1,4 @@
-import { createTRPCRouter } from "$/server/api/trpc";
-import {
-  getOwnedGroups,
-  getSharedGroups,
-} from "$/server/api/routers/user/groups/get-owned-or-shared-groups/handler";
+import { mergeTRPCRouters } from "$/server/api/trpc";
+import { userGroupsQueries } from "$/server/api/routers/user/groups/queries";
 
-const groupsSubRouter = createTRPCRouter({
-  getOwnedGroups,
-  getSharedGroups,
-});
-
-export default groupsSubRouter;
+export const userGroupsSubRouter = mergeTRPCRouters(userGroupsQueries);

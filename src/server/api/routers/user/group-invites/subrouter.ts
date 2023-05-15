@@ -1,14 +1,8 @@
-import { createTRPCRouter } from "$/server/api/trpc";
-import getGroupInvites from "$/server/api/routers/user/group-invites/get-group-invites/handler";
-import acceptGroupInvite from "$/server/api/routers/user/group-invites/accept-group-invite/handler";
-import sendGroupInvite from "$/server/api/routers/user/group-invites/send-group-invite/handler";
-import declineGroupInvite from "$/server/api/routers/user/group-invites/decline-group-invite/handler";
+import { mergeTRPCRouters } from "$/server/api/trpc";
+import { userGroupInvitesMutations } from "$/server/api/routers/user/group-invites/mutations";
+import { userGroupinvitesQueries } from "$/server/api/routers/user/group-invites/queries";
 
-const groupInvitesSubRouter = createTRPCRouter({
-  acceptGroupInvite,
-  getGroupInvites,
-  declineGroupInvite,
-  sendGroupInvite,
-});
-
-export default groupInvitesSubRouter;
+export const userGroupInvitesSubRouter = mergeTRPCRouters(
+  userGroupInvitesMutations,
+  userGroupinvitesQueries
+);

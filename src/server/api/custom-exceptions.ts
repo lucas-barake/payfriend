@@ -8,13 +8,13 @@ const CUSTOM_EXCEPTIONS = {
     });
   },
   BAD_REQUEST: (message?: string) => {
-    throw new TRPCError({
+    return new TRPCError({
       code: "BAD_REQUEST",
       message: message ?? "Ocurrió algún error.",
     });
   },
   INTERNAL_SERVER_ERROR: (message?: string) => {
-    throw new TRPCError({
+    return new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: message ?? "Ocurrió algún error.",
     });

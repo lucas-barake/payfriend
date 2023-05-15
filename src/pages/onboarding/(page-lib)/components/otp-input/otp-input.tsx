@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import {
   verifyPhoneInput,
   type VerifyPhoneInput,
-} from "$/server/api/routers/user/phone/input";
+} from "$/server/api/routers/user/phone/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";

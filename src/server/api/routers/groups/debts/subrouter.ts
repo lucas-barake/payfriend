@@ -1,8 +1,6 @@
-import { createTRPCRouter } from "$/server/api/trpc";
-import createDebt from "$/server/api/routers/groups/debts/create-debt/handler";
+import { mergeTRPCRouters } from "$/server/api/trpc";
+import { groupDebtsMutations } from "$/server/api/routers/groups/debts/mutations";
 
-const debtsSubRouter = createTRPCRouter({
-  createDebt,
-});
+const debtsSubRouter = mergeTRPCRouters(groupDebtsMutations);
 
 export default debtsSubRouter;

@@ -1,11 +1,11 @@
 import { type FC } from "react";
 import { type AppRouter } from "$/server/api/root";
-import { type GetSettingsInput } from "$/server/api/routers/groups/groups/get-settings-by-id/input";
+import { type GetSettingsInput } from "$/server/api/routers/groups/groups/queries/input";
 import { api } from "$/lib/utils/api";
 import {
   type UpdateDeleteUserValueOptions,
   type UpdateUserRoleInput,
-} from "$/server/api/routers/groups/users/update-user-role/input";
+} from "$/server/api/routers/groups/users/mutations/input";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import GroupMember from "$/pages/dashboard/[groupId]/(page-lib)/component/group-member";
