@@ -1,5 +1,5 @@
 import { type FC, useState } from "react";
-import { type GetSettingsInput } from "$/server/api/routers/groups/groups/queries/input";
+import { type GetSettingsInput } from "$/server/api/routers/debts/debts/queries/input";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
 import { Settings } from "lucide-react";

@@ -4,18 +4,18 @@ import cn from "$/lib/utils/cn";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { AuthLayout } from "$/components/layouts/auth-layout";
-import OwnedGroupsTab from "src/pages/dashboard/(page-lib)/components/owned-groups-tab";
-import SharedGroupsTab from "src/pages/dashboard/(page-lib)/components/shared-groups-tab";
+import DebtsAsLenderTab from "src/pages/dashboard/(page-lib)/components/debts-as-lender-tab";
+import DebtsAsBorrowerTab from "src/pages/dashboard/(page-lib)/components/debts-as-borrower-tab";
 import { Layout } from "$/components/layouts/layout";
 
 const tabCategories = [
   {
     id: "yours",
-    title: "Tus Grupos",
+    title: "Tus Deudas",
   },
   {
     id: "shared",
-    title: "Grupos Compartidos",
+    title: "Deudas como Prestamista",
   },
 ] as const;
 
@@ -67,11 +67,11 @@ const Dashboard: NextPageWithLayout = () => {
 
         <Tab.Panels>
           <Tab.Panel as="div" className="flex flex-col gap-6">
-            <OwnedGroupsTab />
+            <DebtsAsLenderTab />
           </Tab.Panel>
 
           <Tab.Panel as="div" className="flex flex-col gap-6">
-            <SharedGroupsTab />
+            <DebtsAsBorrowerTab />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

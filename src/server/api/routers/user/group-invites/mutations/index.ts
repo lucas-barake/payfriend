@@ -9,7 +9,6 @@ import {
 } from "$/server/api/routers/user/group-invites/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
-import { inviteUserSelect } from "$/server/api/routers/user/group-invites/mutations/select";
 
 export const userGroupInvitesMutations = createTRPCRouter({
   acceptGroupInvite: protectedVerifiedProcedure
@@ -17,13 +16,17 @@ export const userGroupInvitesMutations = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const pendingInvite = await ctx.prisma.pendingInvite.findUnique({
         where: {
-          userId_groupId: {
-            userId: ctx.session.user.id,
-            groupId: input.groupId,
+          inviteeEmail_debtId: {
+            inviteeEmail: ctx.session.user.email,
+            debtId: input.debtId,
           },
         },
         select: {
-          role: true,
+          debt: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
 
@@ -31,26 +34,25 @@ export const userGroupInvitesMutations = createTRPCRouter({
         throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No se encontró la invitación");
       }
 
-      await ctx.prisma.groupsUsersMapping.create({
+      await ctx.prisma.borrower.create({
         data: {
           userId: ctx.session.user.id,
-          groupId: input.groupId,
-          role: pendingInvite.role,
+          debtId: input.debtId,
         },
         select: {
-          groupId: true,
+          debtId: true,
         },
       });
 
       return ctx.prisma.pendingInvite.delete({
         where: {
-          userId_groupId: {
-            userId: ctx.session.user.id,
-            groupId: input.groupId,
+          inviteeEmail_debtId: {
+            inviteeEmail: ctx.session.user.email,
+            debtId: input.debtId,
           },
         },
         select: {
-          groupId: true,
+          debtId: true,
         },
       });
     }),
@@ -59,28 +61,24 @@ export const userGroupInvitesMutations = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.pendingInvite.delete({
         where: {
-          userId_groupId: {
-            userId: ctx.session.user.id,
-            groupId: input.groupId,
+          inviteeEmail_debtId: {
+            inviteeEmail: ctx.session.user.email,
+            debtId: input.debtId,
           },
         },
         select: {
-          groupId: true,
+          debtId: true,
         },
       });
     }),
   sendGroupInvite: protectedVerifiedProcedure
     .input(sendGroupInviteInput)
     .mutation(async ({ ctx, input }) => {
-      const hasPermission = await ctx.prisma.group.findFirst({
+      const hasPermission = await ctx.prisma.user.findFirst({
         where: {
-          id: input.groupId,
-          users: {
+          debtsAsLender: {
             some: {
-              user: {
-                id: ctx.session.user.id,
-              },
-              role: "OWNER",
+              id: input.groupId,
             },
           },
         },
@@ -90,46 +88,34 @@ export const userGroupInvitesMutations = createTRPCRouter({
         throw CUSTOM_EXCEPTIONS.UNAUTHORIZED();
       }
 
-      const numOfUsers = await ctx.prisma.group.count({
+      const numOfMembers = await ctx.prisma.borrower.count({
         where: {
-          id: input.groupId,
+          debt: {
+            id: input.groupId,
+          },
         },
       });
 
-      if (numOfUsers >= MAX_NUM_OF_GROUP_USERS) {
+      if (numOfMembers >= MAX_NUM_OF_GROUP_USERS) {
         throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
           "El grupo ya tiene el máximo de usuarios"
         );
       }
 
-      const user = await ctx.prisma.user.findUnique({
-        where: {
-          email: input.email,
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      if (!user) {
-        throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El usuario no existe");
-      }
-
-      if (user.id === ctx.session.user.id) {
-        throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No puedes invitarte a ti mismo");
-      }
-
       try {
         return await ctx.prisma.pendingInvite.create({
           data: {
-            userId: user.id,
-            groupId: input.groupId,
-            role: input.role,
+            debtId: input.groupId,
+            inviteeEmail: input.email,
+            inviterId: ctx.session.user.id,
           },
           select: {
-            role: true,
-            user: {
-              select: inviteUserSelect,
+            inviteeEmail: true,
+            debt: {
+              select: {
+                id: true,
+                name: true,
+              },
             },
           },
         });

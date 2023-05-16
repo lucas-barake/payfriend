@@ -1,11 +1,11 @@
 import { type FC } from "react";
 import { type AppRouter } from "$/server/api/root";
-import { type GetSettingsInput } from "$/server/api/routers/groups/groups/queries/input";
+import { type GetSettingsInput } from "$/server/api/routers/debts/debts/queries/input";
 import { api } from "$/lib/utils/api";
 import {
   type UpdateDeleteUserValueOptions,
   type UpdateUserRoleInput,
-} from "$/server/api/routers/groups/users/mutations/input";
+} from "$/server/api/routers/debts/users/mutations/input";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import GroupMember from "$/pages/dashboard/[groupId]/(page-lib)/component/group-member";
@@ -75,8 +75,8 @@ const Member: FC<Props> = ({ member, queryVariables }) => {
       });
     }
 
-    await utils.user.getOwnedGroups.invalidate();
-    await utils.user.getSharedGroups.invalidate();
+    await utils.user.getOwnedDebts.invalidate();
+    await utils.user.getSharedDebts.invalidate();
     await utils.groups.getGroupById.invalidate();
   }
 

@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import {
   type GetGroupByIdInput,
   getGroupByIdInput,
-} from "$/server/api/routers/groups/groups/queries/input";
+} from "$/server/api/routers/debts/debts/queries/input";
 import LoadingSpinner from "src/components/ui/icons/loading-spinner";
 import { TimeInMs } from "$/lib/enums/time";
 import { GoBackButton } from "$/components/ui/go-back-button";

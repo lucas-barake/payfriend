@@ -7,7 +7,7 @@ import {
   updateDeleteUserOptions,
   type UpdateDeleteUserValueOptions,
   type UpdateUserRoleInput,
-} from "$/server/api/routers/groups/users/mutations/input";
+} from "$/server/api/routers/debts/users/mutations/input";
 
 type UpdateProps = {
   onChange: (v: UpdateDeleteUserValueOptions) => void;

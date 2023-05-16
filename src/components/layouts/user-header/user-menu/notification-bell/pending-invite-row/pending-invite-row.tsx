@@ -11,20 +11,22 @@ import { type inferProcedureOutput } from "@trpc/server";
 import { strTransformer } from "$/lib/utils/str-transformer";
 
 type Props = {
-  invite: inferProcedureOutput<AppRouter["user"]["getGroupInvites"]>[number];
+  invite: NonNullable<
+    inferProcedureOutput<AppRouter["user"]["getDebtsInvites"]>
+  >[number];
 };
 
 const PendingInviteRow: FC<Props> = ({ invite }) => {
   const utils = api.useContext();
   const acceptMutation = api.user.acceptGroupInvite.useMutation({
     onSuccess: async (res) => {
-      const prevData = utils.user.getGroupInvites.getData() ?? [];
+      const prevData = utils.user.getDebtsInvites.getData() ?? [];
 
-      utils.user.getGroupInvites.setData(undefined, [
-        ...prevData.filter((invite) => invite.groupId !== res.groupId),
+      utils.user.getDebtsInvites.setData(undefined, [
+        ...prevData.filter((invite) => invite.debt.id !== res.debtId),
       ]);
 
-      await utils.user.getSharedGroups.invalidate();
+      await utils.user.getSharedDebts.invalidate();
 
       return {
         prevData,
@@ -33,10 +35,10 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
   });
   const declineMutation = api.user.declineGroupInvite.useMutation({
     onSuccess: (res) => {
-      const prevData = utils.user.getGroupInvites.getData() ?? [];
+      const prevData = utils.user.getDebtsInvites.getData() ?? [];
 
-      utils.user.getGroupInvites.setData(undefined, [
-        ...prevData.filter((invite) => invite.groupId !== res.groupId),
+      utils.user.getDebtsInvites.setData(undefined, [
+        ...prevData.filter((invite) => invite.debt.id !== res.debtId),
       ]);
 
       return {
@@ -46,7 +48,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
   });
 
   return (
-    <Menu.Item key={invite.groupId}>
+    <Menu.Item key={invite.debt.id}>
       {({ active }) => (
         <div
           className={cn(
@@ -55,10 +57,10 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
           )}
         >
           <div className="flex flex-col gap-1.5 font-medium">
-            <span>{invite.owner} te invitó al grupo</span>
+            <span>{invite.inviter.name} te invitó al grupo</span>
 
             <Badge className="self-start rounded-sm">
-              {strTransformer.truncate(invite.groupName, 14)}
+              {strTransformer.truncate(invite.debt.name, 14)}
             </Badge>
           </div>
 
@@ -69,7 +71,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
               onClick={() => {
                 void toast.promise(
                   acceptMutation.mutateAsync({
-                    groupId: invite.groupId,
+                    debtId: invite.debt.id,
                   }),
                   {
                     loading: "Aceptando invitación...",
@@ -88,7 +90,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
               onClick={() => {
                 void toast.promise(
                   declineMutation.mutateAsync({
-                    groupId: invite.groupId,
+                    debtId: invite.debt.id,
                   }),
                   {
                     loading: "Rechazando invitación...",

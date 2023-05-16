@@ -7,7 +7,7 @@ import { buttonVariants } from "$/components/ui/button";
 import { Bell } from "lucide-react";
 
 const NotificationBell: FC = () => {
-  const query = api.user.getGroupInvites.useQuery(undefined, {
+  const query = api.user.getDebtsInvites.useQuery(undefined, {
     staleTime: TimeInMs.TenSeconds,
     refetchOnWindowFocus: true,
     retry: false,
@@ -21,7 +21,7 @@ const NotificationBell: FC = () => {
           <Bell className="h-5 w-5" />
 
           {allPendingInvites.length > 0 && (
-            <span className="absolute top-0.5 right-0.5 -mt-1 -mr-1 flex h-2 w-2">
+            <span className="absolute right-0.5 top-0.5 -mr-1 -mt-1 flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-600 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
             </span>
@@ -51,7 +51,7 @@ const NotificationBell: FC = () => {
               </Menu.Item>
             ) : (
               allPendingInvites.map((invite) => (
-                <PendingInviteRow key={invite.groupId} invite={invite} />
+                <PendingInviteRow key={invite.debt.id} invite={invite} />
               ))
             )}
           </div>

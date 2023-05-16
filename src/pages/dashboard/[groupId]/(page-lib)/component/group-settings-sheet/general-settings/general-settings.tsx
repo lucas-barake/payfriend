@@ -5,12 +5,12 @@ import { Button } from "$/components/ui/button";
 import {
   updateGroupInput,
   type UpdateGroupInput,
-} from "$/server/api/routers/groups/groups/mutations/input";
+} from "$/server/api/routers/debts/debts/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
-import { type GetSettingsInput } from "$/server/api/routers/groups/groups/queries/input";
+import { type GetSettingsInput } from "$/server/api/routers/debts/debts/queries/input";
 import { type Group } from "@prisma/client";
 
 type Props = {
@@ -30,7 +30,7 @@ const GeneralSettings: FC<Props> = ({
       const prevData = utils.groups.getSettingsById.getData(queryVariables);
       if (prevData === undefined) return;
 
-      await utils.user.getOwnedGroups.invalidate();
+      await utils.user.getOwnedDebts.invalidate();
       await utils.groups.getGroupById.invalidate({
         id: queryVariables.groupId,
       });

@@ -1,5 +1,5 @@
 import { createTRPCRouter } from "$/server/api/trpc";
-import groupsRouter from "$/server/api/routers/groups/router";
+import groupsRouter from "$/server/api/routers/debts/router";
 import userRouter from "$/server/api/routers/user/router";
 
 /**

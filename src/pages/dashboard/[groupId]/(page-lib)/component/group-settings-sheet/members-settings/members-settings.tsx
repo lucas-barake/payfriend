@@ -14,7 +14,7 @@ import { handleToastError } from "$/components/ui/styled-toaster";
 import { useSession } from "next-auth/react";
 import { z } from "zod";
 import { type AppRouter } from "$/server/api/root";
-import { type GetSettingsInput } from "$/server/api/routers/groups/groups/queries/input";
+import { type GetSettingsInput } from "$/server/api/routers/debts/debts/queries/input";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
 import Member from "$/pages/dashboard/[groupId]/(page-lib)/component/group-settings-sheet/members-settings/member";
 import { PlusCircle } from "lucide-react";
@@ -79,7 +79,7 @@ const MembersSettings: FC<Props> = ({ members, queryVariables }) => {
     const prevSettings = utils.groups.getSettingsById.getData(queryVariables);
     if (prevSettings === undefined) return;
 
-    void utils.user.getOwnedGroups.invalidate();
+    void utils.user.getOwnedDebts.invalidate();
 
     utils.groups.getSettingsById.setData(queryVariables, {
       ...prevSettings,
