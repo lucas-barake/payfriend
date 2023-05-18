@@ -16,7 +16,7 @@ const UserHeader: React.FC = () => {
         {APP_NAME}
       </Link>
 
-      <div className="flex items-baseline gap-2">
+      <div className="flex items-center gap-2">
         {isAuthenticated && <UserMenu />}
 
         <ThemeSwitch />

@@ -13,7 +13,7 @@ export const ProfileMenu: React.FC = () => {
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
         <Button variant="ghost" size="sm">
-          <Avatar className="mr-2 h-6 w-6">
+          <Avatar className="h-6 w-6">
             <Avatar.Image src={userImage} />
 
             <AvatarFallback className="bg-indigo-200 dark:bg-indigo-800">
