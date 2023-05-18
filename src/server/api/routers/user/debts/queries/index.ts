@@ -23,25 +23,31 @@ export const getUserDebtsSelect = {
 
 export const userGroupsQueries = createTRPCRouter({
   getOwnedDebts: protectedVerifiedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user
-      .findUnique({
-        where: {
-          id: ctx.session.user.id,
+    return ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        debtsAsLender: {
+          select: getUserDebtsSelect,
         },
-      })
-      .debtsAsLender({
-        select: getUserDebtsSelect,
-      });
+      },
+    });
   }),
   getSharedDebts: protectedVerifiedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user
-      .findUnique({
-        where: {
-          id: ctx.session.user.id,
+    return ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        debtsAsBorrower: {
+          select: {
+            debt: {
+              select: getUserDebtsSelect,
+            },
+          },
         },
-      })
-      .debtsAsBorrower({
-        select: getUserDebtsSelect,
-      });
+      },
+    });
   }),
 });

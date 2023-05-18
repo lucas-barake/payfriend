@@ -6,7 +6,7 @@ import { createGroupInput } from "$/server/api/routers/debts/debts/mutations/inp
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { getUserDebtsSelect } from "$/server/api/routers/user/debts/queries";
 
-export const groupMutations = createTRPCRouter({
+export const debtsMutations = createTRPCRouter({
   createGroup: protectedVerifiedProcedure
     .input(createGroupInput)
     .mutation(async ({ ctx, input }) => {

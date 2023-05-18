@@ -23,7 +23,7 @@ model Debt {
   amount         Float
   dueDate        DateTime?
   lenderId       String
-  lender         User            @relation("Lender", fields: [lenderId], references: [id])
+  lender         User            @relation(fields: [lenderId], references: [id])
   borrowers      Borrower[]
   pendingInvites PendingInvite[]
 }
@@ -39,7 +39,7 @@ model Borrower {
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   userId    String
-  user      User            @relation("Borrower", fields: [userId], references: [id])
+  user      User            @relation(fields: [userId], references: [id])
   debtId    String
   debt      Debt            @relation(fields: [debtId], references: [id])
   status    BorrowerStatus? @default(YET_TO_PAY)
@@ -95,8 +95,8 @@ model User {
   image           String?
   accounts        Account[]
   sessions        Session[]
-  debtsAsLender   Debt[]          @relation("Lender")
-  debtsAsBorrower Borrower[]      @relation("Borrower")
+  debtsAsLender   Debt[]
+  debtsAsBorrower Borrower[]
   pendingInvites  PendingInvite[]
 }
 

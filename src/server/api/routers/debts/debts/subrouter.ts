@@ -1,5 +1,5 @@
 import { mergeTRPCRouters } from "$/server/api/trpc";
-import { groupMutations } from "$/server/api/routers/debts/debts/mutations";
-import { groupQueries } from "$/server/api/routers/debts/debts/queries";
+import { debtsMutations } from "$/server/api/routers/debts/debts/mutations";
+import { debtsRouter } from "$/server/api/routers/debts/debts/queries";
 
-export const groupsSubRouter = mergeTRPCRouters(groupMutations, groupQueries);
+export const debtsSubRouter = mergeTRPCRouters(debtsMutations, debtsRouter);

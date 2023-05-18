@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { type AppRouter } from "$/server/api/root";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { Menu } from "@headlessui/react";

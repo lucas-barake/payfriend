@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -7,32 +7,11 @@ import {
 } from "$/server/api/routers/debts/debts/mutations/input";
 import { Form } from "src/components/ui/form";
 import { Button } from "$/components/ui/button";
-import { api } from "$/lib/utils/api";
-import toast from "react-hot-toast";
-import { handleToastError } from "$/components/ui/styled-toaster";
-import { useRouter } from "next/router";
 import { Modal, type ModalStateProps } from "$/components/ui/modal";
+import { ArrowRight } from "lucide-react";
 
-const CreateDebtModal: FC<ModalStateProps> = ({ show, onClose }) => {
-  const router = useRouter();
-  const utils = api.useContext();
-  const create = api.groups.createGroup.useMutation({
-    onSuccess: (newTable) => {
-      const prevData = utils.user.getOwnedDebts.getData();
-
-      utils.user.getOwnedDebts.setData(
-        undefined,
-        prevData !== undefined ? [newTable, ...prevData] : [newTable]
-      );
-
-      void router.push(`/dashboard/${newTable.id}`);
-
-      return {
-        prevData,
-      };
-    },
-  });
-
+const CreateDebtModal: React.FC<ModalStateProps> = ({ show, onClose }) => {
+  const locale = Intl.DateTimeFormat().resolvedOptions().locale;
   const form = useForm<CreateGroupInput>({
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -43,60 +22,74 @@ const CreateDebtModal: FC<ModalStateProps> = ({ show, onClose }) => {
     form.reset();
   }
 
-  async function handleSubmit(data: CreateGroupInput): Promise<void> {
-    await toast.promise(create.mutateAsync(data), {
-      loading: "Creando grupo...",
-      success: "Grupo creado",
-      error: handleToastError,
-    });
+  function handleSubmit(data: CreateGroupInput): void {
+    console.log(data);
   }
 
   return (
     <Modal
-      title="Crear Grupo"
+      title="Agregar Deuda"
       show={show}
       onClose={onClose}
       afterClose={afterClose}
     >
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <Form onSubmit={form.handleSubmit(handleSubmit)}>
-        <Form.Input
-          label="Nombre"
-          {...form.register("name")}
-          required
-          error={form.formState.errors.name?.message}
-        />
-        <Form.TextArea
-          label="Descripción"
-          {...form.register("description")}
-          error={form.formState.errors.description?.message}
-        />
+        <Form.Group>
+          <Form.Label htmlFor="name" required>
+            Nombre
+          </Form.Label>
+          <Form.Input
+            id="name"
+            {...form.register("name")}
+            required
+            error={form.formState.errors.name !== undefined}
+          />
 
-        {form.formState.errors.root?.message !== undefined && (
-          <span className="text-sm text-red-500">
-            {form.formState.errors.root?.message}
-          </span>
-        )}
+          <Form.FieldError message={form.formState.errors.name?.message} />
+        </Form.Group>
 
-        <div className="mt-4 flex items-center gap-2">
-          <Button
-            type="submit"
-            loading={create.isLoading}
-            className="flex flex-1 items-center justify-center py-2"
-          >
-            Crear Grupo
-          </Button>
+        <Form.Group>
+          <Form.Label htmlFor="description">Descripción</Form.Label>
+          <Form.TextArea id="description" {...form.register("description")} />
 
-          <Button
-            variant="secondary"
-            className="flex flex-1 items-center justify-center py-2"
-            onClick={() => {
-              onClose(false);
-            }}
-          >
-            Cancelar
-          </Button>
-        </div>
+          <Form.FieldError
+            message={form.formState.errors.description?.message}
+          />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label htmlFor="amount" required>
+            Monto
+          </Form.Label>
+          <Form.Input
+            id="amount"
+            type="number"
+            {...form.register("amount", { valueAsNumber: true })}
+            required
+            error={form.formState.errors.amount !== undefined}
+          />
+
+          {form.watch("amount") !== undefined &&
+            !isNaN(form.watch("amount")) && (
+              <span className="text-sm text-gray-400">
+                {form.watch("amount").toLocaleString(locale, {
+                  style: "currency",
+                  currency: "COP",
+                })}
+              </span>
+            )}
+
+          <Form.FieldError message={form.formState.errors.amount?.message} />
+        </Form.Group>
+
+        <Button
+          type="submit"
+          className="mt-4 flex flex-1 items-center justify-center py-2"
+        >
+          Siguiente
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
       </Form>
     </Modal>
   );

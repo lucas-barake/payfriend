@@ -11,17 +11,15 @@ const UserHeader: React.FC = () => {
   const isAuthenticated = session.status === "authenticated";
 
   return (
-    <header className="fixed top-0 z-10 w-full">
-      <div className="flex h-16 items-center justify-between border-b border-border bg-background px-5 py-3 lg:px-16 lg:py-4">
-        <Link href={Pages.DASHBOARD} className="text-lg font-bold lg:text-xl">
-          {APP_NAME}
-        </Link>
+    <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b bg-background/95 px-5 py-3 shadow-sm backdrop-blur lg:px-16 lg:py-4">
+      <Link href={Pages.DASHBOARD} className="text-lg font-bold lg:text-xl">
+        {APP_NAME}
+      </Link>
 
-        <div className="flex items-baseline gap-2">
-          {isAuthenticated && <UserMenu />}
+      <div className="flex items-baseline gap-2">
+        {isAuthenticated && <UserMenu />}
 
-          <ThemeSwitch />
-        </div>
+        <ThemeSwitch />
       </div>
     </header>
   );

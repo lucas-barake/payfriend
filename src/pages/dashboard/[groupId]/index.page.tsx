@@ -5,7 +5,6 @@ import {
   type GetGroupByIdInput,
   getGroupByIdInput,
 } from "$/server/api/routers/debts/debts/queries/input";
-import LoadingSpinner from "src/components/ui/icons/loading-spinner";
 import { TimeInMs } from "$/lib/enums/time";
 import { GoBackButton } from "$/components/ui/go-back-button";
 import { AuthLayout } from "$/components/layouts/auth-layout";
@@ -16,6 +15,7 @@ import {
   type InferGetServerSidePropsType,
 } from "next";
 import { Layout } from "$/components/layouts/layout";
+import { Loader2 } from "lucide-react";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const getServerSideProps = (context: GetServerSidePropsContext) => {
@@ -67,7 +67,7 @@ const GroupDashboardPage: NextPageWithLayout<Props> = ({ groupId }) => {
 
       {query.isLoading ? (
         <div className="flex h-full flex-col items-center justify-center">
-          <LoadingSpinner />
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
         </div>
       ) : (
         <p>{query.data?.name}</p>

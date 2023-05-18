@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { type FC, Fragment, type ReactNode } from "react";
 import { X } from "lucide-react";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 
 const Title: React.FC<{
   className?: string;
@@ -64,7 +64,7 @@ const BaseSheet: FC<SheetProps> = ({
                     className
                   )}
                 >
-                  <div className="h-full flex-1 overflow-y-scroll bg-background py-6 px-4 sm:px-6">
+                  <div className="h-full flex-1 overflow-y-scroll bg-background px-4 py-6 sm:px-6">
                     {children}
 
                     <button

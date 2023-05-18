@@ -14,7 +14,7 @@ const DebtsAsLenderTab: FC = () => {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
-  const debts = query.data ?? [];
+  const debts = query.data?.debtsAsLender ?? [];
 
   return (
     <Dialog>
@@ -36,7 +36,7 @@ const DebtsAsLenderTab: FC = () => {
             Crear <span className="hidden sm:inline-block">Nuevo</span> Grupo
           </Button>
 
-          {!query.isFetching && query.data?.length === 0 && (
+          {!query.isFetching && debts.length === 0 && (
             <span className="absolute right-0 top-0 -mr-1 -mt-1 flex h-3 w-3">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-700 opacity-75 dark:bg-yellow-300" />
               <span className="relative inline-flex h-3 w-3 rounded-full bg-orange-600 dark:bg-yellow-400" />

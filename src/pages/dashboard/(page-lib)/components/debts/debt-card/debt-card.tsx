@@ -3,16 +3,16 @@ import Link from "next/link";
 import { Button } from "$/components/ui/button";
 import { DateTime } from "luxon";
 import { type AppRouter } from "$/server/api/root";
-import Image from "next/image";
 import { Calendar, Eye } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
 import { type inferProcedureOutput } from "@trpc/server";
 import { strTransformer } from "$/lib/utils/str-transformer";
+import { Avatar } from "$/components/ui/avatar";
 
 type Props = {
   debt: NonNullable<
     inferProcedureOutput<AppRouter["user"]["getOwnedDebts"]>
-  >[number];
+  >["debtsAsLender"][number];
 };
 
 const DebtCard: FC<Props> & {
@@ -28,25 +28,15 @@ const DebtCard: FC<Props> & {
         <span className="truncate">{debt.name}</span>
 
         <div className="flex -space-x-2 overflow-hidden p-2">
-          {debt.borrowers?.map(({ user }) =>
-            user.image === null ? (
-              <div
-                key={user.name}
-                className="tranform inline-block w-7 rounded-full bg-neutral-200 text-center ring-2 ring-white duration-100 hover:scale-105 dark:bg-neutral-600 dark:ring-neutral-800 md:w-8"
-              >
-                {user.name?.charAt(0).toUpperCase()}
-              </div>
-            ) : (
-              <Image
-                key={user.image}
-                className="tranform inline-block w-7 rounded-full duration-100 hover:scale-105 md:w-8"
-                src={user.image}
-                alt={user.name ?? "Miembro del grupo"}
-                width={20}
-                height={20}
-              />
-            )
-          )}
+          {debt.borrowers?.map(({ user }) => (
+            <Avatar key={user.name}>
+              <Avatar.Image src={user.image ?? undefined} />
+
+              <Avatar.Fallback>
+                {user.name?.[0]?.toUpperCase() ?? "?"}
+              </Avatar.Fallback>
+            </Avatar>
+          ))}
         </div>
       </div>
 

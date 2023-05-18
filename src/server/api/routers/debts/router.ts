@@ -1,13 +1,7 @@
 import { mergeTRPCRouters } from "$/server/api/trpc";
-import debtsSubRouter, {
-  groupsSubRouter,
-} from "$/server/api/routers/debts/debts/subrouter";
+import { debtsSubRouter } from "$/server/api/routers/debts/debts/subrouter";
 import { usersSubRouter } from "$/server/api/routers/debts/users/subrouter";
 
-const groupsRouter = mergeTRPCRouters(
-  groupsSubRouter,
-  debtsSubRouter,
-  usersSubRouter
-);
+const debtsRouter = mergeTRPCRouters(debtsSubRouter, usersSubRouter);
 
-export default groupsRouter;
+export default debtsRouter;

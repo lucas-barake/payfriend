@@ -9,7 +9,10 @@ const DebtsAsBorrowerTab: FC = () => {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
-  const debts = query.data ?? [];
+  const debts = query.data?.debtsAsBorrower ?? [];
+  const normalizedDebts = debts.map((debt) => ({
+    ...debt.debt,
+  }));
 
   return (
     <>
@@ -17,7 +20,7 @@ const DebtsAsBorrowerTab: FC = () => {
         {debts.length}
       </span>
 
-      <Debts loading={query.isLoading} debts={debts} />
+      <Debts loading={query.isLoading} debts={normalizedDebts} />
     </>
   );
 };

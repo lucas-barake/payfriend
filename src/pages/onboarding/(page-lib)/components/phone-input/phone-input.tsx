@@ -6,7 +6,7 @@ import { Popover } from "$/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Command } from "$/components/ui/command";
 import { countriesWithCodes } from "$/pages/onboarding/(page-lib)/lib/countries-with-codes";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 import { Form } from "$/components/ui/form";
 import { Virtuoso } from "react-virtuoso";
 import { Controller, useForm } from "react-hook-form";

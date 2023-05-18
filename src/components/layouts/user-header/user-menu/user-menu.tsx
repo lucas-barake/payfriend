@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import ProfileMenu from "./profile-menu";
+import { ProfileMenu } from "./profile-menu";
 import NotificationBell from "./notification-bell";
 
 const UserMenu: FC = () => (

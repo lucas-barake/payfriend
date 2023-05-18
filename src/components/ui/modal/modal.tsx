@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { X } from "lucide-react";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 
 export type ModalStateProps = {
   show: boolean;

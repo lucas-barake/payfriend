@@ -9,7 +9,7 @@ import {
 import { inviteUserSelect } from "$/server/api/routers/user/group-invites/mutations/select";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
-export const groupQueries = createTRPCRouter({
+export const debtsRouter = createTRPCRouter({
   getSettingsById: protectedVerifiedProcedure
     .input(getSettingsInput)
     .query(async ({ ctx, input }) => {

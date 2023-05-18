@@ -1,79 +1,53 @@
-import { type FC, Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import Image from "next/image";
-import cn from "$/lib/utils/cn";
+import React from "react";
 import { signOut, useSession } from "next-auth/react";
-import { LockClosedIcon } from "@heroicons/react/outline";
-import { buttonVariants } from "$/components/ui/button";
-import { ChevronDown, User } from "lucide-react";
+import { Button } from "$/components/ui/button";
+import { DropdownMenu } from "$/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "$/components/ui/avatar";
+import { LogOut } from "lucide-react";
 
-const ProfileMenu: FC = () => {
+export const ProfileMenu: React.FC = () => {
   const session = useSession();
   const userImage = session.data?.user?.image ?? undefined;
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button
-        className={buttonVariants({
-          variant: "ghost",
-          size: "sm",
-          className: "flex items-center gap-2",
-        })}
-      >
-        {userImage !== undefined ? (
-          <Image
-            src={userImage}
-            alt="User image"
-            className="h-5 w-5 cursor-pointer rounded-full"
-            width={24}
-            height={24}
-          />
-        ) : (
-          <User className="h-8 w-8 cursor-pointer" />
-        )}
+    <DropdownMenu>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="ghost" size="sm">
+          <Avatar className="mr-2 h-6 w-6">
+            <Avatar.Image src={userImage} />
 
-        <ChevronDown
-          className="h-4 w-4 text-black dark:text-neutral-200"
-          aria-hidden="true"
-        />
-      </Menu.Button>
+            <AvatarFallback className="bg-indigo-200 dark:bg-indigo-800">
+              {session.data?.user?.name?.charAt(0) ?? "?"}
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenu.Trigger>
 
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md border border-border bg-background ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="divide-y divide-gray-100 py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  type="button"
-                  className={cn(
-                    active && "bg-background-secondary",
-                    "flex w-full items-center gap-1 self-stretch px-4 py-2 text-sm"
-                  )}
-                  onClick={() => {
-                    void signOut();
-                  }}
-                >
-                  <LockClosedIcon
-                    className="h-4 w-4 stroke-2 text-black dark:text-neutral-200"
-                    aria-hidden="true"
-                  />
-                  Cerrar sesión
-                </button>
-              )}
-            </Menu.Item>
-          </div>
-        </Menu.Items>
-      </Transition>
-    </Menu>
+      <DropdownMenu.Content className="w-56">
+        <DropdownMenu.Label>
+          {session.data?.user?.name ?? "Usuario"}
+          <p className="text-xs leading-none text-muted-foreground">
+            {session.data?.user?.email ?? ""}
+          </p>
+        </DropdownMenu.Label>
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Group>
+          <DropdownMenu.Item asChild>
+            <button
+              type="button"
+              onClick={() => {
+                void signOut();
+              }}
+              className="w-full cursor-pointer"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Cerrar Sesión</span>
+            </button>
+          </DropdownMenu.Item>
+        </DropdownMenu.Group>
+      </DropdownMenu.Content>
+    </DropdownMenu>
   );
 };
-
-export default ProfileMenu;
