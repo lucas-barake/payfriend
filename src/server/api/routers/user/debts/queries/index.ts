@@ -9,6 +9,13 @@ export const getUserDebtsSelect = {
   name: true,
   description: true,
   createdAt: true,
+  lender: {
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    },
+  },
   borrowers: {
     select: {
       user: {
