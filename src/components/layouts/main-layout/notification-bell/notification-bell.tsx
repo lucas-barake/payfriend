@@ -1,7 +1,7 @@
 import { type FC, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { api } from "$/lib/utils/api";
-import PendingInviteRow from "$/components/layouts/user-header/user-menu/notification-bell/pending-invite-row";
+import PendingInviteRow from "$/components/layouts/main-layout/notification-bell/pending-invite-row";
 import { TimeInMs } from "$/lib/enums/time";
 import { buttonVariants } from "$/components/ui/button";
 import { Bell } from "lucide-react";

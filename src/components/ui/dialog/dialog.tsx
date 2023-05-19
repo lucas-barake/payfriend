@@ -107,7 +107,7 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
-const Dialog = Object.assign(DialogPrimitive.Root, {
+export const Dialog = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Header: DialogHeader,
@@ -115,5 +115,3 @@ const Dialog = Object.assign(DialogPrimitive.Root, {
   Title: DialogTitle,
   Description: DialogDescription,
 });
-
-export { Dialog };

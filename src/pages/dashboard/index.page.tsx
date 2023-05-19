@@ -1,84 +1,81 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
-import { Tab } from "@headlessui/react";
-import { cn } from "$/lib/utils/cn";
 import { useRouter } from "next/router";
-import { z } from "zod";
-import { AuthLayout } from "$/components/layouts/auth-layout";
 import DebtsAsLenderTab from "src/pages/dashboard/(page-lib)/components/debts-as-lender-tab";
 import DebtsAsBorrowerTab from "src/pages/dashboard/(page-lib)/components/debts-as-borrower-tab";
-import { Layout } from "$/components/layouts/layout";
+import { MainLayout } from "src/components/layouts/main-layout";
+import { Tabs } from "$/components/ui/tabs";
+import { type TabList, useTabs } from "$/hooks/use-tabs/use-tabs";
+import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
 
-const tabCategories = [
+const tabs = [
   {
     id: "yours",
-    title: "Tus Deudas",
+    label: "Deudas como Prestamista",
   },
   {
     id: "shared",
-    title: "Deudas como Prestamista",
+    label: "Deudas como Prestatario",
   },
-] as const;
+] as const satisfies TabList;
+const tabIds = tabs.map((tab) => tab.id);
+const tabIdsSchema = createManyUnion(
+  tabIds as typeof tabIds & [string, string, ...string[]]
+);
+type TabId = typeof tabIds[number];
 
 const Dashboard: NextPageWithLayout = () => {
   const router = useRouter();
 
-  const groupId = z
-    .union([z.literal("yours"), z.literal("shared")])
-    .catch("yours")
-    .parse(router.query.group);
-  const selectedTab = tabCategories.findIndex(
-    (category) => category.id === groupId
-  );
-
-  function handleTabChange(index: number): void {
+  function onValueChange(key: TabId): void {
     void router.push({
       pathname: "/dashboard",
       query: {
-        group: tabCategories[index]?.id,
+        group: key,
       },
     });
   }
 
+  const queryTab = tabIdsSchema.catch(tabs[0].id).parse(router.query.group);
+  const initialTab = tabs.find((tab) => tab.id === queryTab) ?? tabs[0];
+
+  const [selectedTab, tabSetters] = useTabs(tabs, {
+    onValueChange,
+    initialTab,
+  });
+
   return (
-    <Layout>
-      <Tab.Group
-        as="div"
-        className="flex flex-col gap-6"
-        onChange={handleTabChange}
-        defaultIndex={selectedTab}
-      >
-        <Tab.List className="flex gap-2 self-center rounded bg-neutral-200 p-1 dark:bg-neutral-700 md:self-start">
-          {tabCategories.map((category) => (
-            <Tab
-              key={category.id}
-              className={({ selected }) =>
-                cn(
-                  "rounded p-3 text-sm font-bold leading-5 text-neutral-600 transition-colors duration-100 ease-in-out focus:outline-none",
-                  selected
-                    ? "bg-white text-black shadow dark:bg-neutral-800 dark:text-neutral-100"
-                    : "hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-600"
-                )
-              }
-            >
-              {category.title}
-            </Tab>
-          ))}
-        </Tab.List>
+    <Tabs
+      value={selectedTab.id}
+      onValueChange={(id) => {
+        const tab = tabs.find((tab) => tab.id === id) ?? tabs[0];
+        tabSetters.set(tab);
+        void router.push({
+          pathname: "/dashboard",
+          query: {
+            group: id,
+          },
+        });
+      }}
+    >
+      <Tabs.List className="mb-4">
+        {tabs.map((category) => (
+          <Tabs.Trigger value={category.id} key={category.id}>
+            {category.label}
+          </Tabs.Trigger>
+        ))}
+      </Tabs.List>
 
-        <Tab.Panels>
-          <Tab.Panel as="div" className="flex flex-col gap-6">
-            <DebtsAsLenderTab />
-          </Tab.Panel>
+      <Tabs.Content value={tabs[0].id}>
+        <DebtsAsLenderTab />
+      </Tabs.Content>
 
-          <Tab.Panel as="div" className="flex flex-col gap-6">
-            <DebtsAsBorrowerTab />
-          </Tab.Panel>
-        </Tab.Panels>
-      </Tab.Group>
-    </Layout>
+      <Tabs.Content value={tabs[1].id}>
+        <DebtsAsBorrowerTab />
+      </Tabs.Content>
+    </Tabs>
   );
 };
 
-Dashboard.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
+Dashboard.getLayout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default Dashboard;

@@ -7,14 +7,13 @@ import {
 } from "$/server/api/routers/debts/debts/queries/input";
 import { TimeInMs } from "$/lib/enums/time";
 import { GoBackButton } from "$/components/ui/go-back-button";
-import { AuthLayout } from "$/components/layouts/auth-layout";
 import { UnauthorizedView } from "src/components/pages/unauthorized-view";
 import GroupSettingsSheet from "src/pages/dashboard/[groupId]/(page-lib)/component/group-settings-sheet";
 import {
   type GetServerSidePropsContext,
   type InferGetServerSidePropsType,
 } from "next";
-import { Layout } from "$/components/layouts/layout";
+import { MainLayout } from "src/components/layouts/main-layout";
 import { Loader2 } from "lucide-react";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -58,7 +57,7 @@ const GroupDashboardPage: NextPageWithLayout<Props> = ({ groupId }) => {
   }
 
   return (
-    <Layout>
+    <>
       <div className="flex items-center justify-between">
         <GoBackButton />
 
@@ -72,10 +71,10 @@ const GroupDashboardPage: NextPageWithLayout<Props> = ({ groupId }) => {
       ) : (
         <p>{query.data?.name}</p>
       )}
-    </Layout>
+    </>
   );
 };
 
-GroupDashboardPage.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
+GroupDashboardPage.getLayout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default GroupDashboardPage;

@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { type GroupRole, type User } from "@prisma/client";
 import Image from "next/image";
 import { Form } from "src/components/ui/form";
-import { type Neverify } from "$/lib/types/utility";
+import { type Neverify } from "$/lib/types/type-manipulation";
 import {
   updateDeleteUserOptions,
   type UpdateDeleteUserValueOptions,

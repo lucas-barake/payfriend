@@ -223,7 +223,7 @@ const DropdownMenuShortcut: DropdownMenuShortcutDefinition = ({
 };
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 
-const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
+export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,
@@ -239,16 +239,3 @@ const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   SubContent: DropdownMenuSubContent,
   RadioGroup: DropdownMenuPrimitive.RadioGroup,
 });
-
-export {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-};
