@@ -3,7 +3,7 @@ import { useForm, useFormContext } from "react-hook-form";
 import {
   type CreateGroupInput,
   createGroupInput,
-} from "$/server/api/routers/debts/debts/mutations/input";
+} from "$/server/api/routers/debts/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";

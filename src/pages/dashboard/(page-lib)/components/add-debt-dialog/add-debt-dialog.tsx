@@ -11,7 +11,7 @@ import {
 } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { Tabs } from "$/components/ui/tabs";
 import { FormProvider, useForm } from "react-hook-form";
-import { type CreateGroupInput } from "$/server/api/routers/debts/debts/mutations/input";
+import { type CreateGroupInput } from "$/server/api/routers/debts/mutations/input";
 
 const AddDebtDialog: React.FC = () => {
   const [selectedTab, tabSetters] = useTabs(addDebtTabs);
