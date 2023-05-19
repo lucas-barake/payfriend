@@ -16,10 +16,6 @@ const DebtsAsBorrowerTab: FC = () => {
 
   return (
     <>
-      <span className="text-end text-sm text-neutral-700 dark:text-neutral-300">
-        {debts.length}
-      </span>
-
       <Debts loading={query.isLoading} debts={normalizedDebts} />
     </>
   );
