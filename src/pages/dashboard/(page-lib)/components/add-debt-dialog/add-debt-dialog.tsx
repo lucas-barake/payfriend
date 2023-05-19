@@ -30,9 +30,12 @@ const AddDebtDialog: React.FC = () => {
       }}
     >
       <Dialog.Trigger asChild>
-        <Button size="sm" className="text-sm">
-          <Plus className="mr-1 h-5 w-5 sm:mr-2" />
-          <span className="mr-1 hidden xs:inline-flex">Agregar</span>
+        <Button
+          size="sm"
+          className="flex items-center gap-1 text-sm sm:text-base"
+        >
+          <Plus className="h-5 w-5" />
+          <span className="hidden sm:inline-flex">Agregar</span>
           Deuda
         </Button>
       </Dialog.Trigger>
