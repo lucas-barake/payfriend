@@ -2,7 +2,7 @@ import {
   createTRPCRouter,
   protectedVerifiedProcedure,
 } from "$/server/api/trpc";
-import { createGroupInput } from "$/server/api/routers/debts/debts/mutations/input";
+import { createGroupInput } from "$/server/api/routers/debts/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { getUserDebtsSelect } from "$/server/api/routers/user/debts/queries";
 
