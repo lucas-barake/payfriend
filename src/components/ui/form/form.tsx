@@ -11,6 +11,7 @@ import { Group } from "$/components/ui/form/group";
 import { Label } from "$/components/ui/form/label";
 import { cn } from "$/lib/utils/cn";
 import { FieldError } from "$/components/ui/form/field-error";
+import { FieldDescription } from "$/components/ui/form/field-description";
 
 const formVariants = cva("flex gap-4", {
   variants: {
@@ -40,6 +41,7 @@ const Form = Object.assign(BaseForm, {
   Group,
   Label,
   FieldError,
+  FieldDescription,
 });
 
 export { Form, type FormProps };

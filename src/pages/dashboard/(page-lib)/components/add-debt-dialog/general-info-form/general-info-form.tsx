@@ -39,7 +39,6 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
   });
 
   function handleSubmit(data: FormInput): void {
-    console.log(data);
     formContext.setValue("name", data.name);
     formContext.setValue("description", data.description);
     formContext.setValue("amount", data.amount);
@@ -59,15 +58,20 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
           required
           error={form.formState.errors.name !== undefined}
         />
+        <Form.FieldDescription>
+          Una vez creada la deuda, no se puede cambiar el nombre.
+        </Form.FieldDescription>
 
-        <Form.FieldError message={form.formState.errors.name?.message} />
+        <Form.FieldError>{form.formState.errors.name?.message}</Form.FieldError>
       </Form.Group>
 
       <Form.Group>
         <Form.Label htmlFor="description">Descripción</Form.Label>
         <Form.TextArea id="description" {...form.register("description")} />
 
-        <Form.FieldError message={form.formState.errors.description?.message} />
+        <Form.FieldError>
+          {form.formState.errors.description?.message}
+        </Form.FieldError>
       </Form.Group>
 
       <Form.Group>
@@ -91,7 +95,9 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
           </span>
         )}
 
-        <Form.FieldError message={form.formState.errors.amount?.message} />
+        <Form.FieldError>
+          {form.formState.errors.amount?.message}
+        </Form.FieldError>
       </Form.Group>
 
       <Button

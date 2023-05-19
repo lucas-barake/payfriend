@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 
 const formInput = z.object({
-  borrowerEmail: z.string().email(),
+  borrowerEmail: z.string().email("Email inválido"),
 });
 type FormInput = z.infer<typeof formInput>;
 
@@ -115,10 +115,12 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
             Agregar
           </Button>
         </div>
-
-        <Form.FieldError
-          message={form.formState.errors.borrowerEmail?.message}
-        />
+        {form.formState.errors.borrowerEmail === undefined && (
+          <Form.FieldDescription>Máximo 5 personas</Form.FieldDescription>
+        )}
+        <Form.FieldError>
+          {form.formState.errors.borrowerEmail?.message}
+        </Form.FieldError>
       </Form.Group>
 
       <div className="my-6 flex flex-col gap-4">

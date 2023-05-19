@@ -30,7 +30,7 @@ export const createGroupInput = z.object({
     message: "El monto debe ser mayor a 0",
   }),
   borrowerEmails: z
-    .array(z.string().email())
+    .array(z.string().email("Debes agregar un correo válido"))
     .min(1, {
       message: "Debes agregar al menos un correo",
     })
