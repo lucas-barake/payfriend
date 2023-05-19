@@ -14,6 +14,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { type CreateGroupInput } from "$/server/api/routers/debts/mutations/input";
 
 const AddDebtDialog: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
   const [selectedTab, tabSetters] = useTabs(addDebtTabs);
   const form = useForm<CreateGroupInput>({
     defaultValues: {
@@ -23,8 +24,10 @@ const AddDebtDialog: React.FC = () => {
 
   return (
     <Dialog
-      onOpenChange={(open) => {
-        if (!open) {
+      open={open}
+      onOpenChange={(newOpen) => {
+        setOpen(newOpen);
+        if (!newOpen) {
           tabSetters.reset();
         }
       }}
@@ -61,7 +64,7 @@ const AddDebtDialog: React.FC = () => {
             </Tabs.Content>
 
             <Tabs.Content value={addDebtTabs[1]}>
-              <MembersForm tabSetters={tabSetters} />
+              <MembersForm tabSetters={tabSetters} setOpen={setOpen} />
             </Tabs.Content>
           </FormProvider>
         </Tabs>
