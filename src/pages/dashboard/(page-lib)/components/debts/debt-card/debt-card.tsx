@@ -18,6 +18,9 @@ type Props = {
 const DebtCard: FC<Props> & {
   Skeleton: FC;
 } = ({ debt }) => {
+  const normalizedBorrowers = debt.borrowers.map(({ user }) => user);
+  const members = [debt.lender, ...normalizedBorrowers];
+
   return (
     <button
       type="button"
@@ -27,15 +30,17 @@ const DebtCard: FC<Props> & {
       <div className="flex w-full items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
         <span className="truncate">{debt.name}</span>
 
-        {debt.borrowers?.map(({ user }) => (
-          <Avatar key={user.name} className="h-7 w-7">
-            <Avatar.Image src={user.image ?? undefined} />
+        <div className="flex -space-x-2 overflow-hidden">
+          {members.map((user) => (
+            <Avatar key={user.name} className="h-7 w-7">
+              <Avatar.Image src={user.image ?? undefined} />
 
-            <Avatar.Fallback>
-              {user.name?.[0]?.toUpperCase() ?? "?"}
-            </Avatar.Fallback>
-          </Avatar>
-        ))}
+              <Avatar.Fallback>
+                {user.name?.[0]?.toUpperCase() ?? "?"}
+              </Avatar.Fallback>
+            </Avatar>
+          ))}
+        </div>
       </div>
 
       <span className="mb-6 mt-2 pr-2 lg:pr-3 xl:pr-6">
