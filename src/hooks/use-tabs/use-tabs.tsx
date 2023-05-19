@@ -15,13 +15,13 @@ type TabSetters<T extends TabList> = {
   reset: () => void;
 };
 
+type Options<T extends TabList> = {
+  initialTab?: T[number];
+};
+
 function useTabs<T extends TabList>(
   tabs: T,
-  {
-    initialTab,
-  }: {
-    initialTab?: T[number];
-  } = {}
+  { initialTab }: Options<T> = {}
 ): [T[number], TabSetters<T>] {
   const [currentTab, setCurrentTab] = useState(initialTab ?? tabs[0]);
 
