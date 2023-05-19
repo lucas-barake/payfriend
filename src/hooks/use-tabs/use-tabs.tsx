@@ -18,10 +18,8 @@ type TabSetters<T extends TabList> = {
 function useTabs<T extends TabList>(
   tabs: T,
   {
-    onValueChange,
     initialTab,
   }: {
-    onValueChange?: (key: T[number]["id"]) => void;
     initialTab?: T[number];
   } = {}
 ): [T[number], TabSetters<T>] {
@@ -33,24 +31,15 @@ function useTabs<T extends TabList>(
       const nextIndex = (currentIndex + 1) % tabs.length;
       const nextTab = tabs[nextIndex] ?? tabs[0];
       setCurrentTab(nextTab);
-      if (onValueChange) {
-        onValueChange(nextTab.id);
-      }
     },
     prev() {
       const currentIndex = tabs.findIndex((tab) => tab === currentTab);
       const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
       const prevTab = tabs[prevIndex] ?? tabs[0];
       setCurrentTab(prevTab);
-      if (onValueChange) {
-        onValueChange(prevTab.id);
-      }
     },
     set(tab) {
       setCurrentTab(tab);
-      if (onValueChange) {
-        onValueChange(tab.id);
-      }
     },
     reset() {
       setCurrentTab(tabs[0]);

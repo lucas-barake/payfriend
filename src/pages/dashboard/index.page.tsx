@@ -21,25 +21,14 @@ const tabIds = tabs.map((tab) => tab.id);
 const tabIdsSchema = createManyUnion(
   tabIds as typeof tabIds & [string, string, ...string[]]
 );
-type TabId = typeof tabIds[number];
 
 const Dashboard: NextPageWithLayout = () => {
   const router = useRouter();
-
-  function onValueChange(key: TabId): void {
-    void router.push({
-      pathname: "/dashboard",
-      query: {
-        group: key,
-      },
-    });
-  }
 
   const queryTab = tabIdsSchema.catch(tabs[0].id).parse(router.query.group);
   const initialTab = tabs.find((tab) => tab.id === queryTab) ?? tabs[0];
 
   const [selectedTab, tabSetters] = useTabs(tabs, {
-    onValueChange,
     initialTab,
   });
 
