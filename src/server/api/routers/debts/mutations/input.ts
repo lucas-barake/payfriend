@@ -26,8 +26,8 @@ export const createGroupInput = z.object({
     .max(100, {
       message: "La descripción debe tener menos de 100 caracteres",
     }),
-  amount: z.number().min(0, {
-    message: "El monto debe ser mayor o igual a 0",
+  amount: z.number().min(1, {
+    message: "El monto debe ser mayor a 0",
   }),
   borrowerEmails: z
     .array(z.string().email())
