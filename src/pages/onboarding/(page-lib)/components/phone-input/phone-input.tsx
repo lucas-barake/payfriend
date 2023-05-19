@@ -156,15 +156,17 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
             </Popover.Content>
           </Popover>
 
+          <Form.Label htmlFor="phone.phoneNumber" className="sr-only">
+            Número de celular
+          </Form.Label>
           <Controller
             name="phone.phoneNumber"
             control={form.control}
             render={({ field }) => {
               return (
                 <Form.Input
-                  label="Número de celular"
+                  id="phone.phoneNumber"
                   placeholder={selectedCountry.placeholder}
-                  labelClassName="flex-1"
                   value={field.value}
                   onChange={(e) => {
                     let newValue = e.target.value;
@@ -182,7 +184,6 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
                     );
                   }}
                   type="tel"
-                  srOnly
                 />
               );
             }}

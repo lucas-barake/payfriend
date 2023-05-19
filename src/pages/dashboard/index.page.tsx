@@ -1,32 +1,23 @@
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { useRouter } from "next/router";
-import DebtsAsLenderTab from "src/pages/dashboard/(page-lib)/components/debts-as-lender-tab";
 import DebtsAsBorrowerTab from "src/pages/dashboard/(page-lib)/components/debts-as-borrower-tab";
 import { MainLayout } from "src/components/layouts/main-layout";
 import { Tabs } from "$/components/ui/tabs";
 import { type TabList, useTabs } from "$/hooks/use-tabs/use-tabs";
 import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
+import AddDebtDialog from "src/pages/dashboard/(page-lib)/components/add-debt-dialog";
+import DebtsAsLenderTab from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab";
 
-const tabs = [
-  {
-    id: "yours",
-    label: "Deudas como Prestador",
-  },
-  {
-    id: "shared",
-    label: "Deudas como Deudor",
-  },
-] as const satisfies TabList;
-const tabIds = tabs.map((tab) => tab.id);
+const tabs = ["yours", "shared"] as const satisfies TabList;
 const tabIdsSchema = createManyUnion(
-  tabIds as typeof tabIds & [string, string, ...string[]]
+  tabs as typeof tabs & [string, string, ...string[]]
 );
 
 const Dashboard: NextPageWithLayout = () => {
   const router = useRouter();
 
-  const queryTab = tabIdsSchema.catch(tabs[0].id).parse(router.query.group);
-  const initialTab = tabs.find((tab) => tab.id === queryTab) ?? tabs[0];
+  const queryTab = tabIdsSchema.catch(tabs[0]).parse(router.query.group);
+  const initialTab = tabs.find((tab) => tab === queryTab) ?? tabs[0];
 
   const [selectedTab, tabSetters] = useTabs(tabs, {
     initialTab,
@@ -34,9 +25,9 @@ const Dashboard: NextPageWithLayout = () => {
 
   return (
     <Tabs
-      value={selectedTab.id}
+      value={selectedTab}
       onValueChange={(id) => {
-        const tab = tabs.find((tab) => tab.id === id) ?? tabs[0];
+        const tab = tabs.find((tab) => tab === id) ?? tabs[0];
         tabSetters.set(tab);
         void router.push({
           pathname: "/dashboard",
@@ -46,19 +37,20 @@ const Dashboard: NextPageWithLayout = () => {
         });
       }}
     >
-      <Tabs.List className="mb-4">
-        {tabs.map((category) => (
-          <Tabs.Trigger value={category.id} key={category.id}>
-            {category.label}
-          </Tabs.Trigger>
-        ))}
-      </Tabs.List>
+      <div className="mb-4 flex items-center gap-4">
+        <Tabs.List>
+          <Tabs.Trigger value={tabs[0]}>{tabs[0]}</Tabs.Trigger>
+          <Tabs.Trigger value={tabs[1]}>{tabs[1]}</Tabs.Trigger>
+        </Tabs.List>
 
-      <Tabs.Content value={tabs[0].id}>
+        {selectedTab === "yours" && <AddDebtDialog />}
+      </div>
+
+      <Tabs.Content value={tabs[0]}>
         <DebtsAsLenderTab />
       </Tabs.Content>
 
-      <Tabs.Content value={tabs[1].id}>
+      <Tabs.Content value={tabs[1]}>
         <DebtsAsBorrowerTab />
       </Tabs.Content>
     </Tabs>

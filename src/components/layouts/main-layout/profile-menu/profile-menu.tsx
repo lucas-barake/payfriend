@@ -2,7 +2,7 @@ import React from "react";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "$/components/ui/button";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "$/components/ui/avatar";
+import { Avatar } from "$/components/ui/avatar";
 import { LogOut } from "lucide-react";
 
 export const ProfileMenu: React.FC = () => {
@@ -16,9 +16,9 @@ export const ProfileMenu: React.FC = () => {
           <Avatar className="h-6 w-6">
             <Avatar.Image src={userImage} />
 
-            <AvatarFallback className="bg-indigo-200 dark:bg-indigo-800">
+            <Avatar.Fallback className="bg-indigo-200 dark:bg-indigo-800">
               {session.data?.user?.name?.charAt(0) ?? "?"}
-            </AvatarFallback>
+            </Avatar.Fallback>
           </Avatar>
         </Button>
       </DropdownMenu.Trigger>

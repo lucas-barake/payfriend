@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { type NonEmptyArray } from "$/lib/types/type-contraints";
 
-type Tab = {
-  id: string;
-  label: string;
-};
-
-type TabList = Readonly<NonEmptyArray<Tab>>;
+type TabList = Readonly<NonEmptyArray<string>>;
 
 type TabSetters<T extends TabList> = {
   next: () => void;

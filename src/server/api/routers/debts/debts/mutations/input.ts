@@ -30,14 +30,17 @@ export const createGroupInput = z.object({
     message: "El monto debe ser mayor o igual a 0",
   }),
   borrowerEmails: z
-    .array(
-      z.string().email({
-        message: "Correo inválido",
-      })
-    )
+    .array(z.string().email())
     .min(1, {
       message: "Debes agregar al menos un correo",
-    }),
+    })
+    .max(4, {
+      message: "No puedes agregar más de 4 correos",
+    })
+    .refine((emails) => {
+      const uniqueEmails = new Set(emails);
+      return uniqueEmails.size === emails.length;
+    }, "No puedes agregar correos duplicados"),
 });
 export type CreateGroupInput = z.infer<typeof createGroupInput>;
 
