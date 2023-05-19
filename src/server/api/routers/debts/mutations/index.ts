@@ -5,20 +5,37 @@ import {
 import { createGroupInput } from "$/server/api/routers/debts/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { getUserDebtsSelect } from "$/server/api/routers/user/debts/queries";
+import { z } from "zod";
 
 export const debtsMutations = createTRPCRouter({
   create: protectedVerifiedProcedure
     .input(createGroupInput)
     .mutation(async ({ ctx, input }) => {
-      const debtsCount: {
-        lenderDebtsCount: number;
-        borrowerDebtsCount: number;
-      } = await ctx.prisma.$queryRaw`
+      if (
+        input.borrowerEmails.some((email) => email === ctx.session.user.email)
+      ) {
+        throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No puedes prestarte a ti mismo");
+      }
+
+      const debtsCount = await ctx.prisma.$queryRaw`
           SELECT (SELECT COUNT(*) FROM "Debt" WHERE "lenderId" = ${ctx.session.user.id})   AS "lenderDebtsCount",
                  (SELECT COUNT(*) FROM "Borrower" WHERE "userId" = ${ctx.session.user.id}) AS "borrowerDebtsCount"
       `;
+      const debtsCountResult = z
+        .tuple([
+          z.object({
+            lenderDebtsCount: z.number({
+              coerce: true,
+            }),
+            borrowerDebtsCount: z.number({
+              coerce: true,
+            }),
+          }),
+        ])
+        .parse(debtsCount);
       const totalDebtsCount =
-        debtsCount.lenderDebtsCount + debtsCount.borrowerDebtsCount;
+        debtsCountResult[0].lenderDebtsCount +
+        debtsCountResult[0].borrowerDebtsCount;
 
       if (totalDebtsCount >= 5) {
         throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No puedes tener más de 5 deudas");

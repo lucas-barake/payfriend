@@ -12,6 +12,9 @@ import { ArrowLeft, Plus, X } from "lucide-react";
 import { type TabSetters } from "$/hooks/use-tabs/use-tabs";
 import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { Avatar } from "$/components/ui/avatar";
+import { api } from "$/lib/utils/api";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 const formInput = z.object({
   borrowerEmail: z.string().email(),
@@ -23,12 +26,20 @@ type Props = {
 };
 
 const MembersForm: React.FC<Props> = ({ tabSetters }) => {
+  const session = useSession();
   const formContext = useFormContext<CreateGroupInput>();
   const form = useForm<FormInput>({
     mode: "onSubmit",
     reValidateMode: "onChange",
-    resolver: zodResolver(formInput),
+    resolver: zodResolver(
+      formInput.refine((v) => v.borrowerEmail !== session?.data?.user?.email, {
+        message: "No puedes agregarte a ti mismo",
+        path: ["borrowerEmail"],
+      })
+    ),
   });
+
+  const createMutation = api.debts.create.useMutation();
 
   function addEmail(data: FormInput): void {
     const allEmails = formContext.getValues("borrowerEmails");
@@ -51,6 +62,23 @@ const MembersForm: React.FC<Props> = ({ tabSetters }) => {
     }
     form.reset();
     formContext.setValue("borrowerEmails", result.data);
+  }
+
+  async function handleCreate(): Promise<void> {
+    const values = formContext.getValues();
+    const result = createGroupInput.safeParse(values);
+    if (!result.success) {
+      toast.error(result.error.errors[0]?.message ?? "Error al crear grupo");
+      return;
+    }
+
+    await toast.promise(createMutation.mutateAsync(result.data), {
+      loading: "Creando grupo...",
+      success: "Grupo creado",
+      error: "Error al crear grupo",
+    });
+
+    formContext.reset();
   }
 
   return (
@@ -125,10 +153,16 @@ const MembersForm: React.FC<Props> = ({ tabSetters }) => {
           Volver
         </Button>
 
-        <Button>Crear Deuda</Button>
+        <Button
+          onClick={() => {
+            void handleCreate();
+          }}
+          loading={createMutation.isLoading}
+        >
+          Crear Deuda
+        </Button>
       </div>
     </Form>
   );
 };
-
 export default MembersForm;
