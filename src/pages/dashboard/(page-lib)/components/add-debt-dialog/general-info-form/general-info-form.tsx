@@ -36,7 +36,6 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
     mode: "onSubmit",
     reValidateMode: "onChange",
     resolver: zodResolver(formInput),
-    shouldUnregister: false,
   });
 
   function handleSubmit(data: FormInput): void {
