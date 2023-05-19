@@ -10,11 +10,11 @@ import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
 const tabs = [
   {
     id: "yours",
-    label: "Deudas como Prestamista",
+    label: "Deudas como Prestador",
   },
   {
     id: "shared",
-    label: "Deudas como Prestatario",
+    label: "Deudas como Deudor",
   },
 ] as const satisfies TabList;
 const tabIds = tabs.map((tab) => tab.id);
