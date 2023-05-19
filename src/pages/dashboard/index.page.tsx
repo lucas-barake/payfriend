@@ -39,8 +39,8 @@ const Dashboard: NextPageWithLayout = () => {
     >
       <div className="mb-4 flex items-center gap-4">
         <Tabs.List>
-          <Tabs.Trigger value={tabs[0]}>{tabs[0]}</Tabs.Trigger>
-          <Tabs.Trigger value={tabs[1]}>{tabs[1]}</Tabs.Trigger>
+          <Tabs.Trigger value={tabs[0]}>Prestador</Tabs.Trigger>
+          <Tabs.Trigger value={tabs[1]}>Deudor</Tabs.Trigger>
         </Tabs.List>
 
         {selectedTab === "yours" && <AddDebtDialog />}
