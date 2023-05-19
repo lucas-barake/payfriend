@@ -17,7 +17,7 @@ type Props = {
 
 const PendingInviteRow: FC<Props> = ({ invite }) => {
   const utils = api.useContext();
-  const acceptMutation = api.user.acceptGroupInvite.useMutation({
+  const acceptMutation = api.user.acceptDebtInvite.useMutation({
     onSuccess: async (res) => {
       const prevData = utils.user.getDebtsInvites.getData() ?? [];
 
@@ -32,7 +32,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
       };
     },
   });
-  const declineMutation = api.user.declineGroupInvite.useMutation({
+  const declineMutation = api.user.declineDebtInvite.useMutation({
     onSuccess: (res) => {
       const prevData = utils.user.getDebtsInvites.getData() ?? [];
 
