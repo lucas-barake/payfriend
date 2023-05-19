@@ -1,9 +1,8 @@
 import React, { type FC } from "react";
-import Link from "next/link";
 import { Button } from "$/components/ui/button";
 import { DateTime } from "luxon";
 import { type AppRouter } from "$/server/api/root";
-import { Calendar, Eye } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
 import { type inferProcedureOutput } from "@trpc/server";
 import { strTransformer } from "$/lib/utils/str-transformer";
@@ -19,10 +18,10 @@ const DebtCard: FC<Props> & {
   Skeleton: FC;
 } = ({ debt }) => {
   return (
-    <Link
+    <button
+      type="button"
       key={debt.id}
       className="flex flex-col gap-2 rounded-lg border border-border p-6 shadow-sm transition-colors duration-200 ease-in hover:bg-background-secondary/70"
-      href={`/dashboard/${debt.id}`}
     >
       <div className="flex items-center justify-between gap-4 text-lg font-bold text-indigo-500 dark:text-indigo-400">
         <span className="truncate">{debt.name}</span>
@@ -44,7 +43,7 @@ const DebtCard: FC<Props> & {
         {strTransformer.truncate(debt.description, 80)}
       </span>
 
-      <div className="mt-auto flex items-center justify-between">
+      <div className="mt-auto flex w-full items-center justify-between">
         <span className="flex items-center gap-1 text-sm">
           <Calendar className="h-4 w-4" />
           {DateTime.fromJSDate(debt.createdAt).toLocaleString({
@@ -55,11 +54,10 @@ const DebtCard: FC<Props> & {
         </span>
 
         <Button color="indigo" type="button" size="sm">
-          <Eye className="mr-2 h-5 w-5" />
           Ver
         </Button>
       </div>
-    </Link>
+    </button>
   );
 };
 
