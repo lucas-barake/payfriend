@@ -15,6 +15,7 @@ import { Avatar } from "$/components/ui/avatar";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 
 const formInput = z.object({
   borrowerEmail: z.string().email(),
@@ -23,9 +24,10 @@ type FormInput = z.infer<typeof formInput>;
 
 type Props = {
   tabSetters: TabSetters<typeof addDebtTabs>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const MembersForm: React.FC<Props> = ({ tabSetters }) => {
+const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
   const session = useSession();
   const formContext = useFormContext<CreateGroupInput>();
   const form = useForm<FormInput>({
@@ -38,8 +40,6 @@ const MembersForm: React.FC<Props> = ({ tabSetters }) => {
       })
     ),
   });
-
-  const createMutation = api.debts.create.useMutation();
 
   function addEmail(data: FormInput): void {
     const allEmails = formContext.getValues("borrowerEmails");
@@ -64,6 +64,9 @@ const MembersForm: React.FC<Props> = ({ tabSetters }) => {
     formContext.setValue("borrowerEmails", result.data);
   }
 
+  const apiContext = api.useContext();
+  const createMutation = api.debts.create.useMutation();
+
   async function handleCreate(): Promise<void> {
     const values = formContext.getValues();
     const result = createGroupInput.safeParse(values);
@@ -72,12 +75,20 @@ const MembersForm: React.FC<Props> = ({ tabSetters }) => {
       return;
     }
 
-    await toast.promise(createMutation.mutateAsync(result.data), {
-      loading: "Creando grupo...",
-      success: "Grupo creado",
-      error: "Error al crear grupo",
-    });
+    const newDebt = await toast.promise(
+      createMutation.mutateAsync(result.data),
+      {
+        loading: "Creando grupo...",
+        success: "Grupo creado",
+        error: handleMutationError,
+      }
+    );
+    apiContext.user.getOwnedDebts.setData(undefined, (prev) => ({
+      debtsAsLender: [...(prev?.debtsAsLender ?? []), newDebt],
+    }));
 
+    setOpen(false);
+    tabSetters.reset();
     formContext.reset();
   }
 
