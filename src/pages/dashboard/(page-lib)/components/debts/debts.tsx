@@ -5,9 +5,11 @@ import { type inferProcedureOutput } from "@trpc/server";
 
 type Props = {
   loading: boolean;
-  debts: NonNullable<
-    inferProcedureOutput<AppRouter["user"]["getOwnedDebts"]>
-  >["debtsAsLender"];
+  debts: Array<
+    NonNullable<
+      inferProcedureOutput<AppRouter["user"]["getSharedDebts"]>
+    >["debtsAsBorrower"][number]["debt"]
+  >;
 };
 
 const Debts: FC<Props> = ({ loading, debts }) => {

@@ -11,8 +11,8 @@ import { Badge } from "$/components/ui/badge";
 
 type Props = {
   debt: NonNullable<
-    inferProcedureOutput<AppRouter["user"]["getOwnedDebts"]>
-  >["debtsAsLender"][number];
+    inferProcedureOutput<AppRouter["user"]["getSharedDebts"]>
+  >["debtsAsBorrower"][number]["debt"];
 };
 
 const DebtCard: FC<Props> & {

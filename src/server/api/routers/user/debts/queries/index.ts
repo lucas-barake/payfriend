@@ -29,8 +29,8 @@ export const getUserDebtsSelect = {
 } satisfies Prisma.DebtSelect;
 
 export const userGroupsQueries = createTRPCRouter({
-  getOwnedDebts: protectedVerifiedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user.findUnique({
+  getOwnedDebts: protectedVerifiedProcedure.query(async ({ ctx }) => {
+    const debtsAsLenderQuery = await ctx.prisma.user.findUnique({
       where: {
         id: ctx.session.user.id,
       },
@@ -40,6 +40,10 @@ export const userGroupsQueries = createTRPCRouter({
         },
       },
     });
+
+    return {
+      debtsAsLender: debtsAsLenderQuery?.debtsAsLender,
+    };
   }),
   getSharedDebts: protectedVerifiedProcedure.query(({ ctx }) => {
     return ctx.prisma.user.findUnique({

@@ -5,9 +5,12 @@ import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { api } from "$/lib/utils/api";
 import { Check, X } from "lucide-react";
-import { Badge } from "$/components/ui/badge";
 import { type inferProcedureOutput } from "@trpc/server";
-import { strTransformer } from "$/lib/utils/str-transformer";
+import { Popover } from "$/components/ui/popover";
+import { Button } from "$/components/ui/button";
+import { Separator } from "$/components/ui/separator";
+import { useRouter } from "next/router";
+import { Pages } from "$/lib/enums/pages";
 
 type Props = {
   invite: NonNullable<
@@ -16,6 +19,7 @@ type Props = {
 };
 
 const PendingInviteRow: FC<Props> = ({ invite }) => {
+  const router = useRouter();
   const utils = api.useContext();
   const acceptMutation = api.user.acceptDebtInvite.useMutation({
     onSuccess: async (res) => {
@@ -49,15 +53,30 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
   return (
     <div
       className={cn(
-        "flex w-full items-center justify-between gap-1 self-stretch px-4 py-2 text-sm hover:bg-background-secondary hover:dark:bg-background-tertiary"
+        "flex w-full items-center justify-between gap-1 self-stretch text-base"
       )}
     >
-      <div className="flex flex-col gap-1.5 font-medium">
-        <span>{invite.debt.lender.name} te invitó al grupo</span>
+      <div className="flex flex-col gap-2.5 font-medium sm:flex-row sm:items-center">
+        <span>{invite.debt.lender.name} te invitó a:</span>
 
-        <Badge className="self-start rounded-sm">
-          {strTransformer.truncate(invite.debt.name, 14)}
-        </Badge>
+        <Popover>
+          <Popover.Trigger asChild>
+            <Button variant="outline" size="sm" className="self-start">
+              <span className="max-w-[100px] truncate">{invite.debt.name}</span>
+            </Button>
+          </Popover.Trigger>
+
+          <Popover.Content>
+            <div className="flex flex-col gap-1.5 p-2">
+              <span className="font-medium">{invite.debt.name}</span>
+              {invite.debt.description !== undefined && (
+                <span className="text-sm">{invite.debt.description}</span>
+              )}
+              <Separator />
+              Monto: {invite.debt.amount.toLocaleString()}
+            </div>
+          </Popover.Content>
+        </Popover>
       </div>
 
       <div className="flex items-center gap-3">
@@ -75,8 +94,15 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
                 error: handleToastError,
               }
             );
+
+            void router.push(Pages.DASHBOARD, {
+              query: {
+                group: "shared",
+              },
+            });
           }}
         >
+          <span className="sr-only">Aceptar invitación</span>
           <Check className="h-6 w-6" />
         </button>
 
