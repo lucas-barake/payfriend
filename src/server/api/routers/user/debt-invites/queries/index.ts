@@ -3,7 +3,7 @@ import {
   protectedVerifiedProcedure,
 } from "$/server/api/trpc";
 
-export const userGroupinvitesQueries = createTRPCRouter({
+export const debtInvitesQueriesRouter = createTRPCRouter({
   getDebtsInvites: protectedVerifiedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.pendingInvite.findMany({
       where: {
