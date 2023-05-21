@@ -5,8 +5,8 @@ import { MainLayout } from "src/components/layouts/main-layout";
 import { Tabs } from "$/components/ui/tabs";
 import { type TabList, useTabs } from "$/hooks/use-tabs/use-tabs";
 import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
-import AddDebtDialog from "src/pages/dashboard/(page-lib)/components/add-debt-dialog";
 import DebtsAsLenderTab from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab";
+import AddDebtDialog from "$/pages/dashboard/(page-lib)/components/add-debt-dialog";
 
 const tabs = ["yours", "shared"] as const satisfies TabList;
 const tabIdsSchema = createManyUnion(
