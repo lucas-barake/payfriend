@@ -19,7 +19,7 @@ model Debt {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   name           String
-  description    String          @db.Text
+  description    String?         @db.Text
   amount         Float
   dueDate        DateTime?
   lenderId       String

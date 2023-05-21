@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export const deleteGroupInput = z.object({
-  groupId: z.string().cuid(),
-});
-export type DeleteGroupInput = z.infer<typeof deleteGroupInput>;
-
-export const createGroupInput = z.object({
+export const createDebtInput = z.object({
   name: z
     .string({
       invalid_type_error: "El nombre debe ser un string",
@@ -25,7 +20,8 @@ export const createGroupInput = z.object({
     .trim()
     .max(100, {
       message: "La descripción debe tener menos de 100 caracteres",
-    }),
+    })
+    .transform((value) => (value === "" ? null : value)),
   amount: z.number().min(1, {
     message: "El monto debe ser mayor a 0",
   }),
@@ -42,9 +38,9 @@ export const createGroupInput = z.object({
       return uniqueEmails.size === emails.length;
     }, "No puedes agregar correos duplicados"),
 });
-export type CreateGroupInput = z.infer<typeof createGroupInput>;
+export type CreateDebtInput = z.infer<typeof createDebtInput>;
 
-export const updateGroupInput = createGroupInput.extend({
+export const updateDebtInput = createDebtInput.extend({
   id: z
     .string({
       invalid_type_error: "El id debe ser un string",
@@ -54,4 +50,4 @@ export const updateGroupInput = createGroupInput.extend({
       message: "El id no es válido",
     }),
 });
-export type UpdateGroupInput = z.infer<typeof updateGroupInput>;
+export type UpdateDebtInput = z.infer<typeof updateDebtInput>;
