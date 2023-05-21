@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import {
-  createGroupInput,
-  type CreateGroupInput,
+  createDebtInput,
+  type CreateDebtInput,
 } from "$/server/api/routers/debts/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
@@ -29,7 +29,7 @@ type Props = {
 
 const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
   const session = useSession();
-  const formContext = useFormContext<CreateGroupInput>();
+  const formContext = useFormContext<CreateDebtInput>();
   const form = useForm<FormInput>({
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -51,7 +51,7 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
     }
 
     const newEmails = [...allEmails, data.borrowerEmail];
-    const result = createGroupInput.shape.borrowerEmails.safeParse(newEmails);
+    const result = createDebtInput.shape.borrowerEmails.safeParse(newEmails);
     if (!result.success) {
       const errorMessage = result.error.errors[0]?.message;
       form.setError("borrowerEmail", {
@@ -69,7 +69,7 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
 
   async function handleCreate(): Promise<void> {
     const values = formContext.getValues();
-    const result = createGroupInput.safeParse(values);
+    const result = createDebtInput.safeParse(values);
     if (!result.success) {
       toast.error(result.error.errors[0]?.message ?? "Error al crear grupo");
       return;
@@ -78,8 +78,8 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
     const newDebt = await toast.promise(
       createMutation.mutateAsync(result.data),
       {
-        loading: "Creando grupo...",
-        success: "Grupo creado",
+        loading: "Creando deuda...",
+        success: "Deuda creada",
         error: handleMutationError,
       }
     );

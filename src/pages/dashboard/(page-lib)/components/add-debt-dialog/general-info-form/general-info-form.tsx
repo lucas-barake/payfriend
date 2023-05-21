@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import {
-  type CreateGroupInput,
-  createGroupInput,
+  createDebtInput,
+  type CreateDebtInput,
 } from "$/server/api/routers/debts/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
@@ -12,7 +12,7 @@ import { type z } from "zod";
 import { type TabSetters } from "$/hooks/use-tabs/use-tabs";
 import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
 
-const formInput = createGroupInput.pick({
+const formInput = createDebtInput.pick({
   name: true,
   description: true,
   amount: true,
@@ -26,7 +26,7 @@ type Props = {
 const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
   const locale = Intl.DateTimeFormat().resolvedOptions().locale;
 
-  const formContext = useFormContext<CreateGroupInput>();
+  const formContext = useFormContext<CreateDebtInput>();
   const form = useForm<FormInput>({
     defaultValues: {
       name: formContext.watch("name"),
