@@ -101,13 +101,19 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-base text-muted-foreground", className)}
     {...props}
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
-export const Dialog = Object.assign(DialogPrimitive.Root, {
+const Root = ({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Root>) => (
+  <DialogPrimitive.Root {...props} />
+);
+
+export const Dialog = Object.assign(Root, {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Header: DialogHeader,

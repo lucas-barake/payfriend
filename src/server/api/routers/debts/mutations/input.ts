@@ -21,6 +21,7 @@ export const createDebtInput = z.object({
     .max(100, {
       message: "La descripción debe tener menos de 100 caracteres",
     })
+    .nullable()
     .transform((value) => (value === "" ? null : value)),
   amount: z.number().min(1, {
     message: "El monto debe ser mayor a 0",

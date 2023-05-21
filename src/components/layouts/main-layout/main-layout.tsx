@@ -9,8 +9,8 @@ import { Pages } from "$/lib/enums/pages";
 import { APP_NAME } from "$/lib/constants/app-name";
 import Link from "next/link";
 import { ThemeSwitch } from "$/components/common/theme-switch";
-import { ProfileMenu } from "src/components/layouts/main-layout/profile-menu";
-import NotificationBell from "src/components/layouts/main-layout/notification-bell";
+import { ProfileMenu } from "$/components/layouts/main-layout/profile-menu";
+import NotificationBell from "$/components/layouts/main-layout/notification-bell";
 
 type LayoutProps = ComponentPropsWithoutRef<"main"> & CustomHeadProps;
 
