@@ -2,14 +2,14 @@ import {
   createTRPCRouter,
   protectedVerifiedProcedure,
 } from "$/server/api/trpc";
-import { createGroupInput } from "$/server/api/routers/debts/mutations/input";
+import { createDebtInput } from "$/server/api/routers/debts/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { getUserDebtsSelect } from "$/server/api/routers/user/debts/queries";
+import { getUserDebtsSelect } from "$/server/api/routers/user/debts/queries/handler";
 import { rawQueries } from "$/server/api/routers/(routers-lib)/raw-queries";
 
 export const debtsMutations = createTRPCRouter({
   create: protectedVerifiedProcedure
-    .input(createGroupInput)
+    .input(createDebtInput)
     .mutation(async ({ ctx, input }) => {
       if (
         input.borrowerEmails.some((email) => email === ctx.session.user.email)
