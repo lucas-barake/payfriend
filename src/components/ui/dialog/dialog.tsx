@@ -71,10 +71,7 @@ const DialogFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => (
   <div
-    className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-2",
-      className
-    )}
+    className={cn("mt-4 flex justify-center gap-2 sm:justify-end", className)}
     {...props}
   />
 );
@@ -109,7 +106,7 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 const Root = ({
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>) => (
+}: React.ComponentProps<typeof DialogPrimitive.Root>): JSX.Element => (
   <DialogPrimitive.Root {...props} />
 );
 

@@ -29,7 +29,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
         ...prevData.filter((invite) => invite.debt.id !== res.debtId),
       ]);
 
-      await utils.user.getSharedDebts.invalidate();
+      await utils.debts.getSharedDebts.invalidate();
 
       return {
         prevData,

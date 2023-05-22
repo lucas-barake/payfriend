@@ -1,107 +1,130 @@
 import React, { type FC } from "react";
 import { DateTime } from "luxon";
 import { type AppRouter } from "$/server/api/root";
-import { Archive, CalendarIcon, Eye, MoreHorizontal } from "lucide-react";
+import { Archive, CalendarIcon } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
 import { type inferProcedureOutput } from "@trpc/server";
 import { Button } from "$/components/ui/button";
 import { Badge } from "$/components/ui/badge";
 import { Avatar } from "$/components/ui/avatar";
-import { DropdownMenu } from "$/components/ui/dropdown-menu";
+import { useSession } from "next-auth/react";
+import { BorrowerStatus } from "@prisma/client";
+import PendingConfirmDialog from "$/pages/dashboard/(page-lib)/components/debt-card/pending-confirm-dialog";
+import ActionsMenu from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu";
+import { cn } from "$/lib/utils/cn";
 
 type Props = {
   debt: NonNullable<
-    inferProcedureOutput<AppRouter["user"]["getSharedDebts"]>
+    inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
   >["debtsAsBorrower"][number]["debt"];
   lender?: boolean;
 };
 
-const DebtCard: FC<Props> & {
-  Skeleton: FC;
-} = ({ debt, lender = false }) => {
+const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+  const session = useSession();
+  const currentBorrower = debt.borrowers.find(
+    ({ user }) => user.id === session.data?.user?.id
+  );
+  const paymentStatus = currentBorrower?.status ?? BorrowerStatus.YET_TO_PAY;
   const normalizedBorrowers = debt.borrowers.map(({ user }) => user);
   const members = [debt.lender, ...normalizedBorrowers];
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-border p-6 shadow-sm transition-colors duration-200 ease-in hover:bg-background-secondary/70">
-      <div className="flex w-full items-center justify-between gap-4">
-        <span className="max-w-[250px] text-lg font-bold">{debt.name}</span>
+    <>
+      <PendingConfirmDialog
+        open={openConfirmDialog}
+        onOpenChange={setOpenConfirmDialog}
+      />
 
-        <div className="flex -space-x-2 overflow-hidden">
-          {members.map((user) => (
-            <Avatar key={user.name} className="h-7 w-7">
-              <Avatar.Image src={user.image ?? undefined} />
+      <div
+        className={cn(
+          "relative flex flex-col gap-2 rounded-lg border border-border p-6 shadow-sm",
+          debt.archived && "pointer-events-none select-none"
+        )}
+      >
+        {debt.archived && (
+          <div className="absolute left-0 top-0 z-50 flex h-full w-full items-center justify-center rounded-lg bg-background/50">
+            <div className="flex h-full items-center justify-center">
+              <Archive className="h-12 w-12 text-foreground" />
+            </div>
+          </div>
+        )}
 
-              <Avatar.Fallback>
-                {user.name?.[0]?.toUpperCase() ?? "?"}
-              </Avatar.Fallback>
-            </Avatar>
-          ))}
+        <div className="flex w-full items-center justify-between gap-4">
+          <span className="max-w-[250px] text-lg font-bold">{debt.name}</span>
+
+          <div className="flex -space-x-2 overflow-hidden">
+            {members.map((user) => (
+              <Avatar key={user.name} className="h-7 w-7">
+                <Avatar.Image src={user.image ?? undefined} />
+
+                <Avatar.Fallback>
+                  {user.name?.[0]?.toUpperCase() ?? "?"}
+                </Avatar.Fallback>
+              </Avatar>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <Badge className="self-start rounded-sm text-base" variant="success">
-        💵 {debt.amount.toLocaleString()}
-      </Badge>
-
-      <p className="mb-6 mt-2 pr-2 lg:pr-3 xl:pr-6">{debt.description}</p>
-
-      <div className="mt-auto flex w-full items-center justify-between">
-        <Badge variant="secondary">
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {DateTime.fromJSDate(debt.createdAt).toLocaleString(
-            DateTime.DATE_MED
-          )}
+        <Badge className="self-start rounded-sm text-base" variant="success">
+          💵 {debt.amount.toLocaleString()}
         </Badge>
 
-        {lender && (
-          <DropdownMenu>
-            <DropdownMenu.Trigger asChild>
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex items-center gap-1.5"
-              >
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">Más</span>
-              </Button>
-            </DropdownMenu.Trigger>
+        <p className="mb-6 mt-2 pr-2 lg:pr-3 xl:pr-6">{debt.description}</p>
 
-            <DropdownMenu.Content>
-              <DropdownMenu.Label>Acciones</DropdownMenu.Label>
+        <div className="mt-auto flex w-full items-center justify-between">
+          <Badge variant="secondary">
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {DateTime.fromJSDate(debt.createdAt).toLocaleString(
+              DateTime.DATE_MED
+            )}
+          </Badge>
 
-              <DropdownMenu.Separator />
-
-              <DropdownMenu.Item>
-                <button
-                  type="button"
-                  className="flex w-full cursor-pointer items-center gap-1.5"
-                >
-                  <Eye className="h-4 w-4" />
-                  <span>Ver</span>
-                </button>
-              </DropdownMenu.Item>
-
-              <DropdownMenu.Item>
-                <button
-                  type="button"
-                  className="flex w-full cursor-pointer items-center gap-1.5"
-                >
-                  <Archive className="h-4 w-4" />
-                  <span>Archivar</span>
-                </button>
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu>
-        )}
+          {lender ? (
+            <ActionsMenu debt={debt} />
+          ) : (
+            <Button
+              size="sm"
+              className="text-sm"
+              disabled={
+                paymentStatus === BorrowerStatus.CONFIRMED ||
+                paymentStatus === BorrowerStatus.PENDING_CONFIRMATION
+              }
+              variant={
+                paymentStatus === BorrowerStatus.YET_TO_PAY
+                  ? "default"
+                  : paymentStatus === BorrowerStatus.PENDING_CONFIRMATION
+                  ? "secondary"
+                  : "success"
+              }
+              onClick={() => {
+                setOpenConfirmDialog(true);
+              }}
+            >
+              {paymentStatus === BorrowerStatus.YET_TO_PAY ? (
+                <>
+                  <span className="xs:mr-1">Confirmar</span>{" "}
+                  <span className="hidden xs:inline">Pago</span>
+                </>
+              ) : paymentStatus === BorrowerStatus.PENDING_CONFIRMATION ? (
+                "Pendiente"
+              ) : (
+                "Pagado"
+              )}
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
-const GroupCardSkeleton: FC = () => (
+const DebtCardSkeleton: React.FC = () => (
   <Skeleton className="flex h-48 flex-col gap-2 rounded-lg p-6" />
 );
 
-DebtCard.Skeleton = GroupCardSkeleton;
+const DebtCard = Object.assign(BaseDebtCard, {
+  Skeleton: DebtCardSkeleton,
+});
 export default DebtCard;

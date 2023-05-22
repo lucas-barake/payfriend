@@ -10,6 +10,7 @@ export const getUserDebtsSelect = {
   description: true,
   createdAt: true,
   amount: true,
+  archived: true,
   lender: {
     select: {
       id: true,
@@ -21,15 +22,17 @@ export const getUserDebtsSelect = {
     select: {
       user: {
         select: {
+          id: true,
           image: true,
           name: true,
         },
       },
+      status: true,
     },
   },
 } satisfies Prisma.DebtSelect;
 
-export const userGroupsQueries = createTRPCRouter({
+export const debtsQueries = createTRPCRouter({
   getOwnedDebts: protectedVerifiedProcedure.query(async ({ ctx }) => {
     const debtsAsLenderQuery = await ctx.prisma.user.findUnique({
       where: {
@@ -38,6 +41,14 @@ export const userGroupsQueries = createTRPCRouter({
       select: {
         debtsAsLender: {
           select: getUserDebtsSelect,
+          orderBy: [
+            {
+              createdAt: "desc",
+            },
+            {
+              archived: "asc",
+            },
+          ],
         },
       },
     });
@@ -58,6 +69,18 @@ export const userGroupsQueries = createTRPCRouter({
               select: getUserDebtsSelect,
             },
           },
+          orderBy: [
+            {
+              debt: {
+                createdAt: "desc",
+              },
+            },
+            {
+              debt: {
+                archived: "asc",
+              },
+            },
+          ],
         },
       },
     });

@@ -24,6 +24,7 @@ model Debt {
   dueDate        DateTime?
   lenderId       String
   lender         User            @relation(fields: [lenderId], references: [id])
+  archived       Boolean         @default(false)
   borrowers      Borrower[]
   pendingInvites PendingInvite[]
 }
@@ -35,14 +36,14 @@ enum BorrowerStatus {
 }
 
 model Borrower {
-  id        String          @id @default(cuid())
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id        String         @id @default(cuid())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
   userId    String
-  user      User            @relation(fields: [userId], references: [id])
+  user      User           @relation(fields: [userId], references: [id])
   debtId    String
-  debt      Debt            @relation(fields: [debtId], references: [id])
-  status    BorrowerStatus? @default(YET_TO_PAY)
+  debt      Debt           @relation(fields: [debtId], references: [id])
+  status    BorrowerStatus @default(YET_TO_PAY)
 
   @@unique([userId, debtId])
 }

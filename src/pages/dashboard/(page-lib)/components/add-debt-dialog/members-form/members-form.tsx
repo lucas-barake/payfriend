@@ -83,7 +83,7 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
         error: handleMutationError,
       }
     );
-    apiContext.user.getOwnedDebts.setData(undefined, (prev) => ({
+    apiContext.debts.getOwnedDebts.setData(undefined, (prev) => ({
       debtsAsLender: [...(prev?.debtsAsLender ?? []), newDebt],
     }));
 

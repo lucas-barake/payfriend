@@ -5,7 +5,7 @@ import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 
 const DebtsAsBorrowerTab: FC = () => {
-  const query = api.user.getSharedDebts.useQuery(undefined, {
+  const query = api.debts.getSharedDebts.useQuery(undefined, {
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
@@ -14,6 +14,16 @@ const DebtsAsBorrowerTab: FC = () => {
   const normalizedDebts = debts.map((debt) => ({
     ...debt.debt,
   }));
+
+  if (query.isSuccess && normalizedDebts.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4">
+        <p className="text-center text-lg text-gray-500">
+          No tienes deudas compartidas
+        </p>
+      </div>
+    );
+  }
 
   return (
     <DebtsGrid>
