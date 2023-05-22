@@ -19,6 +19,12 @@ const CUSTOM_EXCEPTIONS = {
       message: message ?? "Ocurrió algún error.",
     });
   },
+  NOT_FOUND: (message?: string) => {
+    return new TRPCError({
+      code: "NOT_FOUND",
+      message: message ?? "No encontrado.",
+    });
+  },
 };
 
 export default CUSTOM_EXCEPTIONS;

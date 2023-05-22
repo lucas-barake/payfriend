@@ -27,6 +27,7 @@ const BaseTheme: React.FC<Props> = ({ variant = "ghost" }) => {
       }}
       size="sm"
     >
+      <span className="sr-only">Cambiar tema</span>
       {currentTheme === "dark" ? (
         <Sun className="h-5 w-5" />
       ) : (

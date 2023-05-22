@@ -1,10 +1,11 @@
 import { type FC } from "react";
-import LoadingSpinner from "$/components/ui/icons/loading-spinner";
+import { Loader2 } from "lucide-react";
 
 const LoadingPage: FC = () => (
   <div className="flex h-screen flex-col items-center justify-center gap-2 bg-background">
     <div role="status">
-      <LoadingSpinner />
+      <Loader2 className="h-10 w-10 animate-spin text-primary" />
+
       <span className="sr-only">Cargando...</span>
     </div>
   </div>

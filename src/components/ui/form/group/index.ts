@@ -1,1 +1,1 @@
-export { default } from "./group";
+export * from "./group";

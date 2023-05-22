@@ -1,8 +1,6 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import cn from "$/lib/utils/cn";
-
-const PopoverTrigger = PopoverPrimitive.Trigger;
+import { cn } from "$/lib/utils/cn";
 
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
@@ -28,4 +26,4 @@ const Popover = Object.assign(PopoverPrimitive.Root, {
   Content: PopoverContent,
 });
 
-export { Popover, PopoverTrigger, PopoverContent };
+export { Popover };

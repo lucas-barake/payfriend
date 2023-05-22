@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 import { Loader2 } from "lucide-react";
 
 const buttonVariants = cva(
@@ -13,6 +13,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         success: "bg-success text-success-foreground hover:bg-success/90",
+        warning: "bg-warning text-warning-foreground hover:bg-warning/90",
         outline:
           "border border-input hover:bg-accent hover:text-accent-foreground",
         secondary:

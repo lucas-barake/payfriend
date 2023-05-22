@@ -124,34 +124,20 @@ export const publicProcedure = t.procedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  if (!ctx.session || !ctx.session.user || !ctx.session.user.email) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
+  // TypeScript can't infer that `email` is non-nullable, so we have to do this
+  const user = {
+    ...ctx.session.user,
+    email: ctx.session.user.email,
+  };
 
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
-    },
-  });
-});
-
-const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
-
-  if (ctx.session.user.phoneVerified === null) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "UNVERIFIED_PHONE",
-    });
-  }
-
-  return next({
-    ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { ...ctx.session, user },
     },
   });
 });
@@ -165,6 +151,20 @@ const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
-export const protectedVerifiedProcedure = t.procedure.use(
-  enforceUserIsVerified
-);
+export const protectedVerifiedProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(async ({ ctx, next }) => {
+    if (ctx.session.user.phoneVerified === null) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "UNVERIFIED_PHONE",
+      });
+    }
+
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });

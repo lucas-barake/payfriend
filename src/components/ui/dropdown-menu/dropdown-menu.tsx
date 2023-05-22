@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, ChevronRight, Circle } from "lucide-react";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 
 type DropdownMenuSubTriggerDefinition = React.ForwardRefExoticComponent<
   React.PropsWithoutRef<
@@ -223,7 +223,7 @@ const DropdownMenuShortcut: DropdownMenuShortcutDefinition = ({
 };
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 
-const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
+export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,
@@ -239,16 +239,3 @@ const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   SubContent: DropdownMenuSubContent,
   RadioGroup: DropdownMenuPrimitive.RadioGroup,
 });
-
-export {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-};

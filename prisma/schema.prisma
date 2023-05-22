@@ -14,56 +14,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Group {
-  id             String               @id @default(cuid())
-  createdAt      DateTime             @default(now())
-  name           String
-  description    String               @db.Text
-  debts          Debt[]
-  users          GroupsUsersMapping[]
-  pendingInvites PendingInvite[]
+enum DebtRecurringFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
 }
 
 model Debt {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  description String    @db.Text
-  amount      Float
-  paid        Boolean   @default(false)
-  dueDate     DateTime?
-  borrowerId  String
-  borrower    User      @relation("Borrower", fields: [borrowerId], references: [id])
-  lenderId    String
-  lender      User      @relation("Lender", fields: [lenderId], references: [id])
-  groupId     String?
-  group       Group?    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  id                 String                  @id @default(cuid())
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  name               String
+  description        String?                 @db.Text
+  amount             Float
+  dueDate            DateTime?
+  lenderId           String
+  lender             User                    @relation(fields: [lenderId], references: [id])
+  archived           Boolean                 @default(false)
+  recurringFrequency DebtRecurringFrequency?
+  borrowers          Borrower[]
+  pendingInvites     PendingInvite[]
 }
 
-enum GroupRole {
-  OWNER
-  COLLABORATOR
-  VIEWER
+enum BorrowerStatus {
+  YET_TO_PAY
+  PENDING_CONFIRMATION
+  CONFIRMED
 }
 
-model GroupsUsersMapping {
-  userId  String
-  user    User      @relation(fields: [userId], references: [id])
-  groupId String
-  group   Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  role    GroupRole @default(COLLABORATOR)
+model Borrower {
+  id        String         @id @default(cuid())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
+  debtId    String
+  debt      Debt           @relation(fields: [debtId], references: [id])
+  status    BorrowerStatus @default(YET_TO_PAY)
 
-  @@id([userId, groupId])
+  @@unique([userId, debtId])
 }
 
 model PendingInvite {
-  userId  String
-  user    User      @relation(fields: [userId], references: [id])
-  groupId String
-  group   Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  role    GroupRole
+  createdAt    DateTime @default(now())
+  inviteeEmail String
+  inviterId    String
+  inviter      User     @relation(fields: [inviterId], references: [id])
+  debtId       String
+  debt         Debt     @relation(fields: [debtId], references: [id])
 
-  @@id([userId, groupId])
+  @@id([inviteeEmail, debtId])
 }
 
 // Necessary for Next auth
@@ -94,18 +94,17 @@ model Session {
 }
 
 model User {
-  id              String               @id @default(cuid())
+  id              String          @id @default(cuid())
   name            String?
-  email           String?              @unique
+  email           String?         @unique
   emailVerified   DateTime?
-  phoneNumber     String?              @unique
-  phoneVerified   DateTime?            @db.Timestamptz(6)
+  phoneNumber     String?         @unique
+  phoneVerified   DateTime?       @db.Timestamptz(6)
   image           String?
   accounts        Account[]
   sessions        Session[]
-  debtsAsBorrower Debt[]               @relation("Borrower")
-  debtsAsLender   Debt[]               @relation("Lender")
-  groups          GroupsUsersMapping[]
+  debtsAsLender   Debt[]
+  debtsAsBorrower Borrower[]
   pendingInvites  PendingInvite[]
 }
 

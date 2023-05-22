@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 
 const DialogPortal: React.FC<DialogPrimitive.DialogPortalProps> = ({
   className,
@@ -47,7 +47,7 @@ const DialogContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-        <X className="h-4 w-4" />
+        <X className="h-5 w-5" />
         <span className="sr-only">Cerrar</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -71,10 +71,7 @@ const DialogFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => (
   <div
-    className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-2",
-      className
-    )}
+    className={cn("mt-4 flex justify-center gap-2 sm:justify-end", className)}
     {...props}
   />
 );
@@ -101,13 +98,19 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-base text-muted-foreground", className)}
     {...props}
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
-const Dialog = Object.assign(DialogPrimitive.Root, {
+const Root = ({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Root>): JSX.Element => (
+  <DialogPrimitive.Root {...props} />
+);
+
+export const Dialog = Object.assign(Root, {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Header: DialogHeader,
@@ -115,5 +118,3 @@ const Dialog = Object.assign(DialogPrimitive.Root, {
   Title: DialogTitle,
   Description: DialogDescription,
 });
-
-export { Dialog };

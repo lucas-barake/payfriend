@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { Listbox as HeadlessListbox } from "@headlessui/react";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 import { ChevronsUpDown } from "lucide-react";
 
 type Option = {

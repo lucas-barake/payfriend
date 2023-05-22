@@ -18,6 +18,7 @@ const CustomHead: FC<CustomHeadProps> = ({ title, content }) => {
     <Head>
       <title>{titleText}</title>
       <meta name="description" content={contentText} />
+      <link rel="icon" href="/favicon.ico" />
     </Head>
   );
 };

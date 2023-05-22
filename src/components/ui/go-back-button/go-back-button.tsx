@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { useRouter } from "next/router";
 import { Button, type ButtonProps } from "$/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 
 type Props = ButtonProps;
 

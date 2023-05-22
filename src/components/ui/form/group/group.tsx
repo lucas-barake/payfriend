@@ -1,11 +1,13 @@
-import { type ReactNode } from "react";
+import React from "react";
+import { cn } from "$/lib/utils/cn";
 
 type Props = {
-  children: ReactNode;
+  className?: string;
+  children: React.ReactNode;
 };
 
-const Group = ({ children }: Props): JSX.Element => (
-  <div className="flex flex-col gap-1">{children}</div>
+export const Group: React.FC<Props> = ({ children, className }) => (
+  <div className={cn("grid w-full items-center gap-2", className)}>
+    {children}
+  </div>
 );
-
-export default Group;

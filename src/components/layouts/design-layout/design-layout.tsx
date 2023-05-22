@@ -1,7 +1,7 @@
 import { type FC, type ReactNode } from "react";
 import { Button } from "$/components/ui/button";
 import { signOut } from "next-auth/react";
-import cn from "$/lib/utils/cn";
+import { cn } from "$/lib/utils/cn";
 import { ThemeSwitch } from "$/components/common/theme-switch";
 import { LogOut } from "lucide-react";
 import { APP_NAME } from "$/lib/constants/app-name";
