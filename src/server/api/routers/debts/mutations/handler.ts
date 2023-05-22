@@ -7,6 +7,7 @@ import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries/handler";
 import { rawQueries } from "$/server/api/routers/(routers-lib)/raw-queries";
 import { z } from "zod";
+import { BorrowerStatus } from "@prisma/client";
 
 /*// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
@@ -279,6 +280,7 @@ export const debtsMutations = createTRPCRouter({
     .input(
       z.object({
         debtId: z.string().cuid(),
+        userId: z.string().cuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -294,6 +296,11 @@ export const debtsMutations = createTRPCRouter({
             select: {
               id: true,
               status: true,
+              user: {
+                select: {
+                  id: true,
+                },
+              },
             },
           },
         },
@@ -304,11 +311,17 @@ export const debtsMutations = createTRPCRouter({
       }
 
       const borrower = debt.borrowers.find(
-        (borrower) => borrower.status === "PENDING_CONFIRMATION"
+        (borrower) => borrower.user.id === input.userId
       );
 
       if (!borrower) {
-        throw CUSTOM_EXCEPTIONS.NOT_FOUND("No hay deudores pendientes");
+        throw CUSTOM_EXCEPTIONS.NOT_FOUND("Usuario no encontrado");
+      }
+
+      if (borrower.status !== "PENDING_CONFIRMATION") {
+        throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
+          "El usuario no está pendiente de confirmación"
+        );
       }
 
       return ctx.prisma.borrower.update({
@@ -316,7 +329,7 @@ export const debtsMutations = createTRPCRouter({
           id: borrower.id,
         },
         data: {
-          status: "CONFIRMED",
+          status: BorrowerStatus.CONFIRMED,
         },
       });
     }),

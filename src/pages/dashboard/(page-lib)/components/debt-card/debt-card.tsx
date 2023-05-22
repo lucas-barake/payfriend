@@ -1,7 +1,7 @@
 import React, { type FC } from "react";
 import { DateTime } from "luxon";
 import { type AppRouter } from "$/server/api/root";
-import { Archive, CalendarIcon } from "lucide-react";
+import { Archive, BadgeCheck, CalendarIcon } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
 import { type inferProcedureOutput } from "@trpc/server";
 import { Button } from "$/components/ui/button";
@@ -107,7 +107,9 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
                   : "success"
               }
               onClick={() => {
-                setOpenConfirmDialog(true);
+                if (paymentStatus === BorrowerStatus.YET_TO_PAY) {
+                  setOpenConfirmDialog(true);
+                }
               }}
             >
               {paymentStatus === BorrowerStatus.YET_TO_PAY ? (
@@ -118,7 +120,10 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
               ) : paymentStatus === BorrowerStatus.PENDING_CONFIRMATION ? (
                 "Pendiente"
               ) : (
-                "Pagado"
+                <>
+                  <BadgeCheck className="mr-1 h-4 w-4" />
+                  <span>Pagado</span>
+                </>
               )}
             </Button>
           )}

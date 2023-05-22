@@ -6,6 +6,7 @@ import { type AppRouter } from "$/server/api/root";
 import { type inferProcedureOutput } from "@trpc/server";
 import { AttentionIndicator } from "$/components/common/attention-indicator/attention-indicator";
 import ArchiveDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/archive-dialog";
+import ConfirmationsDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/confirmations-dialog";
 
 type Props = {
   debt: NonNullable<
@@ -16,6 +17,8 @@ type Props = {
 
 const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
   const [openArchiveDialog, setOpenArchiveDialog] = React.useState(false);
+  const [openConfirmationsDialog, setOpenConfirmationsDialog] =
+    React.useState(false);
 
   return (
     <>
@@ -38,10 +41,15 @@ const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
 
           <DropdownMenu.Separator />
 
-          <DropdownMenu.Item>
+          <DropdownMenu.Item
+            onClick={() => {
+              setOpenConfirmationsDialog(true);
+            }}
+            className="cursor-pointer"
+          >
             <button
               type="button"
-              className="relative flex w-full cursor-pointer items-center gap-1.5"
+              className="relative flex w-full items-center gap-1.5"
             >
               <UserCheck className="h-4 w-4" />
               Confirmar Pagos
@@ -51,24 +59,20 @@ const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
             </button>
           </DropdownMenu.Item>
 
-          <DropdownMenu.Item>
-            <button
-              type="button"
-              className="flex w-full cursor-pointer items-center gap-1.5"
-            >
+          <DropdownMenu.Item className="cursor-pointer">
+            <button type="button" className="flex w-full items-center gap-1.5">
               <Settings className="h-4 w-4" />
               <span>Configurar</span>
             </button>
           </DropdownMenu.Item>
 
-          <DropdownMenu.Item>
-            <button
-              type="button"
-              className="flex w-full cursor-pointer items-center gap-1.5"
-              onClick={() => {
-                setOpenArchiveDialog(true);
-              }}
-            >
+          <DropdownMenu.Item
+            onClick={() => {
+              setOpenArchiveDialog(true);
+            }}
+            className="cursor-pointer"
+          >
+            <button type="button" className="flex w-full items-center gap-1.5">
               <Archive className="h-4 w-4" />
               <span>Archivar</span>
             </button>
@@ -82,6 +86,14 @@ const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
         onOpenChange={() => {
           setOpenArchiveDialog(false);
         }}
+      />
+
+      <ConfirmationsDialog
+        open={openConfirmationsDialog}
+        onOpenChange={() => {
+          setOpenConfirmationsDialog(false);
+        }}
+        debtId={debt.id}
       />
     </>
   );

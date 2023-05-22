@@ -2,7 +2,9 @@ import {
   createTRPCRouter,
   protectedVerifiedProcedure,
 } from "$/server/api/trpc";
-import { type Prisma } from "@prisma/client";
+import { BorrowerStatus, type Prisma } from "@prisma/client";
+import { z } from "zod";
+import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
 export const getUserDebtsSelect = {
   id: true,
@@ -87,4 +89,41 @@ export const debtsQueries = createTRPCRouter({
       },
     });
   }),
+  getPendingConfirmations: protectedVerifiedProcedure
+    .input(
+      z.object({
+        debtId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const pendingConfirmations = await ctx.prisma.debt
+        .findFirst({
+          where: {
+            id: input.debtId,
+            lenderId: ctx.session.user.id,
+          },
+        })
+        .borrowers({
+          where: {
+            status: BorrowerStatus.PENDING_CONFIRMATION,
+          },
+          select: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+        });
+
+      if (!pendingConfirmations) {
+        throw CUSTOM_EXCEPTIONS.NOT_FOUND("No se encontró la deuda");
+      }
+
+      return {
+        pendingConfirmations,
+      };
+    }),
 });
