@@ -14,19 +14,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum DebtRecurringFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+}
+
 model Debt {
-  id             String          @id @default(cuid())
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  name           String
-  description    String?         @db.Text
-  amount         Float
-  dueDate        DateTime?
-  lenderId       String
-  lender         User            @relation(fields: [lenderId], references: [id])
-  archived       Boolean         @default(false)
-  borrowers      Borrower[]
-  pendingInvites PendingInvite[]
+  id                 String                  @id @default(cuid())
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  name               String
+  description        String?                 @db.Text
+  amount             Float
+  dueDate            DateTime?
+  lenderId           String
+  lender             User                    @relation(fields: [lenderId], references: [id])
+  archived           Boolean                 @default(false)
+  recurringFrequency DebtRecurringFrequency?
+  borrowers          Borrower[]
+  pendingInvites     PendingInvite[]
 }
 
 enum BorrowerStatus {

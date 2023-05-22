@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "DebtRecurringFrequency" AS ENUM ('WEEKLY', 'BIWEEKLY', 'MONTHLY');
+
+-- CreateEnum
 CREATE TYPE "BorrowerStatus" AS ENUM ('YET_TO_PAY', 'PENDING_CONFIRMATION', 'CONFIRMED');
 
 -- CreateTable
@@ -7,10 +10,12 @@ CREATE TABLE "Debt" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
     "amount" DOUBLE PRECISION NOT NULL,
     "dueDate" TIMESTAMP(3),
     "lenderId" TEXT NOT NULL,
+    "archived" BOOLEAN NOT NULL DEFAULT false,
+    "recurringFrequency" "DebtRecurringFrequency",
 
     CONSTRAINT "Debt_pkey" PRIMARY KEY ("id")
 );
@@ -22,7 +27,7 @@ CREATE TABLE "Borrower" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "debtId" TEXT NOT NULL,
-    "status" "BorrowerStatus" DEFAULT 'YET_TO_PAY',
+    "status" "BorrowerStatus" NOT NULL DEFAULT 'YET_TO_PAY',
 
     CONSTRAINT "Borrower_pkey" PRIMARY KEY ("id")
 );
