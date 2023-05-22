@@ -52,3 +52,11 @@ export const updateDebtInput = createDebtInput.extend({
     }),
 });
 export type UpdateDebtInput = z.infer<typeof updateDebtInput>;
+
+export const sendDebtInviteInput = z.object({
+  email: z.string().email({
+    message: "Correo inválido",
+  }),
+  debtId: z.string().cuid(),
+});
+export type SendDebtInviteInput = z.infer<typeof sendDebtInviteInput>;

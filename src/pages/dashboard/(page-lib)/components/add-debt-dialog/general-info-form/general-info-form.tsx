@@ -7,7 +7,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";
-import { AlertCircleIcon, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { type z } from "zod";
 import { type TabSetters } from "$/hooks/use-tabs/use-tabs";
 import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
@@ -58,10 +58,6 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
           required
           error={form.formState.errors.name !== undefined}
         />
-        <Form.FieldDescription className="flex items-center gap-1.5 text-sm">
-          <AlertCircleIcon className="h-4 w-4" />
-          Una vez creada la deuda, no se puede cambiar el nombre.
-        </Form.FieldDescription>
 
         <Form.FieldError>{form.formState.errors.name?.message}</Form.FieldError>
       </Form.Group>

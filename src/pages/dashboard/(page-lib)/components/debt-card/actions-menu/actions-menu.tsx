@@ -1,12 +1,13 @@
 import React from "react";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Button } from "$/components/ui/button";
-import { Archive, MoreHorizontal, Settings, UserCheck } from "lucide-react";
+import { Archive, MoreHorizontal, UserCheck, Users } from "lucide-react";
 import { type AppRouter } from "$/server/api/root";
 import { type inferProcedureOutput } from "@trpc/server";
 import { AttentionIndicator } from "$/components/common/attention-indicator/attention-indicator";
 import ArchiveDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/archive-dialog";
 import ConfirmationsDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/confirmations-dialog";
+import BorrowersDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/borrowers-dialog";
 
 type Props = {
   debt: NonNullable<
@@ -19,9 +20,28 @@ const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
   const [openArchiveDialog, setOpenArchiveDialog] = React.useState(false);
   const [openConfirmationsDialog, setOpenConfirmationsDialog] =
     React.useState(false);
+  const [showBorrowersDialog, setShowBorrowersDialog] = React.useState(false);
 
   return (
     <>
+      <ArchiveDialog
+        debt={debt}
+        open={openArchiveDialog}
+        onOpenChange={setOpenArchiveDialog}
+      />
+
+      <ConfirmationsDialog
+        open={openConfirmationsDialog}
+        onOpenChange={setOpenConfirmationsDialog}
+        debtId={debt.id}
+      />
+
+      <BorrowersDialog
+        open={showBorrowersDialog}
+        onOpenChange={setShowBorrowersDialog}
+        debtId={debt.id}
+      />
+
       <DropdownMenu>
         <DropdownMenu.Trigger asChild>
           <Button
@@ -59,10 +79,15 @@ const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
             </button>
           </DropdownMenu.Item>
 
-          <DropdownMenu.Item className="cursor-pointer">
+          <DropdownMenu.Item
+            className="cursor-pointer"
+            onClick={() => {
+              setShowBorrowersDialog(true);
+            }}
+          >
             <button type="button" className="flex w-full items-center gap-1.5">
-              <Settings className="h-4 w-4" />
-              <span>Configurar</span>
+              <Users className="h-4 w-4" />
+              <span>Deudores</span>
             </button>
           </DropdownMenu.Item>
 
@@ -79,22 +104,6 @@ const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>
-
-      <ArchiveDialog
-        debt={debt}
-        open={openArchiveDialog}
-        onOpenChange={() => {
-          setOpenArchiveDialog(false);
-        }}
-      />
-
-      <ConfirmationsDialog
-        open={openConfirmationsDialog}
-        onOpenChange={() => {
-          setOpenConfirmationsDialog(false);
-        }}
-        debtId={debt.id}
-      />
     </>
   );
 };

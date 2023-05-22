@@ -61,11 +61,13 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
 
           <div className="flex -space-x-2 overflow-hidden">
             {members.map((user) => (
-              <Avatar key={user.name} className="h-7 w-7">
+              <Avatar key={user.email} className="h-7 w-7">
                 <Avatar.Image src={user.image ?? undefined} />
 
                 <Avatar.Fallback>
-                  {user.name?.[0]?.toUpperCase() ?? "?"}
+                  {user.name?.[0]?.toUpperCase() ??
+                    user.email?.[0]?.toUpperCase() ??
+                    "?"}
                 </Avatar.Fallback>
               </Avatar>
             ))}

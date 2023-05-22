@@ -5,11 +5,8 @@ import {
 import {
   acceptGroupInviteInput,
   declineGroupInviteInput,
-  sendGroupInviteInput,
 } from "$/server/api/routers/user/debt-invites/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
-import { Prisma } from "@prisma/client";
 import { rawQueries } from "$/server/api/routers/(routers-lib)/raw-queries";
 
 export const userGroupInvitesMutations = createTRPCRouter({
@@ -84,65 +81,5 @@ export const userGroupInvitesMutations = createTRPCRouter({
           debtId: true,
         },
       });
-    }),
-  sendDebtInvite: protectedVerifiedProcedure
-    .input(sendGroupInviteInput)
-    .mutation(async ({ ctx, input }) => {
-      const lender = await ctx.prisma.debt.findFirst({
-        where: {
-          id: input.groupId,
-          lenderId: ctx.session.user.id,
-        },
-      });
-
-      if (!lender) {
-        throw CUSTOM_EXCEPTIONS.UNAUTHORIZED();
-      }
-
-      const numOfMembers = await ctx.prisma.borrower.count({
-        where: {
-          debtId: input.groupId,
-        },
-      });
-
-      if (numOfMembers >= MAX_NUM_OF_GROUP_USERS) {
-        throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
-          "El grupo ya tiene el máximo de usuarios"
-        );
-      }
-
-      try {
-        return await ctx.prisma.pendingInvite.create({
-          data: {
-            debt: {
-              connect: {
-                id: input.groupId,
-              },
-            },
-            inviteeEmail: input.email,
-            inviter: {
-              connect: {
-                id: ctx.session.user.id,
-              },
-            },
-          },
-          select: {
-            inviteeEmail: true,
-            debt: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        });
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2002") {
-            throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El usuario ya está invitado");
-          }
-        }
-        throw error;
-      }
     }),
 });

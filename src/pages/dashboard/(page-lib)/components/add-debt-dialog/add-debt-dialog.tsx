@@ -3,7 +3,7 @@ import { Button } from "$/components/ui/button";
 import { Plus } from "lucide-react";
 import { Dialog } from "$/components/ui/dialog";
 import GeneralInfoForm from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/general-info-form";
-import MembersForm from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/members-form";
+import BorrowersForm from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/members-form";
 import { useTabs } from "$/hooks/use-tabs/use-tabs";
 import {
   type AddDebtTab,
@@ -48,8 +48,23 @@ const AddDebtDialog: React.FC = () => {
           <Dialog.Title>
             {selectedTab === "general-info-form"
               ? "Agregar Deuda"
-              : "Agregar Deudores"}
+              : "Invitar Deudores"}
           </Dialog.Title>
+
+          <Dialog.Description>
+            {selectedTab === "general-info-form" ? (
+              <>
+                ⚠️ Una vez hayas creada la deuda, no podrás cambiar esta
+                información.
+              </>
+            ) : (
+              <>
+                ⚠️ Podrás agregar más deudores luego de crear la deuda, pero no
+                podrás cambiar los deudores una vez hayan aceptado la
+                invitación.
+              </>
+            )}
+          </Dialog.Description>
         </Dialog.Header>
 
         <Tabs
@@ -64,7 +79,7 @@ const AddDebtDialog: React.FC = () => {
             </Tabs.Content>
 
             <Tabs.Content value={addDebtTabs[1]}>
-              <MembersForm tabSetters={tabSetters} setOpen={setOpen} />
+              <BorrowersForm tabSetters={tabSetters} setOpen={setOpen} />
             </Tabs.Content>
           </FormProvider>
         </Tabs>

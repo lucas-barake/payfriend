@@ -44,12 +44,10 @@ const ArchiveDialog: React.FC<Props> = ({ debt, open, onOpenChange }) => {
             Archivar Deuda
           </Dialog.Title>
           <Dialog.Description>
-            <p>
-              Al archivar la deuda, se considerará completada y permanecerá
-              inactiva de forma permanente. No podrás realizar cambios ni
-              transacciones relacionadas con esta deuda, pero aún podrás verla.
-              Esta acción no se puede deshacer.
-            </p>
+            Al archivar la deuda, se considerará completada y permanecerá
+            inactiva de forma permanente. No podrás realizar cambios ni
+            transacciones relacionadas con esta deuda, pero aún podrás verla.
+            Esta acción no se puede deshacer.
           </Dialog.Description>
 
           <Dialog.Footer>
