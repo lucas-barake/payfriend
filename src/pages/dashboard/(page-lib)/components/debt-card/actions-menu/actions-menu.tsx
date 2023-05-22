@@ -31,16 +31,7 @@ const ActionsMenu: React.FC<Props> = ({ debt }) => {
         error: handleMutationError,
       }
     );
-    apiContext.debts.getOwnedDebts.setData(undefined, (prev) => {
-      const prevDebtsAsLender = prev?.debtsAsLender ?? [];
-      if (!prev) return prev;
-      return {
-        ...prev,
-        debtsAsLender: prevDebtsAsLender.map((prevDebt) =>
-          prevDebt.id === debt.id ? { ...prevDebt, archived: true } : prevDebt
-        ),
-      };
-    });
+    await apiContext.debts.getOwnedDebts.invalidate();
     setOpenArchiveDialog(false);
   }
 
