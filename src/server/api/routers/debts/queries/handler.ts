@@ -40,7 +40,9 @@ export const debtsQueries = createTRPCRouter({
       },
       select: {
         debtsAsLender: {
-          select: getUserDebtsSelect,
+          select: {
+            ...getUserDebtsSelect,
+          },
           orderBy: [
             {
               createdAt: "desc",

@@ -9,7 +9,7 @@ import { Badge } from "$/components/ui/badge";
 import { Avatar } from "$/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { BorrowerStatus } from "@prisma/client";
-import PendingConfirmDialog from "$/pages/dashboard/(page-lib)/components/debt-card/pending-confirm-dialog";
+import BorrowerConfirmDialog from "src/pages/dashboard/(page-lib)/components/debt-card/borrower-confirm-dialog";
 import ActionsMenu from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu";
 import { cn } from "$/lib/utils/cn";
 
@@ -29,12 +29,17 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
   const paymentStatus = currentBorrower?.status ?? BorrowerStatus.YET_TO_PAY;
   const normalizedBorrowers = debt.borrowers.map(({ user }) => user);
   const members = [debt.lender, ...normalizedBorrowers];
+  const hasPendingConfirmations =
+    debt.borrowers.filter(
+      ({ status }) => status === BorrowerStatus.PENDING_CONFIRMATION
+    ).length > 0;
 
   return (
     <>
-      <PendingConfirmDialog
+      <BorrowerConfirmDialog
         open={openConfirmDialog}
         onOpenChange={setOpenConfirmDialog}
+        debtId={debt.id}
       />
 
       <div
@@ -82,7 +87,10 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
           </Badge>
 
           {lender ? (
-            <ActionsMenu debt={debt} />
+            <ActionsMenu
+              debt={debt}
+              hasPendingConfirmations={hasPendingConfirmations}
+            />
           ) : (
             <Button
               size="sm"
