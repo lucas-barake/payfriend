@@ -60,7 +60,7 @@ const AddDebtDialog: React.FC = () => {
             ) : (
               <>
                 ⚠️ Podrás agregar más deudores luego de crear la deuda, pero no
-                podrás cambiar los deudores una vez hayan aceptado la
+                podrás eliminar a los deudores una vez hayan aceptado la
                 invitación.
               </>
             )}

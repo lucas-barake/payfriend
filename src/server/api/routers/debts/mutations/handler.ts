@@ -243,6 +243,7 @@ export const debtsMutations = createTRPCRouter({
         where: {
           id: input.debtId,
           lenderId: ctx.session.user.id,
+          archived: false,
         },
         select: {
           borrowers: {

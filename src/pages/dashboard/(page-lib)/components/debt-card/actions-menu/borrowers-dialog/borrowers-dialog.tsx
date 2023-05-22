@@ -18,6 +18,8 @@ import { useSession } from "next-auth/react";
 import { Separator } from "$/components/ui/separator";
 import { LucideMail, UserMinus } from "lucide-react";
 import PendingBorrowerRow from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/borrowers-dialog/pending-borrower-row";
+import { borrowerStatusLabels } from "$/lib/shared/borrower-status-labels";
+import { Badge } from "$/components/ui/badge";
 
 type Props = {
   open: boolean;
@@ -157,12 +159,46 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
             key={borrower.id}
           >
             <div className="flex items-center gap-3">
-              <Avatar>
-                <Avatar.Image src={borrower.user.image ?? undefined} />
-                <Avatar.Fallback>
-                  {borrower.user.name?.[0] ?? "?"}
-                </Avatar.Fallback>
-              </Avatar>
+              <Popover>
+                <Popover.Trigger asChild>
+                  <Button variant="outline">
+                    <Avatar className="h-6 w-6">
+                      <Avatar.Image src={borrower.user.image ?? undefined} />
+                      <Avatar.Fallback>
+                        {borrower.user.name?.[0] ?? "?"}
+                      </Avatar.Fallback>
+                    </Avatar>
+                  </Button>
+                </Popover.Trigger>
+
+                <Popover.Content className="flex flex-col gap-2">
+                  <div className="flex items-center gap-1.5 text-sm text-foreground">
+                    <span>{borrower.user.name ?? "Sin nombre"}</span>
+                    <span className="opacity-50">{borrower.user.email}</span>
+                  </div>
+
+                  <Separator />
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-foreground">
+                      Estado de pago:
+                    </span>
+
+                    <Badge
+                      className="self-start text-sm"
+                      variant={
+                        borrower.status === "CONFIRMED"
+                          ? "success"
+                          : borrower.status === "PENDING_CONFIRMATION"
+                          ? "warning"
+                          : "destructive"
+                      }
+                    >
+                      {borrowerStatusLabels.get(borrower.status)}
+                    </Badge>
+                  </div>
+                </Popover.Content>
+              </Popover>
 
               <span className="text-foreground">{borrower.user.email}</span>
             </div>
