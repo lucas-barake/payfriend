@@ -1,0 +1,2 @@
+GET https://api.mercadopago.com/preapproval_plan/search
+Authorization: Bearer {{access_token}}

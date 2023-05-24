@@ -5,7 +5,7 @@ import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Avatar } from "$/components/ui/avatar";
 import { LogOut } from "lucide-react";
 
-export const ProfileMenu: React.FC = () => {
+export const UserMenu: React.FC = () => {
   const session = useSession();
   const userImage = session.data?.user?.image ?? undefined;
 

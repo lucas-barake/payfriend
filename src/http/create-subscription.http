@@ -1,0 +1,15 @@
+POST https://api.mercadopago.com/preapproval
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "back_url": "https://google.com",
+  "payer_email": "lpatronr@gmail.com",
+  "auto_recurring": {
+    "frequency": 1,
+    "frequency_type": "months",
+    "transaction_amount": 5950.0,
+    "currency_id": "COP"
+  },
+  "reason": "Suscripción a Plan Básico"
+}

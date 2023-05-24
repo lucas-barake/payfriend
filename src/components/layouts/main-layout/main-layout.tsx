@@ -9,7 +9,7 @@ import { Pages } from "$/lib/enums/pages";
 import { APP_NAME } from "$/lib/constants/app-name";
 import Link from "next/link";
 import { ThemeSwitch } from "$/components/common/theme-switch";
-import { ProfileMenu } from "$/components/layouts/main-layout/profile-menu";
+import { UserMenu } from "src/components/layouts/main-layout/user-menu";
 import NotificationBell from "$/components/layouts/main-layout/notification-bell";
 
 type LayoutProps = ComponentPropsWithoutRef<"main"> & CustomHeadProps;
@@ -30,7 +30,7 @@ const MainLayout: FC<LayoutProps> = ({
         </Link>
 
         <div className="flex items-center gap-2">
-          <ProfileMenu />
+          <UserMenu />
 
           <NotificationBell />
 

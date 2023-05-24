@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import { api } from "$/lib/utils/api";
 import "$/styles/globals.css";
 import { StyledToaster } from "src/components/ui/styled-toaster";
+import { SubscriptionPlansProvider } from "$/context/subscription-plans-context";
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,
@@ -28,10 +29,12 @@ const MyApp = ({
 
   return (
     <SessionProvider session={session as Session | null}>
-      <StyledToaster />
-      <ThemeProvider attribute="class">
-        {getLayout(<Component {...pageProps} />)}
-      </ThemeProvider>
+      <SubscriptionPlansProvider>
+        <StyledToaster />
+        <ThemeProvider attribute="class">
+          {getLayout(<Component {...pageProps} />)}
+        </ThemeProvider>
+      </SubscriptionPlansProvider>
     </SessionProvider>
   );
 };

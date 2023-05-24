@@ -43,14 +43,15 @@ enum BorrowerStatus {
 }
 
 model Borrower {
-  id        String         @id @default(cuid())
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  userId    String
-  user      User           @relation(fields: [userId], references: [id])
-  debtId    String
-  debt      Debt           @relation(fields: [debtId], references: [id])
-  status    BorrowerStatus @default(YET_TO_PAY)
+  id             String         @id @default(cuid())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  userId         String
+  user           User           @relation(fields: [userId], references: [id])
+  debtId         String
+  debt           Debt           @relation(fields: [debtId], references: [id])
+  status         BorrowerStatus @default(YET_TO_PAY)
+  lastNotifiedAt DateTime?      @db.Timestamptz(6)
 
   @@unique([userId, debtId])
 }
