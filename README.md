@@ -8,22 +8,30 @@ This document provides an overview of the project, including its architecture, t
 
 Before proceeding with the installation, please make sure you have the following software installed on your machine:
 
-- Node.js.
-- NPM
+- [Node.js](https://nodejs.org/en).
+- [nvm](https://github.com/nvm-sh/nvm)
 - A running Postgresql instance.
 - A running Redis instance.
 - ESLint and Prettier extensions in your preferred editor.
-- pnpm installed `npm i -g pnpm`
+- [pnpm](https://pnpm.io/) installed `npm i -g pnpm`
 
 ## Installation Steps
 
-1. Install the dependencies:
+1. Set your Node.js version to the project's version
+
+```bash
+nvm use
+```
+
+Running this command will instruct [nvm](https://github.com/nvm-sh/nvm) to switch to the Node.js version specified in the [nvmrc](./.nvmrc) file.
+
+2. Install the dependencies:
 
 ```bash
 pnpm install
 ```
 
-2. Set up your environment variables
+3. Set up your environment variables
 
 Copy the template found in the `.env.example` file over to a new `.env` file.
 
@@ -33,7 +41,7 @@ cp .env.example .env
 
 Replace the values in the `.env` file with your own configuration.
 
-3. Start the server:
+4. Start the server:
 
 ```bash
 pnpm run dev
@@ -53,7 +61,7 @@ The project is structured as follows:
   - Components created in the `(page-lib)` directory should be imported into the page itself and used there. They should not be shared with other pages unless the page is a child of the page that created the component.
   - Components must be exported with `default` as Next.js does not support named exports within the `/pages` directory (**this only applies for `.tsx` files**).
 - [`/src/pages/api`](./src/pages/api) contains all API routes.
-- [`/src/server`](./src/server) contains all server-side code, specially `tRPC` mutations and queries (note that `tRPC` procedures are mapped via HTTPS routes through the `/src/pages/api` directory).
+- [`/src/server`](./src/server) contains all server-side code, especially `tRPC` mutations and queries (note that `tRPC` procedures are mapped via HTTPS routes through the `/src/pages/api` directory).
 - [`/src/types`](src/lib/types) contains all utility typescript types.
 - [`/src/styles`](./src/styles) contains the global styles for the application, such as color variables.
 - [`/prisma`](./prisma) contains the Prisma schema and migrations.
