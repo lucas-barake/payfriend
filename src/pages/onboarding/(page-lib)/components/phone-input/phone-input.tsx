@@ -69,8 +69,9 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
       });
 
       setPhone(input.phone);
-    } finally {
       setView(View.OTP_INPUT);
+    } catch (error) {
+      handleToastError(error);
     }
   }
 
