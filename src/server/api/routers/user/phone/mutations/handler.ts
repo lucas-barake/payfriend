@@ -9,6 +9,7 @@ import { DateTime } from "luxon";
 import { env } from "$/env.mjs";
 import { TimeInSeconds } from "$/lib/enums/time";
 import { APP_NAME } from "$/lib/constants/app-name";
+import { logger } from "$/server/logger";
 
 export const phoneMutations = createTRPCRouter({
   verifyPhone: protectedProcedure
@@ -89,13 +90,14 @@ export const phoneMutations = createTRPCRouter({
         })
         .then((message) => {
           if (isInDev) {
-            console.log(
-              `✅ Se mandó el código de verificación ${fourDigitGeneratedOTP} a ${input.phone.phoneNumber} con el sid ${message.sid}`
+            logger.info(
+              `Se mandó el código de verificación ${fourDigitGeneratedOTP} a ${input.phone.phoneNumber} con el sid ${message.sid}`
             );
           }
         })
         .catch((error: unknown) => {
           transactionError = error;
+          logger.error(error);
           throw CUSTOM_EXCEPTIONS.INTERNAL_SERVER_ERROR(
             "Error al enviar el código de verificación"
           );
@@ -108,6 +110,7 @@ export const phoneMutations = createTRPCRouter({
         });
 
       if (transactionError) {
+        logger.error(transactionError);
         throw CUSTOM_EXCEPTIONS.INTERNAL_SERVER_ERROR(
           "Error al enviar el código de verificación"
         );
