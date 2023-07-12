@@ -4,7 +4,7 @@ import { cn } from "$/lib/utils/cn";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { api } from "$/lib/utils/api";
-import { Check, X } from "lucide-react";
+import { Check, EyeIcon, X } from "lucide-react";
 import { type inferProcedureOutput } from "@trpc/server";
 import { Popover } from "$/components/ui/popover";
 import { Button } from "$/components/ui/button";
@@ -62,6 +62,7 @@ const PendingInviteRow: FC<Props> = ({ invite }) => {
         <Popover>
           <Popover.Trigger asChild>
             <Button variant="outline" size="sm" className="self-start">
+              <EyeIcon className="mr-2 h-4 w-4" />
               <span className="max-w-[100px] truncate">{invite.debt.name}</span>
             </Button>
           </Popover.Trigger>
