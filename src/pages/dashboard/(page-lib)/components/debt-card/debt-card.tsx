@@ -3,7 +3,10 @@ import { DateTime } from "luxon";
 import { type AppRouter } from "$/server/api/root";
 import { Archive, BadgeCheck, CalendarIcon } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
-import { type inferProcedureOutput } from "@trpc/server";
+import {
+  type inferProcedureInput,
+  type inferProcedureOutput,
+} from "@trpc/server";
 import { Button } from "$/components/ui/button";
 import { Badge } from "$/components/ui/badge";
 import { Avatar } from "$/components/ui/avatar";
@@ -18,9 +21,10 @@ type Props = {
     inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
   >["debtsAsBorrower"][number]["debt"];
   lender?: boolean;
+  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
 };
 
-const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
+const BaseDebtCard: FC<Props> = ({ debt, lender = false, queryVariables }) => {
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
   const session = useSession();
   const currentBorrower = debt.borrowers.find(
@@ -40,6 +44,7 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
         open={openConfirmDialog}
         onOpenChange={setOpenConfirmDialog}
         debtId={debt.id}
+        queryVariables={queryVariables}
       />
 
       <div
@@ -92,6 +97,7 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false }) => {
             <ActionsMenu
               debt={debt}
               hasPendingConfirmations={hasPendingConfirmations}
+              queryVariables={queryVariables}
             />
           ) : (
             <Button

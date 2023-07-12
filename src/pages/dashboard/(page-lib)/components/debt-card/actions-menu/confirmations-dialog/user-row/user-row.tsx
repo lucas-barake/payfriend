@@ -1,5 +1,8 @@
 import React from "react";
-import { type inferProcedureOutput } from "@trpc/server";
+import {
+  type inferProcedureInput,
+  type inferProcedureOutput,
+} from "@trpc/server";
 import { type AppRouter } from "$/server/api/root";
 import { api } from "$/lib/utils/api";
 import { Avatar } from "$/components/ui/avatar";
@@ -13,9 +16,10 @@ type Props = {
     inferProcedureOutput<AppRouter["debts"]["getPendingConfirmations"]>
   >["pendingConfirmations"][number]["user"];
   debtId: string;
+  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
 };
 
-const UserRow: React.FC<Props> = ({ user, debtId }) => {
+const UserRow: React.FC<Props> = ({ user, debtId, queryVariables }) => {
   const apiContext = api.useContext();
   const confirmMutation = api.debts.confirmPendingConfirmation.useMutation();
 
@@ -32,7 +36,7 @@ const UserRow: React.FC<Props> = ({ user, debtId }) => {
       }
     );
 
-    apiContext.debts.getOwnedDebts.setData(undefined, (cachedData) => {
+    apiContext.debts.getOwnedDebts.setData(queryVariables, (cachedData) => {
       if (!cachedData) return cachedData;
       const debtsAsLender = cachedData.debtsAsLender ?? [];
 

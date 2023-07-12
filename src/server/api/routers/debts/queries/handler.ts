@@ -36,61 +36,85 @@ export const getUserDebtsSelect = {
   },
 } satisfies Prisma.DebtSelect;
 
-export const debtsQueries = createTRPCRouter({
-  getOwnedDebts: protectedVerifiedProcedure.query(async ({ ctx }) => {
-    const debtsAsLenderQuery = await ctx.prisma.user.findUnique({
-      where: {
-        id: ctx.session.user.id,
-      },
-      select: {
-        debtsAsLender: {
-          select: {
-            ...getUserDebtsSelect,
-          },
-          orderBy: [
-            {
-              createdAt: "desc",
-            },
-            {
-              archived: "asc",
-            },
-          ],
-        },
-      },
-    });
+const paginationInput = z.object({
+  limit: z.number().int().min(1).max(10),
+  skip: z.number().int().optional(),
+});
 
-    return {
-      debtsAsLender: debtsAsLenderQuery?.debtsAsLender,
-    };
-  }),
-  getSharedDebts: protectedVerifiedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user.findUnique({
-      where: {
-        id: ctx.session.user.id,
-      },
-      select: {
-        debtsAsBorrower: {
-          select: {
-            debt: {
-              select: getUserDebtsSelect,
+export const debtsQueries = createTRPCRouter({
+  getOwnedDebts: protectedVerifiedProcedure
+    .input(paginationInput)
+    .query(async ({ ctx, input }) => {
+      const debtsAsLenderQuery = await ctx.prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+        select: {
+          debtsAsLender: {
+            select: {
+              ...getUserDebtsSelect,
             },
-          },
-          orderBy: [
-            {
-              debt: {
+            take: input.limit,
+            skip: input.skip,
+            orderBy: [
+              {
                 createdAt: "desc",
               },
-            },
-            {
-              debt: {
+              {
                 archived: "asc",
               },
+            ],
+          },
+          _count: {
+            select: {
+              debtsAsLender: true,
             },
-          ],
+          },
         },
-      },
-    });
-  }),
+      });
+
+      return {
+        debtsAsLender: debtsAsLenderQuery?.debtsAsLender,
+        count: debtsAsLenderQuery?._count?.debtsAsLender,
+      };
+    }),
+  getSharedDebts: protectedVerifiedProcedure
+    .input(paginationInput)
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+        select: {
+          debtsAsBorrower: {
+            select: {
+              debt: {
+                select: getUserDebtsSelect,
+              },
+            },
+            take: input.limit,
+            skip: input.skip,
+            orderBy: [
+              {
+                debt: {
+                  createdAt: "desc",
+                },
+              },
+              {
+                debt: {
+                  archived: "asc",
+                },
+              },
+            ],
+          },
+          _count: {
+            select: {
+              debtsAsBorrower: true,
+            },
+          },
+        },
+      });
+    }),
   getPendingConfirmations: protectedVerifiedProcedure
     .input(
       z.object({

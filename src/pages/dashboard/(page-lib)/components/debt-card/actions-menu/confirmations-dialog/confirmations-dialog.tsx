@@ -5,17 +5,21 @@ import { TimeInMs } from "$/lib/enums/time";
 import { Loader2 } from "lucide-react";
 import { Button } from "$/components/ui/button";
 import UserRow from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/confirmations-dialog/user-row";
+import { type inferProcedureInput } from "@trpc/server";
+import { type AppRouter } from "$/server/api/root";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   debtId: string;
+  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
 };
 
 const ConfirmationsDialog: React.FC<Props> = ({
   open,
   onOpenChange,
   debtId,
+  queryVariables,
 }) => {
   const query = api.debts.getPendingConfirmations.useQuery(
     {
@@ -56,6 +60,7 @@ const ConfirmationsDialog: React.FC<Props> = ({
                 user={pendingConfirmation.user}
                 key={pendingConfirmation.user.id}
                 debtId={debtId}
+                queryVariables={queryVariables}
               />
             ))}
           </div>

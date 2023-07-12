@@ -3,7 +3,10 @@ import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Button } from "$/components/ui/button";
 import { Archive, MoreHorizontal, UserCheck, Users } from "lucide-react";
 import { type AppRouter } from "$/server/api/root";
-import { type inferProcedureOutput } from "@trpc/server";
+import {
+  type inferProcedureInput,
+  type inferProcedureOutput,
+} from "@trpc/server";
 import { AttentionIndicator } from "$/components/common/attention-indicator/attention-indicator";
 import ArchiveDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/archive-dialog";
 import ConfirmationsDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/confirmations-dialog";
@@ -14,9 +17,14 @@ type Props = {
     inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
   >["debtsAsBorrower"][number]["debt"];
   hasPendingConfirmations: boolean;
+  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
 };
 
-const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
+const ActionsMenu: React.FC<Props> = ({
+  debt,
+  hasPendingConfirmations,
+  queryVariables,
+}) => {
   const [openArchiveDialog, setOpenArchiveDialog] = React.useState(false);
   const [openConfirmationsDialog, setOpenConfirmationsDialog] =
     React.useState(false);
@@ -34,6 +42,7 @@ const ActionsMenu: React.FC<Props> = ({ debt, hasPendingConfirmations }) => {
         open={openConfirmationsDialog}
         onOpenChange={setOpenConfirmationsDialog}
         debtId={debt.id}
+        queryVariables={queryVariables}
       />
 
       <BorrowersDialog

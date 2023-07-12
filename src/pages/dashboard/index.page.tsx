@@ -46,11 +46,17 @@ const Dashboard: NextPageWithLayout = () => {
         {selectedTab === "yours" && <AddDebtDialog />}
       </div>
 
-      <Tabs.Content value={tabs[0]}>
+      <Tabs.Content
+        value={tabs[0]}
+        className="flex flex-col justify-between gap-8"
+      >
         <DebtsAsLenderTab />
       </Tabs.Content>
 
-      <Tabs.Content value={tabs[1]}>
+      <Tabs.Content
+        value={tabs[1]}
+        className="flex flex-col justify-between gap-8"
+      >
         <DebtsAsBorrowerTab />
       </Tabs.Content>
     </Tabs>

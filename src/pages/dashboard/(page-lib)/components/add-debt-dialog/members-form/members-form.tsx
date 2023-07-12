@@ -75,17 +75,12 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
       return;
     }
 
-    const newDebt = await toast.promise(
-      createMutation.mutateAsync(result.data),
-      {
-        loading: "Creando deuda...",
-        success: "Deuda creada",
-        error: handleMutationError,
-      }
-    );
-    apiContext.debts.getOwnedDebts.setData(undefined, (prev) => ({
-      debtsAsLender: [...(prev?.debtsAsLender ?? []), newDebt],
-    }));
+    await toast.promise(createMutation.mutateAsync(result.data), {
+      loading: "Creando deuda...",
+      success: "Deuda creada",
+      error: handleMutationError,
+    });
+    await apiContext.debts.getOwnedDebts.invalidate();
 
     setOpen(false);
     tabSetters.reset();
@@ -161,6 +156,7 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
           onClick={() => {
             tabSetters.prev();
           }}
+          disabled={createMutation.isLoading}
         >
           <ArrowLeft className="mr-2 h-5 w-5" />
           Volver
