@@ -1,6 +1,7 @@
 import Redis from "ioredis";
 import Twilio from "twilio";
 import { env } from "$/env.mjs";
+import sendGridMail from "@sendgrid/mail";
 
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
@@ -51,12 +52,15 @@ type CreateContextOptions = {
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   const redis = new Redis(env.REDIS_URL);
   const twilio = Twilio(env.TWILIO_ACCOUNT_SID, env.TWILIO_AUTH_TOKEN);
+  const mail = sendGridMail;
+  mail.setApiKey(env.SENDGRID_API_KEY);
 
   return {
     session: opts.session,
     prisma,
     redis,
     twilio,
+    mail,
   };
 };
 
@@ -84,7 +88,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
     if (error.code === "INTERNAL_SERVER_ERROR") {
       return {
         ...shape,
-        message: "Internal server error",
+        message: "Error interno del servidor. Por favor, inténtelo de nuevo.",
       };
     }
     return {
