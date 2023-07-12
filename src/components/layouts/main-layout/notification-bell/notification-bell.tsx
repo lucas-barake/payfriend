@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import React from "react";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
 import { Bell } from "lucide-react";
@@ -7,16 +7,24 @@ import { Button } from "$/components/ui/button";
 import PendingInviteRow from "$/components/layouts/main-layout/notification-bell/pending-invite-row";
 import { Separator } from "$/components/ui/separator";
 
-const NotificationBell: FC = () => {
+const NotificationBell: React.FC = () => {
+  const [hasAlreadyOpened, setHasAlreadyOpened] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   const query = api.user.getDebtsInvites.useQuery(undefined, {
     staleTime: TimeInMs.TenSeconds,
     refetchOnWindowFocus: true,
     retry: false,
+    onSuccess(data) {
+      if (data.length > 0 && !hasAlreadyOpened) {
+        setOpen(true);
+        setHasAlreadyOpened(true);
+      }
+    },
   });
   const allPendingInvites = query.data ?? [];
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button variant="ghost" size="sm">
           <div className="relative inline-flex">
