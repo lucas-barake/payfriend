@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@headlessui/react':
     specifier: ^1.7.13
@@ -94,6 +98,9 @@ dependencies:
   libphonenumber-js:
     specifier: ^1.10.30
     version: 1.10.30
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
   lucide-react:
     specifier: ^0.220.0
     version: 0.220.0(react@18.2.0)
@@ -153,6 +160,9 @@ devDependencies:
   '@types/eslint':
     specifier: ^8.21.1
     version: 8.21.1
+  '@types/lodash':
+    specifier: ^4.14.195
+    version: 4.14.195
   '@types/luxon':
     specifier: ^3.2.0
     version: 3.2.0
@@ -1465,6 +1475,10 @@ packages:
 
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash@4.14.195:
+    resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
     dev: true
 
   /@types/luxon@3.2.0:
