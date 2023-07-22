@@ -5,7 +5,7 @@ import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { type AppRouter } from "$/server/api/root";
 import { type inferProcedureOutput } from "@trpc/server";
 import { Dialog } from "$/components/ui/dialog";
-import { AlertTriangle, Archive } from "lucide-react";
+import { AlertTriangle, BadgeCheck } from "lucide-react";
 import { Button } from "$/components/ui/button";
 
 type Props = {
@@ -41,10 +41,10 @@ const ArchiveDialog: React.FC<Props> = ({ debt, open, onOpenChange }) => {
         <Dialog.Header>
           <Dialog.Title className="flex items-center justify-center gap-2 sm:justify-start">
             <AlertTriangle className="h-6 w-6 text-destructive" />
-            Archivar Deuda
+            Finalizar deuda
           </Dialog.Title>
           <Dialog.Description>
-            Al archivar la deuda, se considerará completada y permanecerá
+            Al finalizar la deuda, se considerará completada y permanecerá
             inactiva de forma permanente. No podrás realizar cambios ni
             transacciones relacionadas con esta deuda, pero aún podrás verla.
             Esta acción no se puede deshacer.
@@ -59,8 +59,8 @@ const ArchiveDialog: React.FC<Props> = ({ debt, open, onOpenChange }) => {
               }}
               loading={archiveMutation.isLoading}
             >
-              <Archive className="mr-1.5 h-4 w-4" />
-              Archivar
+              <BadgeCheck className="mr-1.5 h-4 w-4" />
+              Finalizar
             </Button>
 
             <Dialog.Trigger asChild>

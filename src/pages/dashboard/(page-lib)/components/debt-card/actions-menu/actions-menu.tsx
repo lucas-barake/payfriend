@@ -1,7 +1,7 @@
 import React from "react";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Button } from "$/components/ui/button";
-import { Archive, MoreHorizontal, UserCheck, Users } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { type AppRouter } from "$/server/api/root";
 import {
   type inferProcedureInput,
@@ -58,7 +58,7 @@ const ActionsMenu: React.FC<Props> = ({
             variant="outline"
             className="relative flex items-center gap-1.5"
           >
-            <MoreHorizontal className="h-4 w-4" />
+            <LucideIcons.MoreHorizontal className="h-4 w-4" />
             <span className="sr-only">Más</span>
 
             {hasPendingConfirmations && <AttentionIndicator />}
@@ -80,7 +80,7 @@ const ActionsMenu: React.FC<Props> = ({
               type="button"
               className="relative flex w-full items-center gap-1.5"
             >
-              <UserCheck className="h-4 w-4" />
+              <LucideIcons.UserCheck className="h-4 w-4" />
               Confirmar Pagos
               {hasPendingConfirmations && (
                 <AttentionIndicator containerClassName="-top-0.5 -mr-2" />
@@ -95,7 +95,7 @@ const ActionsMenu: React.FC<Props> = ({
             }}
           >
             <button type="button" className="flex w-full items-center gap-1.5">
-              <Users className="h-4 w-4" />
+              <LucideIcons.Users className="h-4 w-4" />
               <span>Deudores</span>
             </button>
           </DropdownMenu.Item>
@@ -107,8 +107,8 @@ const ActionsMenu: React.FC<Props> = ({
             className="cursor-pointer"
           >
             <button type="button" className="flex w-full items-center gap-1.5">
-              <Archive className="h-4 w-4" />
-              <span>Archivar</span>
+              <LucideIcons.BadgeCheck className="h-4 w-4" />
+              <span>Finalizar</span>
             </button>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
