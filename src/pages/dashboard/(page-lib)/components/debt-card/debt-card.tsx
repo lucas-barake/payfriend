@@ -1,7 +1,7 @@
 import React, { type FC } from "react";
 import { DateTime } from "luxon";
 import { type AppRouter } from "$/server/api/root";
-import { Archive, BadgeCheck, CalendarIcon } from "lucide-react";
+import { BadgeCheck, CalendarIcon } from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
 import {
   type inferProcedureInput,
@@ -56,7 +56,7 @@ const BaseDebtCard: FC<Props> = ({ debt, lender = false, queryVariables }) => {
         {debt.archived && (
           <div className="absolute left-0 top-0 z-50 flex h-full w-full items-center justify-center rounded-lg bg-background/50">
             <div className="flex h-full items-center justify-center">
-              <Archive className="h-12 w-12 text-foreground" />
+              <BadgeCheck className="h-12 w-12 text-foreground" />
             </div>
           </div>
         )}
