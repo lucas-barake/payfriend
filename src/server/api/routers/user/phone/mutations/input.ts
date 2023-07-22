@@ -23,15 +23,20 @@ export const sendPhoneCodeInput = z.object({
         .min(2, { message: "El número de teléfono no es válido" }),
       countryCode,
     })
-    .refine((v) => {
-      const phoneNumber = parsePhoneNumber(v.phoneNumber, v.countryCode);
+    .refine(
+      (v) => {
+        const phoneNumber = parsePhoneNumber(v.phoneNumber, v.countryCode);
 
-      if (!phoneNumber) {
-        return false;
+        if (!phoneNumber) {
+          return false;
+        }
+
+        return phoneNumber.isValid();
+      },
+      {
+        message: "El número de celular no es válido",
       }
-
-      return phoneNumber.isValid();
-    })
+    )
     .transform((v) => ({
       phoneNumber: strTransformer.removeWhitespace(
         format(v.phoneNumber, v.countryCode, "INTERNATIONAL")

@@ -20,6 +20,7 @@ import {
   type SendPhoneCodeInput,
   type VerifyPhoneInput,
 } from "$/server/api/routers/user/phone/mutations/input";
+import { FieldError } from "$/components/ui/form/field-error";
 
 type Props = {
   setView: React.Dispatch<React.SetStateAction<View>>;
@@ -185,17 +186,14 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
                     );
                   }}
                   type="tel"
+                  error={form.formState.errors.phone !== undefined}
                 />
               );
             }}
           />
         </div>
 
-        {form.formState.errors.phone?.phoneNumber && (
-          <span className="mt-2 text-sm font-bold text-destructive">
-            {form.formState.errors.phone.phoneNumber.message}
-          </span>
-        )}
+        <FieldError>{form.formState.errors.phone?.message}</FieldError>
 
         <Button
           type="submit"
