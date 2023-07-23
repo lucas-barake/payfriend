@@ -4,14 +4,6 @@ import { env } from "$/env.mjs";
 import sendGridMail from "@sendgrid/mail";
 
 /**
- * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
- * 1. You want to modify request context (see Part 1).
- * 2. You want to create a new middleware or type of procedure (see Part 3).
- *
- * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
- * need to use are documented accordingly near the end.
- */
-/**
  * 1. CONTEXT
  *
  * This section defines the "contexts" that are available in the backend API.
@@ -49,7 +41,6 @@ type CreateContextOptions = {
  *
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   const redis = new Redis(env.REDIS_URL);
   const twilio = Twilio(env.TWILIO_ACCOUNT_SID, env.TWILIO_AUTH_TOKEN);
@@ -120,13 +111,13 @@ export const createTRPCRouter = t.router;
 export const mergeTRPCRouters = t.mergeRouters;
 export const createTRPCMiddleware = t.middleware;
 
-/**
- * Public (unauthenticated) procedure
- *
- * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
- * guarantee that a user querying is authorized, but you can still access user session data if they
- * are logged in.
- */
+type RateLimitOptions = Record<
+  string,
+  {
+    maxRequests: number;
+    windowInSeconds: number;
+  }
+>;
 const rateLimitOptions = {
   limited: {
     maxRequests: 50,
@@ -136,7 +127,7 @@ const rateLimitOptions = {
     maxRequests: 25,
     windowInSeconds: 600, // 10 minutes
   },
-};
+} satisfies RateLimitOptions;
 
 async function rateLimit(
   ctx: {
@@ -203,7 +194,6 @@ const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
   });
 });
 
-/* Procedures */
 export const TRPCProcedures = {
   public: t.procedure,
 
