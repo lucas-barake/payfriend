@@ -1,7 +1,4 @@
-import {
-  createTRPCRouter,
-  protectedVerifiedProcedure,
-} from "$/server/api/trpc";
+import { createTRPCRouter, TRPCProcedures } from "$/server/api/trpc";
 import {
   acceptGroupInviteInput,
   declineGroupInviteInput,
@@ -10,7 +7,7 @@ import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { rawQueries } from "$/server/api/routers/(routers-lib)/raw-queries";
 
 export const userGroupInvitesMutations = createTRPCRouter({
-  acceptDebtInvite: protectedVerifiedProcedure
+  acceptDebtInvite: TRPCProcedures.verified
     .input(acceptGroupInviteInput)
     .mutation(async ({ ctx, input }) => {
       const debtsCount = await rawQueries.getUserDebtCount(
@@ -67,7 +64,7 @@ export const userGroupInvitesMutations = createTRPCRouter({
         return createdBorrower;
       });
     }),
-  declineDebtInvite: protectedVerifiedProcedure
+  declineDebtInvite: TRPCProcedures.verified
     .input(declineGroupInviteInput)
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.pendingInvite.delete({

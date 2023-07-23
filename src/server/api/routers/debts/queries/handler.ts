@@ -1,7 +1,4 @@
-import {
-  createTRPCRouter,
-  protectedVerifiedProcedure,
-} from "$/server/api/trpc";
+import { createTRPCRouter, TRPCProcedures } from "$/server/api/trpc";
 import { BorrowerStatus, type Prisma } from "@prisma/client";
 import { z } from "zod";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
@@ -42,7 +39,7 @@ const paginationInput = z.object({
 });
 
 export const debtsQueries = createTRPCRouter({
-  getOwnedDebts: protectedVerifiedProcedure
+  getOwnedDebts: TRPCProcedures.verified
     .input(paginationInput)
     .query(async ({ ctx, input }) => {
       const debtsAsLenderQuery = await ctx.prisma.user.findUnique({
@@ -78,7 +75,7 @@ export const debtsQueries = createTRPCRouter({
         count: debtsAsLenderQuery?._count?.debtsAsLender,
       };
     }),
-  getSharedDebts: protectedVerifiedProcedure
+  getSharedDebts: TRPCProcedures.verified
     .input(paginationInput)
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findUnique({
@@ -115,7 +112,7 @@ export const debtsQueries = createTRPCRouter({
         },
       });
     }),
-  getPendingConfirmations: protectedVerifiedProcedure
+  getPendingConfirmations: TRPCProcedures.verified
     .input(
       z.object({
         debtId: z.string().cuid(),
@@ -152,7 +149,7 @@ export const debtsQueries = createTRPCRouter({
         pendingConfirmations,
       };
     }),
-  getDebtBorrowersAndPendingBorrowers: protectedVerifiedProcedure
+  getDebtBorrowersAndPendingBorrowers: TRPCProcedures.verified
     .input(
       z.object({
         debtId: z.string().cuid(),

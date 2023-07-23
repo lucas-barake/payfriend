@@ -1,7 +1,4 @@
-import {
-  createTRPCRouter,
-  protectedVerifiedProcedure,
-} from "$/server/api/trpc";
+import { createTRPCRouter, TRPCProcedures } from "$/server/api/trpc";
 import {
   createDebtInput,
   sendDebtInviteInput,
@@ -18,7 +15,7 @@ import { APP_NAME } from "$/lib/constants/app-name";
 import { logger } from "$/server/logger";
 
 export const debtsMutations = createTRPCRouter({
-  create: protectedVerifiedProcedure
+  create: TRPCProcedures.verifiedLimited
     .input(createDebtInput)
     .mutation(async ({ ctx, input }) => {
       if (
@@ -99,7 +96,7 @@ export const debtsMutations = createTRPCRouter({
         return createdDebt;
       });
     }),
-  archiveDebt: protectedVerifiedProcedure
+  archiveDebt: TRPCProcedures.verified
     .input(
       z.object({
         debtId: z.string().cuid(),
@@ -138,7 +135,7 @@ export const debtsMutations = createTRPCRouter({
         });
       });
     }),
-  setPendingConfirmation: protectedVerifiedProcedure
+  setPendingConfirmation: TRPCProcedures.verified
     .input(
       z.object({
         debtId: z.string().cuid(),
@@ -173,7 +170,7 @@ export const debtsMutations = createTRPCRouter({
         },
       });
     }),
-  confirmPendingConfirmation: protectedVerifiedProcedure
+  confirmPendingConfirmation: TRPCProcedures.verified
     .input(
       z.object({
         debtId: z.string().cuid(),
@@ -230,7 +227,7 @@ export const debtsMutations = createTRPCRouter({
         },
       });
     }),
-  rejectPendingConfirmation: protectedVerifiedProcedure
+  rejectPendingConfirmation: TRPCProcedures.verified
     .input(
       z.object({
         debtId: z.string().cuid(),
@@ -275,7 +272,7 @@ export const debtsMutations = createTRPCRouter({
         },
       });
     }),
-  sendDebtInvite: protectedVerifiedProcedure
+  sendDebtInvite: TRPCProcedures.verifiedLimited
     .input(sendDebtInviteInput)
     .mutation(async ({ ctx, input }) => {
       const lender = await ctx.prisma.debt.findFirst({
@@ -390,7 +387,7 @@ export const debtsMutations = createTRPCRouter({
         throw error;
       }
     }),
-  removeDebtInvite: protectedVerifiedProcedure
+  removeDebtInvite: TRPCProcedures.verified
     .input(
       z.object({
         debtId: z.string().cuid(),

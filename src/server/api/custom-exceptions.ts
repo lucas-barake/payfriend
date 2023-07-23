@@ -25,6 +25,12 @@ const CUSTOM_EXCEPTIONS = {
       message: message ?? "No encontrado.",
     });
   },
+  TOO_MANY_REQUESTS: (message?: string) => {
+    return new TRPCError({
+      code: "TOO_MANY_REQUESTS",
+      message: message ?? "Demasiadas solicitudes. Espera un momento.",
+    });
+  },
 };
 
 export default CUSTOM_EXCEPTIONS;

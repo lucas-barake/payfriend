@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedProcedure } from "$/server/api/trpc";
+import { createTRPCRouter, TRPCProcedures } from "$/server/api/trpc";
 import {
   sendPhoneCodeInput,
   verifyPhoneInput,
@@ -12,7 +12,7 @@ import { APP_NAME } from "$/lib/constants/app-name";
 import { logger } from "$/server/logger";
 
 export const phoneMutations = createTRPCRouter({
-  verifyPhone: protectedProcedure
+  verifyPhone: TRPCProcedures.protected
     .input(verifyPhoneInput)
     .mutation(async ({ input, ctx }) => {
       if (ctx.session.user.phoneVerified !== null) {
@@ -41,11 +41,9 @@ export const phoneMutations = createTRPCRouter({
 
       return true;
     }),
-  sendPhoneVerificationCode: protectedProcedure
+  sendPhoneVerificationCode: TRPCProcedures.protected
     .input(sendPhoneCodeInput)
     .mutation(async ({ ctx, input }) => {
-      const isInDev = env.NODE_ENV === "development";
-
       if (ctx.session.user.phoneVerified !== null) {
         throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El celular ya está verificado");
       }
@@ -89,11 +87,9 @@ export const phoneMutations = createTRPCRouter({
           }
         })
         .then((message) => {
-          if (isInDev) {
-            logger.info(
-              `Se mandó el código de verificación ${fourDigitGeneratedOTP} a ${input.phone.phoneNumber} con el sid ${message.sid}`
-            );
-          }
+          logger.dev(
+            `Se mandó el código de verificación ${fourDigitGeneratedOTP} a ${input.phone.phoneNumber} con el sid ${message.sid}`
+          );
         })
         .catch((error: unknown) => {
           transactionError = error;

@@ -1,10 +1,7 @@
-import {
-  createTRPCRouter,
-  protectedVerifiedProcedure,
-} from "$/server/api/trpc";
+import { createTRPCRouter, TRPCProcedures } from "$/server/api/trpc";
 
 export const debtInvitesQueriesRouter = createTRPCRouter({
-  getDebtsInvites: protectedVerifiedProcedure.query(async ({ ctx }) => {
+  getDebtsInvites: TRPCProcedures.verified.query(async ({ ctx }) => {
     return ctx.prisma.pendingInvite.findMany({
       where: {
         inviteeEmail: ctx.session.user.email,

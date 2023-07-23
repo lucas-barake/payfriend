@@ -1,7 +1,4 @@
-import {
-  createTRPCRouter,
-  protectedVerifiedProcedure,
-} from "$/server/api/trpc";
+import { createTRPCRouter, TRPCProcedures } from "$/server/api/trpc";
 import { z } from "zod";
 import { env } from "$/env.mjs";
 import { generateLinkInput } from "$/server/api/routers/transactions/payment-link/mutations/input";
@@ -10,7 +7,7 @@ import { type GenerateLinkReqBody } from "$/server/api/routers/transactions/paym
 import { DateTime } from "luxon";
 
 export const transactionsMutations = createTRPCRouter({
-  generateLink: protectedVerifiedProcedure
+  generateLink: TRPCProcedures.verified
     .input(generateLinkInput)
     .mutation(async ({ ctx }) => {
       const body = {

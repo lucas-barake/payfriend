@@ -1,4 +1,4 @@
-import { protectedProcedure } from "$/server/api/trpc";
+import { TRPCProcedures } from "$/server/api/trpc";
 import sendGridMail, { type MailDataRequired } from "@sendgrid/mail";
 import { env } from "$/env.mjs";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
@@ -6,7 +6,7 @@ import { TimeInMs } from "$/lib/enums/time";
 import { emailCodeKey } from "$/server/api/routers/user/email-otp/lib/email-code-key";
 import { APP_NAME } from "$/lib/constants/app-name";
 
-const sendEmailOTP = protectedProcedure.mutation(async ({ ctx }) => {
+const sendEmailOTP = TRPCProcedures.protected.mutation(async ({ ctx }) => {
   const isInSandBoxMode = env.SENDGRID_SANDBOX_MODE;
 
   if (ctx.session.user.emailVerified !== null) {

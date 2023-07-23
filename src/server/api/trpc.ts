@@ -33,6 +33,7 @@ import { prisma } from "$/server/db";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -63,6 +64,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
     mail,
   };
 };
+export type InnerTRPCContext = ReturnType<typeof createInnerTRPCContext>;
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -116,6 +118,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router;
 export const mergeTRPCRouters = t.mergeRouters;
+export const createTRPCMiddleware = t.middleware;
 
 /**
  * Public (unauthenticated) procedure
@@ -124,7 +127,35 @@ export const mergeTRPCRouters = t.mergeRouters;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+const rateLimitOptions = {
+  limited: {
+    maxRequests: 50,
+    windowInSeconds: 600, // 10 minutes
+  },
+  critical: {
+    maxRequests: 25,
+    windowInSeconds: 600, // 10 minutes
+  },
+};
+
+async function rateLimit(
+  ctx: {
+    redis: InnerTRPCContext["redis"];
+    session: NonNullable<InnerTRPCContext["session"]>;
+  },
+  type: keyof typeof rateLimitOptions
+): Promise<void> {
+  const key = `rate-limit:${type}:${ctx.session.user.id}`;
+  const current = await ctx.redis.incr(key);
+
+  if (current === 1) {
+    await ctx.redis.expire(key, rateLimitOptions[type].windowInSeconds);
+  }
+
+  if (current > rateLimitOptions[type].maxRequests) {
+    throw CUSTOM_EXCEPTIONS.TOO_MANY_REQUESTS();
+  }
+}
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
@@ -146,29 +177,69 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   });
 });
 
-/**
- * Protected (authenticated) procedure
- *
- * If you want a query or mutation to ONLY be accessible to logged-in users, use this. It verifies
- * the session is valid and guarantees `ctx.session.user` is not null.
- *
- * @see https://trpc.io/docs/procedures
- */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
-export const protectedVerifiedProcedure = t.procedure
-  .use(enforceUserIsAuthed)
-  .use(async ({ ctx, next }) => {
-    if (ctx.session.user.phoneVerified === null) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "UNVERIFIED_PHONE",
-      });
-    }
+const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user || !ctx.session.user.email) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
 
-    return next({
-      ctx: {
-        // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
-      },
+  if (ctx.session.user.phoneVerified === null) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "UNVERIFIED_PHONE",
     });
+  }
+
+  // TypeScript can't infer that `email` is non-nullable, so we have to do this
+  const user = {
+    ...ctx.session.user,
+    email: ctx.session.user.email,
+  };
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user },
+    },
   });
+});
+
+/* Procedures */
+export const TRPCProcedures = {
+  public: t.procedure,
+
+  protected: t.procedure.use(enforceUserIsAuthed),
+  protectedLimited: t.procedure
+    .use(enforceUserIsAuthed)
+    .use(async ({ ctx, next }) => {
+      await rateLimit(ctx, "limited");
+      return next({
+        ctx,
+      });
+    }),
+  protectedCritical: t.procedure
+    .use(enforceUserIsAuthed)
+    .use(async ({ ctx, next }) => {
+      await rateLimit(ctx, "critical");
+      return next({
+        ctx,
+      });
+    }),
+
+  verified: t.procedure.use(enforceUserIsVerified),
+  verifiedLimited: t.procedure
+    .use(enforceUserIsVerified)
+    .use(async ({ ctx, next }) => {
+      await rateLimit(ctx, "limited");
+      return next({
+        ctx,
+      });
+    }),
+  verifiedCritical: t.procedure
+    .use(enforceUserIsVerified)
+    .use(async ({ ctx, next }) => {
+      await rateLimit(ctx, "critical");
+      return next({
+        ctx,
+      });
+    }),
+};

@@ -1,10 +1,10 @@
-import { protectedProcedure } from "$/server/api/trpc";
+import { TRPCProcedures } from "$/server/api/trpc";
 import { DateTime } from "luxon";
 import { verifyEmailInput } from "$/server/api/routers/user/email-otp/verify/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { emailCodeKey } from "$/server/api/routers/user/email-otp/lib/email-code-key";
 
-const verifyEmail = protectedProcedure
+const verifyEmail = TRPCProcedures.protected
   .input(verifyEmailInput)
   .mutation(async ({ input, ctx }) => {
     if (ctx.session.user.emailVerified !== null) {
