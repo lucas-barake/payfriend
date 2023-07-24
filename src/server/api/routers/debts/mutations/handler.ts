@@ -99,7 +99,7 @@ export const debtsMutations = createTRPCRouter({
   archiveDebt: TRPCProcedures.verified
     .input(
       z.object({
-        debtId: z.string().cuid(),
+        debtId: z.string().uuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -138,7 +138,7 @@ export const debtsMutations = createTRPCRouter({
   setPendingConfirmation: TRPCProcedures.verified
     .input(
       z.object({
-        debtId: z.string().cuid(),
+        debtId: z.string().uuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -173,8 +173,8 @@ export const debtsMutations = createTRPCRouter({
   confirmPendingConfirmation: TRPCProcedures.verified
     .input(
       z.object({
-        debtId: z.string().cuid(),
-        userId: z.string().cuid(),
+        debtId: z.string().uuid(),
+        userId: z.string().uuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -230,7 +230,7 @@ export const debtsMutations = createTRPCRouter({
   rejectPendingConfirmation: TRPCProcedures.verified
     .input(
       z.object({
-        debtId: z.string().cuid(),
+        debtId: z.string().uuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -390,7 +390,7 @@ export const debtsMutations = createTRPCRouter({
   removeDebtInvite: TRPCProcedures.verified
     .input(
       z.object({
-        debtId: z.string().cuid(),
+        debtId: z.string().uuid(),
         inviteeEmail: z.string().email(),
       })
     )

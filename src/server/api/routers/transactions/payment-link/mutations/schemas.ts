@@ -38,7 +38,7 @@ export const generateLinkReqBodySchema = z.object({
     .refine((value) => {
       if (!value.includes(":")) return false;
       const [userId, productId] = value.split(":");
-      if (!z.string().cuid().safeParse(userId).success) return false;
+      if (!z.string().uuid().safeParse(userId).success) return false;
       return z.number({ coerce: true }).int().safeParse(productId).success;
     }),
 });

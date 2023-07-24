@@ -115,7 +115,7 @@ export const debtsQueries = createTRPCRouter({
   getPendingConfirmations: TRPCProcedures.verified
     .input(
       z.object({
-        debtId: z.string().cuid(),
+        debtId: z.string().uuid(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -152,7 +152,7 @@ export const debtsQueries = createTRPCRouter({
   getDebtBorrowersAndPendingBorrowers: TRPCProcedures.verified
     .input(
       z.object({
-        debtId: z.string().cuid(),
+        debtId: z.string().uuid(),
       })
     )
     .query(async ({ ctx, input }) => {

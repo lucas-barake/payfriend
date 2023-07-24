@@ -21,7 +21,7 @@ enum DebtRecurringFrequency {
 }
 
 model Debt {
-  id                 String                  @id @default(cuid())
+  id                 String                  @id @default(uuid())
   createdAt          DateTime                @default(now())
   updatedAt          DateTime                @updatedAt
   name               String
@@ -43,7 +43,7 @@ enum BorrowerStatus {
 }
 
 model Borrower {
-  id        String         @id @default(cuid())
+  id        String         @id @default(uuid())
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
   userId    String
@@ -68,7 +68,7 @@ model PendingInvite {
 
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -86,26 +86,58 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum SubscriptionType {
+  BASIC
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PENDING
+  FAILED
+}
+
+model Subscription {
+  id        String           @id @default(uuid())
+  createdAt DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime         @updatedAt @db.Timestamptz(6)
+  userId    String           @unique
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      SubscriptionType
+  expires   DateTime         @db.Timestamptz(6)
+}
+
+model SubscriptionHistory {
+  id        String             @id @default(uuid())
+  createdAt DateTime           @default(now()) @db.Timestamptz(6)
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      SubscriptionType
+  expires   DateTime           @db.Timestamptz(6)
+  status    SubscriptionStatus
+}
+
 model User {
-  id              String          @id @default(cuid())
-  name            String?
-  email           String?         @unique
-  emailVerified   DateTime?
-  phoneNumber     String?         @unique
-  phoneVerified   DateTime?       @db.Timestamptz(6)
-  image           String?
-  accounts        Account[]
-  sessions        Session[]
-  debtsAsLender   Debt[]
-  debtsAsBorrower Borrower[]
-  pendingInvites  PendingInvite[]
+  id                  String                @id @default(uuid())
+  name                String?
+  email               String?               @unique
+  emailVerified       DateTime?
+  phoneNumber         String?               @unique
+  phoneVerified       DateTime?             @db.Timestamptz(6)
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  debtsAsLender       Debt[]
+  debtsAsBorrower     Borrower[]
+  pendingInvites      PendingInvite[]
+  subscription        Subscription?
+  subscriptionHistory SubscriptionHistory[]
 }
 
 model VerificationToken {

@@ -42,14 +42,7 @@ export const createDebtInput = z.object({
 export type CreateDebtInput = z.infer<typeof createDebtInput>;
 
 export const updateDebtInput = createDebtInput.extend({
-  id: z
-    .string({
-      invalid_type_error: "El id debe ser un string",
-      required_error: "El id es requerido",
-    })
-    .cuid({
-      message: "El id no es válido",
-    }),
+  id: z.string().uuid(),
 });
 export type UpdateDebtInput = z.infer<typeof updateDebtInput>;
 
@@ -57,6 +50,6 @@ export const sendDebtInviteInput = z.object({
   email: z.string().email({
     message: "Correo inválido",
   }),
-  debtId: z.string().cuid(),
+  debtId: z.string().uuid(),
 });
 export type SendDebtInviteInput = z.infer<typeof sendDebtInviteInput>;
