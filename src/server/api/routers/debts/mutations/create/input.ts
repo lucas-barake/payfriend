@@ -40,16 +40,3 @@ export const createDebtInput = z.object({
     }, "No puedes agregar correos duplicados"),
 });
 export type CreateDebtInput = z.infer<typeof createDebtInput>;
-
-export const updateDebtInput = createDebtInput.extend({
-  id: z.string().uuid(),
-});
-export type UpdateDebtInput = z.infer<typeof updateDebtInput>;
-
-export const sendDebtInviteInput = z.object({
-  email: z.string().email({
-    message: "Correo inválido",
-  }),
-  debtId: z.string().uuid(),
-});
-export type SendDebtInviteInput = z.infer<typeof sendDebtInviteInput>;

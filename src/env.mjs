@@ -35,8 +35,9 @@ export const env = createEnv({
       .string()
       .startsWith("whatsapp:")
       .optional(),
-    WOMPI_PUBLIC_KEY: z.string().min(1),
-    WOMPI_PRIVATE_KEY: z.string().min(1),
+    MERCADOPAGO_ACCESS_TOKEN: z.string().min(1),
+    MERCADOPAGO_URL: z.string().url(),
+    MERCADOPAGO_PAYER_EMAIL: z.string().email().optional(),
   },
   client: {},
   runtimeEnv: {
@@ -54,7 +55,8 @@ export const env = createEnv({
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
     TWILIO_FROM_WHATSAPP_NUMBER: process.env.TWILIO_FROM_WHATSAPP_NUMBER,
     TWILIO_DEV_TO_WHATSAPP_NUMBER: process.env.TWILIO_DEV_TO_WHATSAPP_NUMBER,
-    WOMPI_PUBLIC_KEY: process.env.WOMPI_PUBLIC_KEY,
-    WOMPI_PRIVATE_KEY: process.env.WOMPI_PRIVATE_KEY,
+    MERCADOPAGO_ACCESS_TOKEN: process.env.MERCADOPAGO_ACCESS_TOKEN,
+    MERCADOPAGO_URL: process.env.MERCADOPAGO_URL,
+    MERCADOPAGO_PAYER_EMAIL: process.env.MERCADOPAGO_PAYER_EMAIL,
   },
 });

@@ -98,29 +98,30 @@ enum SubscriptionType {
 }
 
 enum SubscriptionStatus {
-  ACTIVE
+  SUCCESS
   PENDING
   FAILED
+  CANCELLED
 }
 
-model Subscription {
-  id        String           @id @default(uuid())
-  createdAt DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime         @updatedAt @db.Timestamptz(6)
-  userId    String           @unique
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      SubscriptionType
-  expires   DateTime         @db.Timestamptz(6)
+model ActiveSubscription {
+  id                String           @id // MercadoPago's generated ID
+  createdAt         DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime         @updatedAt @db.Timestamptz(6)
+  userId            String           @unique
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              SubscriptionType
+  externalReference String           @unique
 }
 
 model SubscriptionHistory {
-  id        String             @id @default(uuid())
-  createdAt DateTime           @default(now()) @db.Timestamptz(6)
-  userId    String
-  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      SubscriptionType
-  expires   DateTime           @db.Timestamptz(6)
-  status    SubscriptionStatus
+  id                String             @id // MercadoPago's generated ID
+  createdAt         DateTime           @default(now()) @db.Timestamptz(6)
+  userId            String
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              SubscriptionType
+  status            SubscriptionStatus
+  externalReference String             @unique
 }
 
 model User {
@@ -136,7 +137,7 @@ model User {
   debtsAsLender       Debt[]
   debtsAsBorrower     Borrower[]
   pendingInvites      PendingInvite[]
-  subscription        Subscription?
+  activeSubscription  ActiveSubscription?
   subscriptionHistory SubscriptionHistory[]
 }
 

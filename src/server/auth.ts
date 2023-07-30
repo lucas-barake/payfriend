@@ -6,9 +6,11 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "$/env.mjs";
 import { prisma } from "$/server/db";
+import { type ActiveSubscription } from "@prisma/client";
+import { ModifiedPrismaAdapter } from "$/server/modified-prisma-adapter";
+import { z } from "zod";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -24,14 +26,14 @@ declare module "next-auth" {
       // role: UserRole;
       emailVerified: Date | null;
       phoneVerified: Date | null;
+      activeSubscription: ActiveSubscription | null;
     } & DefaultSession["user"];
   }
 
   interface User {
     emailVerified: Date | null;
     phoneVerified: Date | null;
-    // ...other properties
-    // role: UserRole;
+    activeSubscription: ActiveSubscription | null;
   }
 }
 
@@ -42,17 +44,32 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session({ session, user }) {
+    session({ session, user, trigger, newSession }) {
       if (session.user) {
         session.user.id = user.id;
         session.user.emailVerified = user.emailVerified;
         session.user.phoneVerified = user.phoneVerified;
+        session.user.activeSubscription = user.activeSubscription;
         // session.user.role = user.role; <-- put other properties on the session here
+      }
+
+      if (trigger === "update" && session.user) {
+        const updatedSession = z.object({
+          activeSubscription: z.null(),
+        });
+
+        const newSessionData = updatedSession.safeParse(newSession);
+        console.log(newSessionData);
+
+        if (newSessionData.success) {
+          session.user.activeSubscription = null;
+        }
       }
       return session;
     },
   },
-  adapter: PrismaAdapter(prisma),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  adapter: ModifiedPrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,

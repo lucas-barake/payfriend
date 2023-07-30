@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import {
   sendDebtInviteInput,
   type SendDebtInviteInput,
-} from "$/server/api/routers/debts/mutations/input";
+} from "$/server/api/routers/debts/mutations/send-debt-invite/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { Separator } from "$/components/ui/separator";

@@ -26,6 +26,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
+import mercadopago from "$/server/api/routers/subscription-plans/(lib)/mercadopago";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -53,6 +54,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
     redis,
     twilio,
     mail,
+    mercadopago,
   };
 };
 export type InnerTRPCContext = ReturnType<typeof createInnerTRPCContext>;
