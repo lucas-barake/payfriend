@@ -65,12 +65,12 @@ export const sendDebtInvite = TRPCProcedures.verifiedLimited
         subject: `Te invitaron a una deuda en ${APP_NAME}`,
         text: `Entra a ${
           env.NODE_ENV === "production"
-            ? "https://www.payfriend.com/dashboard"
+            ? `https://${env.VERCEL_URL ?? ""}/dashboard`
             : "http://localhost:3000/dashboard"
         } para aceptar la invitación`,
         html: `<strong>Entra a <a href="${
           env.NODE_ENV === "production"
-            ? "https://www.payfriend.com/dashboard"
+            ? `https://${env.VERCEL_URL ?? ""}/dashboard`
             : "http://localhost:3000/dashboard"
         }">Payfriend</a> para aceptar la invitación</strong>`,
         mailSettings: {

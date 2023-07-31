@@ -27,12 +27,12 @@ export const create = TRPCProcedures.verifiedLimited
           subject: `Te invitaron a una deuda en ${APP_NAME}`,
           text: `Entra a ${
             env.VERCEL_URL !== undefined
-              ? `${env.VERCEL_URL}/dashboard`
+              ? `https://${env.VERCEL_URL}/dashboard`
               : "http://localhost:3000/dashboard"
           } para aceptar la invitación`,
           html: `<strong>Entra a <a href="${
             env.VERCEL_URL !== undefined
-              ? `${env.VERCEL_URL}/dashboard`
+              ? `https://${env.VERCEL_URL}/dashboard`
               : "http://localhost:3000/dashboard"
           }">${APP_NAME}</a> para aceptar la invitación</strong>`,
           mailSettings: {

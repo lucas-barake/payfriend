@@ -52,10 +52,10 @@ const NotificationBell: React.FC = () => {
             </div>
           ) : (
             allPendingInvites.map((invite) => (
-              <>
-                <PendingInviteRow key={invite.debt.id} invite={invite} />
+              <div key={invite.debt.id} className="flex flex-col gap-2">
+                <PendingInviteRow invite={invite} />
                 <Separator />
-              </>
+              </div>
             ))
           )}
         </div>

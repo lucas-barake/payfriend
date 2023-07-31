@@ -1,4 +1,3 @@
-import Redis from "ioredis";
 import Twilio from "twilio";
 import { env } from "$/env.mjs";
 import sendGridMail from "@sendgrid/mail";
@@ -27,6 +26,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import mercadopago from "$/server/api/routers/subscription-plans/(lib)/mercadopago";
+import { redis } from "$/server/redis";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -43,7 +43,6 @@ type CreateContextOptions = {
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
-  const redis = new Redis(env.REDIS_URL);
   const twilio = Twilio(env.TWILIO_ACCOUNT_SID, env.TWILIO_AUTH_TOKEN);
   const mail = sendGridMail;
   mail.setApiKey(env.SENDGRID_API_KEY);

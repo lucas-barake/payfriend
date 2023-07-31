@@ -38,6 +38,7 @@ export const env = createEnv({
     MERCADOPAGO_ACCESS_TOKEN: z.string().min(1),
     MERCADOPAGO_URL: z.string().url(),
     MERCADOPAGO_PAYER_EMAIL: z.string().email().optional(),
+    NGROK_FORWARDING_URL: z.string().url().optional(),
   },
   client: {},
   runtimeEnv: {
@@ -58,5 +59,6 @@ export const env = createEnv({
     MERCADOPAGO_ACCESS_TOKEN: process.env.MERCADOPAGO_ACCESS_TOKEN,
     MERCADOPAGO_URL: process.env.MERCADOPAGO_URL,
     MERCADOPAGO_PAYER_EMAIL: process.env.MERCADOPAGO_PAYER_EMAIL,
+    NGROK_FORWARDING_URL: process.env.NGROK_FORWARDING_URL,
   },
 });

@@ -27,12 +27,12 @@ export const subscriptionsMutations = createTRPCRouter({
         const subscription = {
           back_url:
             env.NODE_ENV === "development"
-              ? `https://67aa-186-29-109-23.ngrok.io/${Pages.DASHBOARD}`
-              : `${env.VERCEL_URL ?? ""}/${Pages.DASHBOARD}`,
+              ? `https://${env.NGROK_FORWARDING_URL ?? ""}/${Pages.DASHBOARD}`
+              : `https://${env.VERCEL_URL ?? ""}/${Pages.DASHBOARD}`,
           auto_recurring: {
             frequency: 1,
             frequency_type: "months",
-            transaction_amount: 7500,
+            transaction_amount: 5900,
             currency_id: "COP",
           },
           payer_email:

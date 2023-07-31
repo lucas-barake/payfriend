@@ -18,7 +18,10 @@ export async function subscriptionsWebhook(
   try {
     const body = z
       .object({
-        type: z.literal("subscription_preapproval"),
+        type: z.union([
+          z.literal("subscription_preapproval"),
+          z.literal("subscription_authorized_payment"),
+        ]),
         data: z.object({ id: z.string() }),
       })
       .passthrough()
@@ -155,7 +158,7 @@ export async function subscriptionsWebhook(
     res.status(200).send("OK");
   } catch (error) {
     if (error instanceof z.ZodError) {
-      logger.error("ZOD", error.errors);
+      logger.error("ZOD", error.errors, "BODY", req.body);
       res.status(400).send("BAD REQUEST");
       return;
     }

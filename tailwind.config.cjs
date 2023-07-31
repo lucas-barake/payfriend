@@ -47,6 +47,7 @@ const config = {
         warning: {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+          text: "hsl(var(--warning-text))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

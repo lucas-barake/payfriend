@@ -2,6 +2,7 @@ import React from "react";
 import { useTheme } from "next-themes";
 import { Button, type ButtonProps } from "$/components/ui/button";
 import * as RadixIcons from "@radix-ui/react-icons";
+import * as LucideIcons from "lucide-react";
 import dynamic from "next/dynamic";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 
@@ -24,7 +25,7 @@ const ThemeItem: React.FC<ThemeItemProps> = ({
     }}
   >
     {currentTheme === theme && (
-      <RadixIcons.CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
+      <LucideIcons.CheckIcon className="mr-1 h-[1rem] w-[1rem]" />
     )}
     {label}
   </DropdownMenu.Item>

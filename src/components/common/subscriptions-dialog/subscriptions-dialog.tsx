@@ -8,20 +8,25 @@ import * as LucideIcons from "lucide-react";
 import { DateTime } from "luxon";
 import { type UpdateSessionSubscription } from "$/server/auth/update-session-schemas";
 import { Popover } from "$/components/ui/popover";
+import { cn } from "$/lib/utils/cn";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  reachedFreeLimit?: boolean;
 };
 
 export const SubscriptionsDialog: React.FC<Props> = ({
   open,
   onOpenChange,
+  reachedFreeLimit = false,
 }) => {
   const [openCancelSubscriptionDialog, setOpenCancelSubscriptionDialog] =
     React.useState(false);
   const session = useSession();
   const subscription = session.data?.user.subscription;
+  const isSubscriptionCancelledAndActive =
+    subscription?.status === "CANCELLED" && subscription?.isActive;
   const subscribeMutation = api.subscriptions.generateLink.useMutation({
     onSuccess(data) {
       window.location.href = data.paymentLink;
@@ -84,10 +89,15 @@ export const SubscriptionsDialog: React.FC<Props> = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <Dialog.Content>
           <Dialog.Header>
-            <Dialog.Title>Suscripciones</Dialog.Title>
-            <Dialog.Description>
-              ¡Aprovecha al máximo nuestra aplicación y eleva tu experiencia hoy
-              mismo!
+            <Dialog.Title
+              className={cn(reachedFreeLimit && "text-warning-text")}
+            >
+              {reachedFreeLimit ? "¡Ups! Límite alcanzado" : "Suscripciones"}
+            </Dialog.Title>
+            <Dialog.Description className="text-sm">
+              {reachedFreeLimit
+                ? "Has alcanzado el límite de deudas gratuitas. Con nuestro plan gratuito, puedes crear y unirte a un máximo de 5 deudas al mes. Pero no te preocupes, puedes suscribirte a nuestro Plan Premium y disfrutar de todas las funcionalidades de la aplicación."
+                : "¡Aprovecha al máximo nuestra aplicación y eleva tu experiencia hoy mismo!"}
             </Dialog.Description>
           </Dialog.Header>
 
@@ -137,56 +147,48 @@ export const SubscriptionsDialog: React.FC<Props> = ({
             </Card.Content>
 
             <Card.Footer className="justify-center">
-              {subscription?.status === "CANCELLED" &&
-                subscription?.isActive && (
-                  <Popover>
-                    <Popover.Trigger asChild>
-                      <Button variant="tertiary">
-                        <LucideIcons.Info className="mr-2 h-4 w-4" />
-                        Suscribirme Ahora
-                      </Button>
-                    </Popover.Trigger>
+              {isSubscriptionCancelledAndActive ? (
+                <Popover>
+                  <Popover.Trigger asChild>
+                    <Button variant="tertiary">
+                      <LucideIcons.Info className="mr-2 h-4 w-4" />
+                      Suscribirme Ahora
+                    </Button>
+                  </Popover.Trigger>
 
-                    <Popover.Content>
-                      <span className="text-sm">
-                        Cancelaste tu suscripción. Puedes volver a suscribirte
-                        una vez finalice tu periodo actual. Tu suscripción
-                        finaliza:{" "}
-                        {DateTime.fromISO(
-                          session.data?.user.subscription?.nextDueDate ?? ""
-                        ).toLocaleString(DateTime.DATE_FULL)}
-                        .
-                      </span>
-                    </Popover.Content>
-                  </Popover>
-                )}
-
-              {subscription?.status !== "CANCELLED" && (
+                  <Popover.Content>
+                    <span className="text-sm">
+                      Cancelaste tu suscripción. Puedes volver a suscribirte una
+                      vez finalice tu periodo actual. Tu suscripción finaliza:{" "}
+                      {DateTime.fromISO(
+                        session.data?.user.subscription?.nextDueDate ?? ""
+                      ).toLocaleString(DateTime.DATE_FULL)}
+                      .
+                    </span>
+                  </Popover.Content>
+                </Popover>
+              ) : subscription?.status === "SUCCESS" ||
+                subscription?.status === "PENDING" ? (
                 <Button
                   onClick={() => {
-                    if (session.data?.user.subscription?.status === "SUCCESS") {
-                      setOpenCancelSubscriptionDialog(true);
-                      return;
-                    }
+                    setOpenCancelSubscriptionDialog(true);
+                  }}
+                  variant="destructive"
+                >
+                  <LucideIcons.X className="mr-1.5 h-4 w-4" />
+                  <span>Cancelar Suscripción</span>
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
                     subscribeMutation.mutate({
                       subscriptionType: "BASIC",
                     });
                   }}
                   loading={subscribeMutation.isLoading}
-                  variant={
-                    subscription?.status === "SUCCESS"
-                      ? "destructive"
-                      : "default"
-                  }
+                  variant="default"
                 >
-                  {subscription?.status === "SUCCESS" ? (
-                    <>
-                      <LucideIcons.X className="mr-1.5 h-4 w-4" />
-                      <span>Cancelar Suscripción</span>
-                    </>
-                  ) : (
-                    <span>Suscribirme Ahora</span>
-                  )}
+                  <span>Suscribirme Ahora</span>
                 </Button>
               )}
             </Card.Footer>

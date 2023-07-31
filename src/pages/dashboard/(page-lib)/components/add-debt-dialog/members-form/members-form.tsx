@@ -16,6 +16,7 @@ import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
+import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
 
 const formInput = z.object({
   borrowerEmail: z.string().email("Email inválido"),
@@ -30,6 +31,7 @@ type Props = {
 const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
   const session = useSession();
   const formContext = useFormContext<CreateDebtInput>();
+  const freePlanLimit = useFreePlanLimit();
   const form = useForm<FormInput>({
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -81,6 +83,7 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
       error: handleMutationError,
     });
     await apiContext.debts.getOwnedDebts.invalidate();
+    await freePlanLimit.invalidateQuery();
 
     setOpen(false);
     tabSetters.reset();

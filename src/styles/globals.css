@@ -52,6 +52,7 @@
 
     --warning: 27 96% 50%;
     --warning-foreground: 0 0% 100%;
+    --warning-text: 27 96% 45%;
 
     --ring: 0 0% 63.9%;
 
@@ -105,6 +106,7 @@
 
     --warning: 27 96% 35%;
     --warning-foreground: 0 0% 100%;
+    --warning-text: 27 96% 55%;
 
     --ring: 239, 84%, 67%;
 
