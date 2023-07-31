@@ -1,5 +1,5 @@
 import { TRPCProcedures } from "$/server/api/trpc";
-import { sendDebtInviteInput } from "$/server/api/routers/debts/mutations/send-debt-invite/input";
+import { sendDebtInviteInput } from "$/server/api/routers/debts/mutations/handlers/invites/send-debt-invite/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
 import { env } from "$/env.mjs";

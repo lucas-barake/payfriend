@@ -1,12 +1,12 @@
 import { TRPCProcedures } from "$/server/api/trpc";
-import { createDebtInput } from "$/server/api/routers/debts/mutations/create/input";
+import { createDebtInput } from "$/server/api/routers/debts/mutations/handlers/create/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { rawQueries } from "$/server/api/routers/(routers-lib)/raw-queries";
 import { env } from "$/env.mjs";
 import { APP_NAME } from "$/lib/constants/app-name";
 import { type MailDataRequired } from "@sendgrid/mail";
 import { logger } from "$/server/logger";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
+import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
 
 export const create = TRPCProcedures.verifiedLimited
   .input(createDebtInput)
@@ -17,16 +17,7 @@ export const create = TRPCProcedures.verifiedLimited
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No puedes prestarte a ti mismo");
     }
 
-    const debtsCount = await rawQueries.getUserDebtCount(
-      ctx.prisma,
-      ctx.session.user.id
-    );
-    const totalDebtsCount =
-      debtsCount.lenderDebtsCount + debtsCount.borrowerDebtsCount;
-
-    if (totalDebtsCount >= 5) {
-      throw CUSTOM_EXCEPTIONS.BAD_REQUEST("Has alcanzado el límite de deudas");
-    }
+    await checkDebtLimitAndIncr(ctx);
 
     for (const email of input.borrowerEmails) {
       try {
@@ -35,15 +26,15 @@ export const create = TRPCProcedures.verifiedLimited
           from: env.SENDGRID_FROM_EMAIL,
           subject: `Te invitaron a una deuda en ${APP_NAME}`,
           text: `Entra a ${
-            env.NODE_ENV === "production"
-              ? "https://www.payfriend.com/dashboard"
+            env.VERCEL_URL !== undefined
+              ? `${env.VERCEL_URL}/dashboard`
               : "http://localhost:3000/dashboard"
           } para aceptar la invitación`,
           html: `<strong>Entra a <a href="${
-            env.NODE_ENV === "production"
-              ? "https://www.payfriend.com/dashboard"
+            env.VERCEL_URL !== undefined
+              ? `${env.VERCEL_URL}/dashboard`
               : "http://localhost:3000/dashboard"
-          }">Payfriend</a> para aceptar la invitación</strong>`,
+          }">${APP_NAME}</a> para aceptar la invitación</strong>`,
           mailSettings: {
             sandboxMode: {
               enable: env.SENDGRID_SANDBOX_MODE,

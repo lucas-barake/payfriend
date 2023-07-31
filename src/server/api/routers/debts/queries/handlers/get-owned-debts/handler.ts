@@ -1,6 +1,6 @@
 import { TRPCProcedures } from "$/server/api/trpc";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
-import { paginationInput } from "$/server/api/routers/debts/queries/(shared)/input";
+import { paginationInput } from "$/server/api/routers/debts/queries/lib/shared-input";
 
 export const getOwnedDebts = TRPCProcedures.verified
   .input(paginationInput)

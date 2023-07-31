@@ -13,7 +13,7 @@ import sendGridMail from "@sendgrid/mail";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
 
-import { getServerAuthSession } from "$/server/auth";
+import { getServerAuthSession } from "$/server/auth/auth";
 import { prisma } from "$/server/db";
 /**
  * 2. INITIALIZATION
