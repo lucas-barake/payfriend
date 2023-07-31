@@ -21,7 +21,7 @@ export const ProfileMenu: React.FC = () => {
 
       <DropdownMenu>
         <DropdownMenu.Trigger asChild>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="icon">
             <Avatar className="h-6 w-6">
               <Avatar.Image src={userImage} />
 
@@ -52,7 +52,7 @@ export const ProfileMenu: React.FC = () => {
                 className="w-full cursor-pointer"
               >
                 <CreditCard className="mr-2 h-4 w-4" />
-                <span>Subscripciones</span>
+                <span>Suscripciones</span>
               </button>
             </DropdownMenu.Item>
 
