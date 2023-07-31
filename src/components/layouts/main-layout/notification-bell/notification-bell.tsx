@@ -26,7 +26,7 @@ const NotificationBell: React.FC = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <Button variant="ghost" size="sm">
+        <Button variant="ghost" size="icon">
           <div className="relative inline-flex">
             <Bell className="h-5 w-5" />
 
