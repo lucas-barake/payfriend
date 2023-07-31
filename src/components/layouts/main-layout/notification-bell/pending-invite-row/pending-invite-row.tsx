@@ -97,7 +97,7 @@ const PendingInviteRow: React.FC<Props> = ({ invite }) => {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="rounded-full border-2 border-success p-0.5 text-success hover:bg-success/10"
+            className="rounded-full border-2 border-success-text p-0.5 text-success-text hover:bg-success/10"
             onClick={() => {
               if (freePlanLimit.reachedMonthlyLimit) {
                 setShowSubscribeDialog(true);

@@ -84,7 +84,7 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
         />
 
         {form.watch("amount") !== undefined && !isNaN(form.watch("amount")) && (
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-muted-foreground">
             {form.watch("amount").toLocaleString(locale, {
               style: "currency",
               currency: "COP",
