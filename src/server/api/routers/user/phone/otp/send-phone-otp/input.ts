@@ -14,7 +14,7 @@ const countryCode = createManyUnion(
   }
 );
 
-export const sendPhoneCodeInput = z.object({
+export const sendPhoneOtpInput = z.object({
   phone: z
     .object({
       phoneNumber: z
@@ -44,16 +44,4 @@ export const sendPhoneCodeInput = z.object({
       countryCode: v.countryCode,
     })),
 });
-export type SendPhoneCodeInput = z.infer<typeof sendPhoneCodeInput>;
-
-export const verifyPhoneInput = sendPhoneCodeInput.merge(
-  z.object({
-    otp: z
-      .string()
-      .trim()
-      .regex(/^[0-9]{4}$/, {
-        message: "El código debe ser de 4 dígitos",
-      }),
-  })
-);
-export type VerifyPhoneInput = z.infer<typeof verifyPhoneInput>;
+export type SendPhoneOtpInput = z.infer<typeof sendPhoneOtpInput>;

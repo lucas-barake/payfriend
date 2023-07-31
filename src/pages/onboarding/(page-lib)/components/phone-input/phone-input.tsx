@@ -16,11 +16,12 @@ import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { strTransformer } from "$/lib/utils/str-transformer";
 import {
-  sendPhoneCodeInput,
-  type SendPhoneCodeInput,
-  type VerifyPhoneInput,
-} from "$/server/api/routers/user/phone/mutations/input";
+  sendPhoneOtpInput,
+  type SendPhoneOtpInput,
+} from "$/server/api/routers/user/phone/otp/send-phone-otp/input";
 import { FieldError } from "$/components/ui/form/field-error";
+import { TRPCError } from "@trpc/server";
+import { type VerifyPhoneInput } from "$/server/api/routers/user/phone/otp/verify-phone/input";
 
 type Props = {
   setView: React.Dispatch<React.SetStateAction<View>>;
@@ -48,20 +49,20 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
     [countryQuery]
   );
 
-  const form = useForm<SendPhoneCodeInput>({
+  const form = useForm<SendPhoneOtpInput>({
     defaultValues: {
       phone: {
         phoneNumber: "",
         countryCode: initCountry.code_2,
       },
     },
-    resolver: zodResolver(sendPhoneCodeInput),
+    resolver: zodResolver(sendPhoneOtpInput),
     mode: "onSubmit",
   });
 
-  const sendCodeMutation = api.user.sendPhoneVerificationCode.useMutation();
+  const sendCodeMutation = api.user.sendPhoneOtp.useMutation();
 
-  async function sendCode(input: SendPhoneCodeInput): Promise<void> {
+  async function sendCode(input: SendPhoneOtpInput): Promise<void> {
     try {
       await toast.promise(sendCodeMutation.mutateAsync(input), {
         loading: "Enviando código...",
@@ -72,6 +73,12 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
       setPhone(input.phone);
       setView(View.OTP_INPUT);
     } catch (error) {
+      if (error instanceof TRPCError) {
+        if (error.code === "TOO_MANY_REQUESTS") {
+          setView(View.OTP_INPUT);
+          return;
+        }
+      }
       handleToastError(error);
     }
   }

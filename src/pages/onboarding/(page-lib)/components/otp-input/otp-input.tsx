@@ -1,10 +1,6 @@
 import React from "react";
 import { View } from "$/pages/onboarding/(page-lib)/enums/view";
 import { Controller, useForm } from "react-hook-form";
-import {
-  verifyPhoneInput,
-  type VerifyPhoneInput,
-} from "$/server/api/routers/user/phone/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
@@ -14,6 +10,13 @@ import { Form } from "$/components/ui/form";
 import OTPInput from "react-otp-input";
 import { Button } from "$/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useTimer } from "react-timer-hook";
+import { DateTime, Duration } from "luxon";
+import { minutesToMs } from "$/lib/utils/minutes-to-ms";
+import {
+  verifyPhoneInput,
+  type VerifyPhoneInput,
+} from "$/server/api/routers/user/phone/otp/verify-phone/input";
 
 type Props = {
   setView: React.Dispatch<React.SetStateAction<View>>;
@@ -31,6 +34,30 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
     resolver: zodResolver(verifyPhoneInput),
   });
   const verifyPhoneMutation = api.user.verifyPhone.useMutation();
+
+  const timer = useTimer({
+    expiryTimestamp: DateTime.now().toJSDate(),
+    autoStart: false,
+  });
+  api.user.getPhoneOtpTtl.useQuery(
+    {
+      phone: {
+        phoneNumber: phone?.phoneNumber ?? "",
+        countryCode: phone?.countryCode ?? "CO",
+      },
+    },
+    {
+      enabled: phone !== undefined,
+      onSuccess({ ttlInSeconds }) {
+        timer.restart(
+          DateTime.now()
+            .plus(Duration.fromObject({ seconds: ttlInSeconds }))
+            .toJSDate()
+        );
+      },
+      staleTime: minutesToMs(3),
+    }
+  );
 
   async function verifyPhone(input: VerifyPhoneInput): Promise<void> {
     await toast.promise(verifyPhoneMutation.mutateAsync(input), {
@@ -109,6 +136,12 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
             Verificar
           </Button>
         </div>
+
+        <p className="max-w-sm text-center text-sm text-muted-foreground">
+          El código de verificación caducará en {timer.minutes} minuto
+          {timer.minutes === 1 ? "" : "s"} y {timer.seconds} segundo
+          {timer.seconds === 1 ? "" : "s"}.
+        </p>
       </Form>
     </>
   );
