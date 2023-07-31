@@ -17,7 +17,7 @@ export const subscriptionsMutations = createTRPCRouter({
   generateLink: TRPCProcedures.verified
     .input(generateLinkInput)
     .mutation(async ({ ctx, input }) => {
-      if (Boolean(ctx.session.user.activeSubscription)) {
+      if (ctx.session.user.subscription?.isActive) {
         throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
           "An active subscription already exists"
         );
@@ -80,15 +80,13 @@ export const subscriptionsMutations = createTRPCRouter({
       }
     }),
   cancelSubscription: TRPCProcedures.verified.mutation(async ({ ctx }) => {
-    const activeSubscription = ctx.session.user.activeSubscription;
-
-    if (activeSubscription === null || activeSubscription === undefined) {
-      throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No active subscription exists");
+    if (!ctx.session.user.subscription?.isActive) {
+      throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No active subscription found");
     }
 
     try {
       const body = {
-        id: activeSubscription.id,
+        id: ctx.session.user.subscription.id,
         status: "cancelled",
       } satisfies UpdateSubscriptionRequestBody;
 
