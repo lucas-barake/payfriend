@@ -16,7 +16,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { Separator } from "$/components/ui/separator";
-import { LucideMail, UserMinus } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import PendingBorrowerRow from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/borrowers-dialog/pending-borrower-row";
 import { borrowerStatusLabels } from "$/lib/shared/borrower-status-labels";
 import { Badge } from "$/components/ui/badge";
@@ -139,7 +139,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
                 loading={sendInviteMutation.isLoading}
               >
                 {!sendInviteMutation.isLoading && (
-                  <LucideMail className="mr-1.5 h-4 w-4 sm:h-5 sm:w-5" />
+                  <LucideIcons.LucideMail className="mr-1.5 h-4 w-4 sm:h-5 sm:w-5" />
                 )}
                 Invitar
               </Button>
@@ -161,8 +161,11 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
             <div className="flex items-center gap-3">
               <Popover>
                 <Popover.Trigger asChild>
-                  <Button variant="outline">
-                    <Avatar className="h-6 w-6">
+                  <Button variant="outline" className="group relative">
+                    <span className="sr-only">Ver información del deudor</span>
+                    <LucideIcons.Eye className="absolute left-1/2 top-1/2 z-50 h-6 w-6 -translate-x-1/2 -translate-y-1/2 transform opacity-0 group-hover:opacity-100" />
+
+                    <Avatar className="h-6 w-6 group-hover:opacity-0">
                       <Avatar.Image src={borrower.user.image ?? undefined} />
                       <Avatar.Fallback>
                         {borrower.user.name?.[0] ?? "?"}
@@ -206,7 +209,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
             <Popover>
               <Popover.Trigger asChild>
                 <Button size="sm" variant="destructive" className="opacity-50">
-                  <UserMinus className="h-5 w-5 sm:mr-1.5" />
+                  <LucideIcons.UserMinus className="h-5 w-5 sm:mr-1.5" />
                   <span className="sr-only sm:not-sr-only">Eliminar</span>
                 </Button>
               </Popover.Trigger>

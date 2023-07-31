@@ -114,7 +114,7 @@ export const SubscriptionsDialog: React.FC<Props> = ({
             </Card.Header>
 
             <Card.Content>
-              <ul className="ml-4 list-disc text-sm lg:text-base [&>li:not(:first-child)]:mt-2">
+              <ul className="ml-4 list-disc text-sm [&>li:not(:first-child)]:mt-2">
                 <li>
                   <span className="font-bold">Crea Deudas sin Límites</span>{" "}
                   <p className="block">
