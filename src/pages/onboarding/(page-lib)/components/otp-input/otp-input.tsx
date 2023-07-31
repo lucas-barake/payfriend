@@ -12,7 +12,7 @@ import { Button } from "$/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useTimer } from "react-timer-hook";
 import { DateTime, Duration } from "luxon";
-import { minutesToMs } from "$/lib/utils/minutes-to-ms";
+import { minutesToMs } from "$/lib/utils/time/minutes-to-ms";
 import {
   verifyPhoneInput,
   type VerifyPhoneInput,
