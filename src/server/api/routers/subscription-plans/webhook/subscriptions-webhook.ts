@@ -9,6 +9,7 @@ import {
 import { logger } from "$/server/logger";
 import { prisma } from "$/server/db";
 import { Prisma, SubscriptionType } from "@prisma/client";
+import { DateTime } from "luxon";
 
 export async function subscriptionsWebhook(
   req: NextApiRequest,
@@ -22,7 +23,7 @@ export async function subscriptionsWebhook(
       })
       .passthrough()
       .parse(req.body);
-    logger.dev("WEBHOOK", body);
+    logger.dev("SUBSCRIPTIONS WEBHOOK BODY", body);
 
     const getSubscriptionRes = await fetch(
       `${env.MERCADOPAGO_URL}/preapproval/${body.data.id}`,
@@ -35,7 +36,7 @@ export async function subscriptionsWebhook(
     );
 
     const json = (await getSubscriptionRes.json()) as GetSubscriptionResponse;
-    logger.dev("GET SUBSCRIPTION", json);
+    logger.dev("SUBSCRIPTIONS WEBHOOK GET SUBSCRIPTION", json);
 
     const _cuid2 = json.external_reference.split(":")[0];
     const userId = json.external_reference.split(":")[1] as UserId;
@@ -45,9 +46,12 @@ export async function subscriptionsWebhook(
 
     switch (json.status) {
       case "paused":
-        await prisma.activeSubscription.delete({
+        await prisma.subscriptionHistory.update({
           where: {
-            userId,
+            id: json.id,
+          },
+          data: {
+            status: "FAILED",
           },
         });
         logger.info(`Paused subscription ${json.id}`);
@@ -61,6 +65,11 @@ export async function subscriptionsWebhook(
             type: SubscriptionType[subscriptionType],
             status: "PENDING",
             externalReference: json.external_reference,
+            nextDueDate: DateTime.fromISO(json.date_created)
+              .plus({
+                months: 1,
+              })
+              .toISO(),
           },
         });
         logger.info(`Added pending subscription ${json.id}`);
@@ -68,20 +77,52 @@ export async function subscriptionsWebhook(
 
       case "authorized":
         await prisma.$transaction(async (prisma) => {
-          await prisma.activeSubscription.create({
-            data: {
+          await prisma.activeSubscription.upsert({
+            where: {
+              userId,
+            },
+            create: {
               id: json.id,
               userId,
               type: SubscriptionType[subscriptionType],
               externalReference: json.external_reference,
+              nextDueDate: DateTime.fromISO(json.last_modified)
+                .plus({
+                  months: 1,
+                })
+                .toISO(),
+              status: "SUCCESS",
+            },
+            update: {
+              id: json.id,
+              type: SubscriptionType[subscriptionType],
+              externalReference: json.external_reference,
+              nextDueDate: DateTime.fromISO(json.last_modified)
+                .plus({
+                  months: 1,
+                })
+                .toISO(),
+              status: "SUCCESS",
             },
           });
 
-          await prisma.subscriptionHistory.update({
+          await prisma.subscriptionHistory.upsert({
             where: {
               id: json.id,
             },
-            data: {
+            create: {
+              status: "SUCCESS",
+              type: SubscriptionType[subscriptionType],
+              userId,
+              nextDueDate: DateTime.fromISO(json.last_modified)
+                .plus({
+                  months: 1,
+                })
+                .toISO(),
+              externalReference: json.external_reference,
+              id: json.id,
+            },
+            update: {
               status: "SUCCESS",
             },
           });
@@ -90,9 +131,12 @@ export async function subscriptionsWebhook(
         break;
       case "cancelled":
         await prisma.$transaction(async (prisma) => {
-          await prisma.activeSubscription.delete({
+          await prisma.activeSubscription.update({
             where: {
               userId,
+            },
+            data: {
+              status: "CANCELLED",
             },
           });
 
