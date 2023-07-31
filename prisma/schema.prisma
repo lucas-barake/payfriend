@@ -105,13 +105,15 @@ enum SubscriptionStatus {
 }
 
 model ActiveSubscription {
-  id                String           @id // MercadoPago's generated ID
-  createdAt         DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt         DateTime         @updatedAt @db.Timestamptz(6)
-  userId            String           @unique
-  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String             @id // MercadoPago's generated ID
+  createdAt         DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime           @updatedAt @db.Timestamptz(6)
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   type              SubscriptionType
-  externalReference String           @unique
+  status            SubscriptionStatus
+  nextDueDate       DateTime           @db.Timestamptz(6)
+  externalReference String             @unique
 }
 
 model SubscriptionHistory {
@@ -121,6 +123,7 @@ model SubscriptionHistory {
   user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   type              SubscriptionType
   status            SubscriptionStatus
+  nextDueDate       DateTime           @db.Timestamptz(6)
   externalReference String             @unique
 }
 
