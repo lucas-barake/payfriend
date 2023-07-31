@@ -11,7 +11,7 @@ import {
 } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { Tabs } from "$/components/ui/tabs";
 import { FormProvider, useForm } from "react-hook-form";
-import { type CreateDebtInput } from "$/server/api/routers/debts/mutations/create/input";
+import { type CreateDebtInput } from "$/server/api/routers/debts/mutations/handlers/create/input";
 
 const AddDebtDialog: React.FC = () => {
   const [open, setOpen] = React.useState(false);
