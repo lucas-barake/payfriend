@@ -22,8 +22,6 @@ export type GetSubscriptionResponse = {
   auto_recurring: {
     frequency: number;
     frequency_type: FrequencyType;
-    start_date: string;
-    end_date: string;
     currency_id: CurrencyId;
     transaction_amount: number;
     free_trial: {
@@ -35,7 +33,6 @@ export type GetSubscriptionResponse = {
   payer_id: string;
   card_id: string;
   payment_method_id: string;
-  next_payment_date?: string;
   date_created: string;
   last_modified: string;
   status: Status;
