@@ -5,6 +5,9 @@ import { Button } from "$/components/ui/button";
 import { api } from "$/lib/utils/api";
 import { useSession } from "next-auth/react";
 import * as LucideIcons from "lucide-react";
+import { DateTime } from "luxon";
+import { type UpdateSessionSubscription } from "$/server/auth/update-session-schemas";
+import { Popover } from "$/components/ui/popover";
 
 type Props = {
   open: boolean;
@@ -18,10 +21,10 @@ export const SubscriptionsDialog: React.FC<Props> = ({
   const [openCancelSubscriptionDialog, setOpenCancelSubscriptionDialog] =
     React.useState(false);
   const session = useSession();
-  const hasActiveSubscription = Boolean(session.data?.user.activeSubscription);
+  const subscription = session.data?.user.subscription;
   const subscribeMutation = api.subscriptions.generateLink.useMutation({
     onSuccess(data) {
-      window.open(data.paymentLink);
+      window.location.href = data.paymentLink;
     },
   });
   const cancelSubscriptionMutation =
@@ -29,8 +32,8 @@ export const SubscriptionsDialog: React.FC<Props> = ({
       onSuccess() {
         setOpenCancelSubscriptionDialog(false);
         void session.update({
-          activeSubscription: null,
-        });
+          cancelledSubscription: true,
+        } satisfies UpdateSessionSubscription);
       },
     });
 
@@ -101,7 +104,7 @@ export const SubscriptionsDialog: React.FC<Props> = ({
             </Card.Header>
 
             <Card.Content>
-              <ul className="ml-4 list-disc [&>li]:mt-4">
+              <ul className="ml-4 list-disc text-sm lg:text-base [&>li:not(:first-child)]:mt-2">
                 <li>
                   <span className="font-bold">Crea Deudas sin Límites</span>{" "}
                   <p className="block">
@@ -134,30 +137,58 @@ export const SubscriptionsDialog: React.FC<Props> = ({
             </Card.Content>
 
             <Card.Footer className="justify-center">
-              <Button
-                onClick={() => {
-                  if (hasActiveSubscription) {
-                    setOpenCancelSubscriptionDialog(true);
-                    return;
-                  }
-                  subscribeMutation.mutate({
-                    subscriptionType: "BASIC",
-                  });
-                }}
-                loading={subscribeMutation.isLoading}
-                variant={hasActiveSubscription ? "destructive" : "default"}
-              >
-                {hasActiveSubscription ? (
-                  <>
-                    <LucideIcons.X className="mr-1.5 h-4 w-4" />
-                    <span>Cancelar Suscripción</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Suscribirme Ahora</span>
-                  </>
+              {subscription?.status === "CANCELLED" &&
+                subscription?.isActive && (
+                  <Popover>
+                    <Popover.Trigger asChild>
+                      <Button variant="tertiary">
+                        <LucideIcons.Info className="mr-2 h-4 w-4" />
+                        Suscribirme Ahora
+                      </Button>
+                    </Popover.Trigger>
+
+                    <Popover.Content>
+                      <span className="text-sm">
+                        Cancelaste tu suscripción. Puedes volver a suscribirte
+                        una vez finalice tu periodo actual. Tu suscripción
+                        finaliza:{" "}
+                        {DateTime.fromISO(
+                          session.data?.user.subscription?.nextDueDate ?? ""
+                        ).toLocaleString(DateTime.DATE_FULL)}
+                        .
+                      </span>
+                    </Popover.Content>
+                  </Popover>
                 )}
-              </Button>
+
+              {subscription?.status !== "CANCELLED" && (
+                <Button
+                  onClick={() => {
+                    if (session.data?.user.subscription?.status === "SUCCESS") {
+                      setOpenCancelSubscriptionDialog(true);
+                      return;
+                    }
+                    subscribeMutation.mutate({
+                      subscriptionType: "BASIC",
+                    });
+                  }}
+                  loading={subscribeMutation.isLoading}
+                  variant={
+                    subscription?.status === "SUCCESS"
+                      ? "destructive"
+                      : "default"
+                  }
+                >
+                  {subscription?.status === "SUCCESS" ? (
+                    <>
+                      <LucideIcons.X className="mr-1.5 h-4 w-4" />
+                      <span>Cancelar Suscripción</span>
+                    </>
+                  ) : (
+                    <span>Suscribirme Ahora</span>
+                  )}
+                </Button>
+              )}
             </Card.Footer>
           </Card>
         </Dialog.Content>
