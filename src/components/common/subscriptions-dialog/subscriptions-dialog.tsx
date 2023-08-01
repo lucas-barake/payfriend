@@ -9,6 +9,8 @@ import { DateTime } from "luxon";
 import { type UpdateSessionSubscription } from "$/server/auth/update-session-schemas";
 import { Popover } from "$/components/ui/popover";
 import { cn } from "$/lib/utils/cn";
+import toast from "react-hot-toast";
+import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 
 type Props = {
   open: boolean;
@@ -66,7 +68,11 @@ export const SubscriptionsDialog: React.FC<Props> = ({
           <div className="mt-6 flex justify-end gap-2">
             <Button
               onClick={() => {
-                cancelSubscriptionMutation.mutate();
+                void toast.promise(cancelSubscriptionMutation.mutateAsync(), {
+                  loading: "Cancelando suscripción...",
+                  success: "Suscripción cancelada",
+                  error: handleMutationError,
+                });
               }}
               loading={cancelSubscriptionMutation.isLoading}
               variant="destructive"
@@ -181,9 +187,16 @@ export const SubscriptionsDialog: React.FC<Props> = ({
               ) : (
                 <Button
                   onClick={() => {
-                    subscribeMutation.mutate({
-                      subscriptionType: "BASIC",
-                    });
+                    void toast.promise(
+                      subscribeMutation.mutateAsync({
+                        subscriptionType: "BASIC",
+                      }),
+                      {
+                        loading: "Creando suscripción...",
+                        success: "Suscripción creada exitosamente.",
+                        error: handleMutationError,
+                      }
+                    );
                   }}
                   loading={subscribeMutation.isLoading}
                   variant="default"
