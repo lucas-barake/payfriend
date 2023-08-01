@@ -2,7 +2,7 @@ import { TRPCProcedures } from "$/server/api/trpc";
 import { z } from "zod";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
-export const rejectPendingConfirmation = TRPCProcedures.verified
+export const rejectPendingConfirmation = TRPCProcedures.protected
   .input(
     z.object({
       debtId: z.string().uuid(),

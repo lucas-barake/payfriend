@@ -11,6 +11,10 @@ import { CustomHead } from "$/components/layouts/custom-head";
 import OtpInput from "$/pages/onboarding/(page-lib)/components/otp-input";
 import { type VerifyPhoneInput } from "$/server/api/routers/user/phone/otp/verify-phone/input";
 
+/* ARCHIVED PAGE
+ * This page has been archived as phone verification is no longer required.
+ * Add .page.tsx to the file name to restore it.
+ * */
 const Onboard: NextPageWithLayout = () => {
   const router = useRouter();
   const session = useRedirectSession();

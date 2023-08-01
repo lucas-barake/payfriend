@@ -2,7 +2,7 @@ import { TRPCProcedures } from "$/server/api/trpc";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
 import { paginationInput } from "$/server/api/routers/debts/queries/lib/shared-input";
 
-export const getOwnedDebts = TRPCProcedures.verified
+export const getOwnedDebts = TRPCProcedures.protected
   .input(paginationInput)
   .query(async ({ ctx, input }) => {
     const debtsAsLenderQuery = await ctx.prisma.user.findUnique({

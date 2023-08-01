@@ -3,7 +3,7 @@ import { z } from "zod";
 import { BorrowerStatus } from "@prisma/client";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
-export const getPendingConfirmations = TRPCProcedures.verified
+export const getPendingConfirmations = TRPCProcedures.protected
   .input(
     z.object({
       debtId: z.string().uuid(),

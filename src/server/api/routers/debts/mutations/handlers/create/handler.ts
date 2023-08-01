@@ -8,7 +8,7 @@ import { logger } from "$/server/logger";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
 import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
 
-export const create = TRPCProcedures.verifiedLimited
+export const create = TRPCProcedures.protectedLimited
   .input(createDebtInput)
   .mutation(async ({ ctx, input }) => {
     if (

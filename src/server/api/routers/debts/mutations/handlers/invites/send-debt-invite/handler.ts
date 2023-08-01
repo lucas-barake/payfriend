@@ -8,7 +8,7 @@ import { type MailDataRequired } from "@sendgrid/mail";
 import { logger } from "$/server/logger";
 import { Prisma } from "@prisma/client";
 
-export const sendDebtInvite = TRPCProcedures.verifiedLimited
+export const sendDebtInvite = TRPCProcedures.protectedLimited
   .input(sendDebtInviteInput)
   .mutation(async ({ ctx, input }) => {
     const lender = await ctx.prisma.debt.findFirst({

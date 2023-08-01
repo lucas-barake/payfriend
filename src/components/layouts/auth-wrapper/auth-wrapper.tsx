@@ -1,8 +1,6 @@
-import { useRouter } from "next/router";
 import React, { type FC, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import LoadingPage from "$/components/pages/loading-page";
-import { Pages } from "$/lib/enums/pages";
 import { useRedirectSession } from "$/hooks/use-redirect-session";
 import { api } from "$/lib/utils/api";
 
@@ -21,15 +19,9 @@ const FreePlanDebtLimitCount: React.FC = () => {
 };
 
 const AuthWrapper: FC<Props> = ({ children }) => {
-  const router = useRouter();
   const session = useRedirectSession();
 
   if (session.status === "loading") return <LoadingPage />;
-
-  if (session.data?.user.phoneVerified === null) {
-    void router.push(Pages.ONBOARDING);
-    return <LoadingPage />;
-  }
   const hasActiveSubscription =
     session.data?.user.subscription?.isActive ?? false;
 

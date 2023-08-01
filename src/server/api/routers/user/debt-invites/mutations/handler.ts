@@ -7,7 +7,7 @@ import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
 
 export const userGroupInvitesMutations = createTRPCRouter({
-  acceptDebtInvite: TRPCProcedures.verified
+  acceptDebtInvite: TRPCProcedures.protected
     .input(acceptGroupInviteInput)
     .mutation(async ({ ctx, input }) => {
       await checkDebtLimitAndIncr(ctx);
@@ -55,7 +55,7 @@ export const userGroupInvitesMutations = createTRPCRouter({
         return createdBorrower;
       });
     }),
-  declineDebtInvite: TRPCProcedures.verified
+  declineDebtInvite: TRPCProcedures.protected
     .input(declineGroupInviteInput)
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.pendingInvite.delete({
