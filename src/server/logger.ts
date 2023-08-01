@@ -9,8 +9,8 @@ export const logger = {
   error: (...error: unknown[]): void => {
     console.log("[❌ ERROR]", ...error);
   },
-  info: (message: string): void => {
-    console.log(`[ℹ️ INFO] ${message}`);
+  info: (...message: unknown[]): void => {
+    console.log("[ℹ️ INFO]", ...message);
   },
   debug: (message: string): void => {
     if (env.NODE_ENV === "development") {
