@@ -113,7 +113,7 @@ model ActiveSubscription {
   type              SubscriptionType
   status            SubscriptionStatus
   nextDueDate       DateTime           @db.Timestamptz(6)
-  externalReference String             @unique
+  externalReference String
 }
 
 model SubscriptionHistory {
@@ -124,7 +124,7 @@ model SubscriptionHistory {
   type              SubscriptionType
   status            SubscriptionStatus
   nextDueDate       DateTime           @db.Timestamptz(6)
-  externalReference String             @unique
+  externalReference String
 }
 
 model User {
