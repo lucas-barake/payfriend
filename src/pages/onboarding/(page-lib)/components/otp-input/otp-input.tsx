@@ -39,7 +39,8 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
     expiryTimestamp: DateTime.now().toJSDate(),
     autoStart: false,
   });
-  api.user.getPhoneOtpTtl.useQuery(
+  const sendPhoneOtp = api.user.sendPhoneOtp.useMutation();
+  const phoneOtpTtlQuery = api.user.getPhoneOtpTtl.useQuery(
     {
       phone: {
         phoneNumber: phone?.phoneNumber ?? "",
@@ -58,6 +59,22 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
       staleTime: minutesToMs(3),
     }
   );
+
+  async function resendOtp(): Promise<void> {
+    if (phone === undefined) {
+      toast.error("No se pudo reenviar el código.");
+      return;
+    }
+
+    await toast.promise(sendPhoneOtp.mutateAsync({ phone }), {
+      loading: "Enviando código...",
+      success: () => {
+        void phoneOtpTtlQuery.refetch();
+        return "¡Código enviado!";
+      },
+      error: handleToastError,
+    });
+  }
 
   async function verifyPhone(input: VerifyPhoneInput): Promise<void> {
     await toast.promise(verifyPhoneMutation.mutateAsync(input), {
@@ -136,13 +153,27 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
             Verificar
           </Button>
         </div>
+      </Form>
 
+      {timer.isRunning && (
         <p className="max-w-sm text-center text-sm text-muted-foreground">
           El código de verificación caducará en {timer.minutes} minuto
           {timer.minutes === 1 ? "" : "s"} y {timer.seconds} segundo
           {timer.seconds === 1 ? "" : "s"}.
         </p>
-      </Form>
+      )}
+
+      {!timer.isRunning && phoneOtpTtlQuery.data !== undefined && (
+        <Button
+          onClick={() => {
+            void resendOtp();
+          }}
+          variant="outline"
+          loading={sendPhoneOtp.isLoading}
+        >
+          Reenviar código
+        </Button>
+      )}
     </>
   );
 };
