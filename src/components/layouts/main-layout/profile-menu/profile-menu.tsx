@@ -3,51 +3,74 @@ import { signOut, useSession } from "next-auth/react";
 import { Button } from "$/components/ui/button";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Avatar } from "$/components/ui/avatar";
-import { LogOut } from "lucide-react";
+import { CreditCard, LogOut } from "lucide-react";
+import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
 
 export const ProfileMenu: React.FC = () => {
   const session = useSession();
+  const [showSubscriptionsDialog, setShowSubscriptionsDialog] =
+    React.useState(false);
   const userImage = session.data?.user?.image ?? undefined;
 
   return (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" size="sm">
-          <Avatar className="h-6 w-6">
-            <Avatar.Image src={userImage} />
+    <>
+      <SubscriptionsDialog
+        open={showSubscriptionsDialog}
+        onOpenChange={setShowSubscriptionsDialog}
+      />
 
-            <Avatar.Fallback className="bg-indigo-200 dark:bg-indigo-800">
-              {session.data?.user?.name?.charAt(0) ?? "?"}
-            </Avatar.Fallback>
-          </Avatar>
-        </Button>
-      </DropdownMenu.Trigger>
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
+          <Button variant="ghost" size="icon">
+            <Avatar className="h-6 w-6">
+              <Avatar.Image src={userImage} />
 
-      <DropdownMenu.Content className="w-56">
-        <DropdownMenu.Label>
-          {session.data?.user?.name ?? "Usuario"}
-          <p className="text-xs leading-none text-muted-foreground">
-            {session.data?.user?.email ?? ""}
-          </p>
-        </DropdownMenu.Label>
+              <Avatar.Fallback className="bg-indigo-200 dark:bg-indigo-800">
+                {session.data?.user?.name?.charAt(0) ?? "?"}
+              </Avatar.Fallback>
+            </Avatar>
+          </Button>
+        </DropdownMenu.Trigger>
 
-        <DropdownMenu.Separator />
+        <DropdownMenu.Content className="w-56">
+          <DropdownMenu.Label>
+            {session.data?.user?.name ?? "Usuario"}
+            <p className="text-xs leading-none text-muted-foreground">
+              {session.data?.user?.email ?? ""}
+            </p>
+          </DropdownMenu.Label>
 
-        <DropdownMenu.Group>
-          <DropdownMenu.Item asChild>
-            <button
-              type="button"
-              onClick={() => {
-                void signOut();
-              }}
-              className="w-full cursor-pointer"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Cerrar Sesión</span>
-            </button>
-          </DropdownMenu.Item>
-        </DropdownMenu.Group>
-      </DropdownMenu.Content>
-    </DropdownMenu>
+          <DropdownMenu.Separator />
+
+          <DropdownMenu.Group>
+            <DropdownMenu.Item asChild>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSubscriptionsDialog(true);
+                }}
+                className="w-full cursor-pointer"
+              >
+                <CreditCard className="mr-2 h-4 w-4" />
+                <span>Suscripciones</span>
+              </button>
+            </DropdownMenu.Item>
+
+            <DropdownMenu.Item asChild>
+              <button
+                type="button"
+                onClick={() => {
+                  void signOut();
+                }}
+                className="w-full cursor-pointer"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Cerrar Sesión</span>
+              </button>
+            </DropdownMenu.Item>
+          </DropdownMenu.Group>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </>
   );
 };

@@ -3,7 +3,7 @@ import { useForm, useFormContext } from "react-hook-form";
 import {
   createDebtInput,
   type CreateDebtInput,
-} from "$/server/api/routers/debts/mutations/input";
+} from "$/server/api/routers/debts/mutations/handlers/create/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";
@@ -84,7 +84,7 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
         />
 
         {form.watch("amount") !== undefined && !isNaN(form.watch("amount")) && (
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-muted-foreground">
             {form.watch("amount").toLocaleString(locale, {
               style: "currency",
               currency: "COP",

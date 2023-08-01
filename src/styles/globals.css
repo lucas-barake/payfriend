@@ -7,7 +7,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 47.4% 11.2%;
+    --foreground: 0 0% 3.9%;
 
     --background-secondary: 220 13% 96%;
     --foreground-secondary: 222.2 47.4% 11.2%;
@@ -19,7 +19,7 @@
     --foreground-quaternary: 222.2 47.4% 11.2%;
 
     --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted-foreground: 0 0% 30%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
@@ -43,14 +43,16 @@
     --accent: 0 0% 96.1%;
     --accent-foreground: 0 0% 9%;
 
-    --destructive: 0 100% 50%;
+    --destructive: 0 100% 44%;
     --destructive-foreground: 210 40% 98%;
 
     --success: 142 76% 32%;
     --success-foreground: 0 0% 100%;
+    --success-text: 142 76% 32%;
 
     --warning: 27 96% 50%;
     --warning-foreground: 0 0% 100%;
+    --warning-text: 27 96% 45%;
 
     --ring: 0 0% 63.9%;
 
@@ -58,29 +60,29 @@
   }
 
   .dark {
-    --background: 0 0% 12%;
-    --foreground: 0 0% 100%;
+    --background: 0 0% 7.9%;
+    --foreground: 0 0% 98%;
 
-    --background-secondary: 0 0% 14%;
-    --foreground-secondary: 0 0% 100%;
+    --background-secondary: 0 0% 9.9%;
+    --foreground-secondary: 0 0% 98%;
 
-    --background-tertiary: 0 0% 16%;
-    --foreground-tertiary: 0 0% 100%;
+    --background-tertiary: 0 0% 11.9%;
+    --foreground-tertiary: 0 0% 98%;
 
     --background-quaternary: 0 0% 18%;
     --foreground-quaternary: 0 0% 100%;
 
-    --muted: 0 0% 16%;
+    --muted: 0 0% 16.9%;
     --muted-foreground: 0 0% 75%;
 
-    --popover: 0 0% 9%;
+    --popover: 0 0% 7.9%;
     --popover-foreground: 0 0% 90%;
 
-    --card: 224 71% 6%;
-    --card-foreground: 213 31% 91%;
+    --card: 0 0% 7.9%;
+    --card-foreground: 0 0% 98%;
 
-    --border: 0 0% 17%;
-    --input: 0 0% 20%;
+    --border: 0 0% 16.9%;
+    --input: 0 0% 16.9%;
     --input-focus: 239, 84%, 67%;
 
     --primary: 243 75% 59%;
@@ -92,17 +94,19 @@
     --tertiary: 210 40% 98%;
     --tertiary-foreground: 222.2 47.4% 1.2%;
 
-    --accent: 0 0% 15%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 0% 18.9%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 55%;
     --destructive-foreground: 210 40% 98%;
 
     --success: 142 76% 25%;
     --success-foreground: 0 0% 100%;
+    --success-text: 142 76% 50%;
 
     --warning: 27 96% 35%;
     --warning-foreground: 0 0% 100%;
+    --warning-text: 27 96% 55%;
 
     --ring: 239, 84%, 67%;
 

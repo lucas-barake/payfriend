@@ -4,22 +4,13 @@ import {
   declineGroupInviteInput,
 } from "$/server/api/routers/user/debt-invites/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { rawQueries } from "$/server/api/routers/(routers-lib)/raw-queries";
+import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
 
 export const userGroupInvitesMutations = createTRPCRouter({
   acceptDebtInvite: TRPCProcedures.verified
     .input(acceptGroupInviteInput)
     .mutation(async ({ ctx, input }) => {
-      const debtsCount = await rawQueries.getUserDebtCount(
-        ctx.prisma,
-        ctx.session.user.id
-      );
-      const totalDebtsCount =
-        debtsCount.lenderDebtsCount + debtsCount.borrowerDebtsCount;
-
-      if (totalDebtsCount >= 5) {
-        throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No puedes tener más de 5 deudas");
-      }
+      await checkDebtLimitAndIncr(ctx);
 
       return ctx.prisma.$transaction(async (prisma) => {
         const pendingInvite = await prisma.pendingInvite.findUnique({

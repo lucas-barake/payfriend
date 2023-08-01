@@ -47,7 +47,7 @@ const MainLayout: FC<LayoutProps> = ({
       />
 
       <footer className="border-t px-5 py-4 text-sm lg:px-16">
-        © 2023 PayFriend
+        © 2023 {APP_NAME}
       </footer>
     </div>
   </AuthWrapper>

@@ -26,7 +26,7 @@ const NotificationBell: React.FC = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <Button variant="ghost" size="sm">
+        <Button variant="ghost" size="icon">
           <div className="relative inline-flex">
             <Bell className="h-5 w-5" />
 
@@ -52,10 +52,10 @@ const NotificationBell: React.FC = () => {
             </div>
           ) : (
             allPendingInvites.map((invite) => (
-              <>
-                <PendingInviteRow key={invite.debt.id} invite={invite} />
+              <div key={invite.debt.id} className="flex flex-col gap-2">
+                <PendingInviteRow invite={invite} />
                 <Separator />
-              </>
+              </div>
             ))
           )}
         </div>

@@ -1,12 +1,23 @@
 import { useRouter } from "next/router";
-import { type FC, type ReactNode } from "react";
+import React, { type FC, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import LoadingPage from "$/components/pages/loading-page";
 import { Pages } from "$/lib/enums/pages";
 import { useRedirectSession } from "$/hooks/use-redirect-session";
+import { api } from "$/lib/utils/api";
 
 type Props = {
   children: ReactNode;
+};
+
+// Setting enabled to false does not allow invalidation of the query for some reason, so we have to use this workaround
+const FreePlanDebtLimitCount: React.FC = () => {
+  api.user.getFreePlanDebtLimitCount.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    retry: 2,
+  });
+  return null;
 };
 
 const AuthWrapper: FC<Props> = ({ children }) => {
@@ -19,8 +30,15 @@ const AuthWrapper: FC<Props> = ({ children }) => {
     void router.push(Pages.ONBOARDING);
     return <LoadingPage />;
   }
+  const hasActiveSubscription =
+    session.data?.user.subscription?.isActive ?? false;
 
-  return <>{children}</>;
+  return (
+    <>
+      {!hasActiveSubscription && <FreePlanDebtLimitCount />}
+      {children}
+    </>
+  );
 };
 
 const ClientSideAuthWrapper = dynamic(() => Promise.resolve(AuthWrapper), {

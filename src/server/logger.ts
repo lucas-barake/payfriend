@@ -1,22 +1,20 @@
 import { env } from "$/env.mjs";
 
 export const logger = {
-  dev: (message: string): void => {
+  dev: (...data: unknown[]): void => {
     if (env.NODE_ENV === "development") {
-      console.log(`[🔨 DEV] ${message}`);
+      console.log("[🔨 DEV]", ...data);
     }
   },
-  error: (message: unknown): void => {
-    console.log(
-      `[❌ ERROR] ${
-        typeof message === "string" ? message : JSON.stringify(message)
-      }`
-    );
+  error: (...error: unknown[]): void => {
+    console.log("[❌ ERROR]", ...error);
   },
   info: (message: string): void => {
     console.log(`[ℹ️ INFO] ${message}`);
   },
   debug: (message: string): void => {
-    console.log(`[🐛 DEBUG] ${message}`);
+    if (env.NODE_ENV === "development") {
+      console.log(`[🐛 DEBUG] ${message}`);
+    }
   },
 };
