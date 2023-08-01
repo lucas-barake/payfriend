@@ -3,6 +3,10 @@
 # ngrok
 ngrok*
 
+# pwa
+/public/sw*
+/public/workbox*
+
 # dependencies
 /node_modules
 /.pnp

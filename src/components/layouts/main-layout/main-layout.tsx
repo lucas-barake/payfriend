@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ThemeSwitch } from "$/components/common/theme-switch";
 import { ProfileMenu } from "$/components/layouts/main-layout/profile-menu";
 import NotificationBell from "$/components/layouts/main-layout/notification-bell";
+import { SubscriptionButton } from "$/components/layouts/main-layout/subscription-button";
 
 type LayoutProps = ComponentPropsWithoutRef<"main"> & CustomHeadProps;
 
@@ -30,10 +31,9 @@ const MainLayout: FC<LayoutProps> = ({
         </Link>
 
         <div className="flex items-center gap-2">
+          <SubscriptionButton />
           <ProfileMenu />
-
           <NotificationBell />
-
           <ThemeSwitch />
         </div>
       </header>

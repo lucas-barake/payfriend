@@ -5,9 +5,11 @@ import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Avatar } from "$/components/ui/avatar";
 import { CreditCard, LogOut } from "lucide-react";
 import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
+import { cn } from "$/lib/utils/cn";
 
 export const ProfileMenu: React.FC = () => {
   const session = useSession();
+  const hasSubscription = session.data?.user?.subscription?.isActive ?? false;
   const [showSubscriptionsDialog, setShowSubscriptionsDialog] =
     React.useState(false);
   const userImage = session.data?.user?.image ?? undefined;
@@ -21,7 +23,14 @@ export const ProfileMenu: React.FC = () => {
 
       <DropdownMenu>
         <DropdownMenu.Trigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              hasSubscription &&
+                "bg-yellow-500/10 hover:bg-yellow-500/20 dark:bg-yellow-500/5 dark:hover:bg-yellow-500/10"
+            )}
+          >
             <Avatar className="h-6 w-6">
               <Avatar.Image src={userImage} />
 
