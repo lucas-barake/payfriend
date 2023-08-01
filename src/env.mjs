@@ -42,6 +42,7 @@ export const env = createEnv({
   },
   client: {},
   runtimeEnv: {
+    VERCEL_URL: process.env.VERCEL_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
