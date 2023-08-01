@@ -29,7 +29,7 @@ export const subscriptionsMutations = createTRPCRouter({
           back_url:
             env.NODE_ENV === "development"
               ? `${env.NGROK_FORWARDING_URL ?? ""}/${Pages.DASHBOARD}`
-              : `${env.VERCEL_URL ?? ""}/${Pages.DASHBOARD}`,
+              : `https://${env.VERCEL_URL ?? ""}/${Pages.DASHBOARD}`,
           auto_recurring: {
             frequency: 1,
             frequency_type: "months",
