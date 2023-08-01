@@ -3,7 +3,8 @@
  * This is especially useful for Docker builds.
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
-const withPWA = require("next-pwa")({
+import NextPwa from "next-pwa";
+const withPWA = NextPwa({
   dest: "public",
 });
 
