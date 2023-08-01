@@ -28,6 +28,8 @@ export type GetSubscriptionResponse = {
       frequency: number;
       frequency_type: FrequencyType;
     } | null;
+    start_date: string;
+    end_date: string;
   };
   first_invoice_offset: number | null;
   payer_id: string;

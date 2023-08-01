@@ -114,6 +114,8 @@ model ActiveSubscription {
   status            SubscriptionStatus
   nextDueDate       DateTime           @db.Timestamptz(6)
   externalReference String
+  startDate         DateTime           @db.Timestamptz(6)
+  endDate           DateTime           @db.Timestamptz(6)
 }
 
 model SubscriptionHistory {
@@ -125,6 +127,8 @@ model SubscriptionHistory {
   status            SubscriptionStatus
   nextDueDate       DateTime           @db.Timestamptz(6)
   externalReference String
+  startDate         DateTime           @db.Timestamptz(6)
+  endDate           DateTime           @db.Timestamptz(6)
 }
 
 model User {

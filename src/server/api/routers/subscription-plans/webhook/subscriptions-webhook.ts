@@ -79,6 +79,12 @@ export async function subscriptionsWebhook(
                 months: 1,
               })
               .toISO(),
+            startDate: DateTime.fromISO(json.auto_recurring.start_date)
+              .toUTC()
+              .toISO(),
+            endDate: DateTime.fromISO(json.auto_recurring.end_date)
+              .toUTC()
+              .toISO(),
           },
         });
         logger.info(`Added pending subscription ${json.id}`);
@@ -101,6 +107,12 @@ export async function subscriptionsWebhook(
                 })
                 .toISO(),
               status: "SUCCESS",
+              startDate: DateTime.fromISO(json.auto_recurring.start_date)
+                .toUTC()
+                .toISO(),
+              endDate: DateTime.fromISO(json.auto_recurring.end_date)
+                .toUTC()
+                .toISO(),
             },
             update: {
               id: json.id,
@@ -112,6 +124,12 @@ export async function subscriptionsWebhook(
                 })
                 .toISO(),
               status: "SUCCESS",
+              startDate: DateTime.fromISO(json.auto_recurring.start_date)
+                .toUTC()
+                .toISO(),
+              endDate: DateTime.fromISO(json.auto_recurring.end_date)
+                .toUTC()
+                .toISO(),
             },
           });
 
@@ -130,6 +148,12 @@ export async function subscriptionsWebhook(
                 .toISO(),
               externalReference: json.external_reference,
               id: json.id,
+              startDate: DateTime.fromISO(json.auto_recurring.start_date)
+                .toUTC()
+                .toISO(),
+              endDate: DateTime.fromISO(json.auto_recurring.end_date)
+                .toUTC()
+                .toISO(),
             },
             update: {
               status: "SUCCESS",

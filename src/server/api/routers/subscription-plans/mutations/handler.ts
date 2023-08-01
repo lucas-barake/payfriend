@@ -12,6 +12,7 @@ import { Pages } from "$/lib/enums/pages";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { logger } from "$/server/logger";
 import cuid2 from "@paralleldrive/cuid2";
+import { DateTime } from "luxon";
 
 export const subscriptionsMutations = createTRPCRouter({
   generateLink: TRPCProcedures.verified
@@ -28,12 +29,14 @@ export const subscriptionsMutations = createTRPCRouter({
           back_url:
             env.NODE_ENV === "development"
               ? `${env.NGROK_FORWARDING_URL ?? ""}/${Pages.DASHBOARD}`
-              : `https://${env.VERCEL_URL ?? ""}/${Pages.DASHBOARD}`,
+              : `${env.VERCEL_URL ?? ""}/${Pages.DASHBOARD}`,
           auto_recurring: {
             frequency: 1,
             frequency_type: "months",
             transaction_amount: 5900,
             currency_id: "COP",
+            start_date: DateTime.now().toUTC().toISO(),
+            end_date: DateTime.now().plus({ months: 5 }).toUTC().toISO(),
           },
           payer_email:
             env.NODE_ENV === "development"
@@ -80,7 +83,12 @@ export const subscriptionsMutations = createTRPCRouter({
       }
     }),
   cancelSubscription: TRPCProcedures.verified.mutation(async ({ ctx }) => {
-    if (!ctx.session.user.subscription?.isActive) {
+    if (ctx.session.user.subscription === null) {
+      throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No subscription found");
+    }
+
+    const isActive = ctx.session.user.subscription?.isActive ?? false;
+    if (!isActive) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No active subscription found");
     }
 
