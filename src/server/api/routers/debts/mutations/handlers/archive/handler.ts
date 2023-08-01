@@ -2,7 +2,7 @@ import { TRPCProcedures } from "$/server/api/trpc";
 import { z } from "zod";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 
-export const archiveDebt = TRPCProcedures.verified
+export const archiveDebt = TRPCProcedures.protected
   .input(
     z.object({
       debtId: z.string().uuid(),

@@ -15,10 +15,12 @@ import cuid2 from "@paralleldrive/cuid2";
 import { DateTime } from "luxon";
 
 export const subscriptionsMutations = createTRPCRouter({
-  generateLink: TRPCProcedures.verified
+  generateLink: TRPCProcedures.protected
     .input(generateLinkInput)
     .mutation(async ({ ctx, input }) => {
-      if (ctx.session.user.subscription?.isActive) {
+      const activeSubscription =
+        ctx.session.user.subscription?.isActive ?? false;
+      if (activeSubscription) {
         throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
           "An active subscription already exists"
         );
@@ -82,7 +84,7 @@ export const subscriptionsMutations = createTRPCRouter({
         );
       }
     }),
-  cancelSubscription: TRPCProcedures.verified.mutation(async ({ ctx }) => {
+  cancelSubscription: TRPCProcedures.protected.mutation(async ({ ctx }) => {
     if (ctx.session.user.subscription === null) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No subscription found");
     }
