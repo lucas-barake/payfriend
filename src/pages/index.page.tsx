@@ -39,6 +39,7 @@ const Home: NextPageWithLayout = () => {
                 });
               }}
               size="lg"
+              loading={session.status === "loading"}
             >
               Empezar ahora
             </Button>

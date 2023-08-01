@@ -12,13 +12,14 @@ const CustomHead: FC<CustomHeadProps> = ({ title, content }) => {
   const contentText =
     content !== undefined
       ? content
-      : `${APP_NAME} es una aplicación gratuita que te ayuda a controlar y dividir las deudas con tus amigos y familiares. Crea grupos, añade gastos y liquida saldos fácilmente con ${APP_NAME}.`;
+      : `${APP_NAME}: Comparte deudas y gastos fácilmente. Registra, rastrea y salda cuentas con amigos. ¡Simplifica tus deudas compartidas hoy!`;
 
   return (
     <Head>
       <title>{titleText}</title>
       <meta name="description" content={contentText} />
       <link rel="icon" href="/favicon.ico" />
+      <link rel="manifest" href="/manifest.json" />
     </Head>
   );
 };
