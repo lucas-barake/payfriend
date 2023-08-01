@@ -1,0 +1,32 @@
+{
+  "theme_color": "#5048e5",
+  "background_color": "#141414",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "Deudamigo",
+  "short_name": "Deudamigo",
+  "description": "Deudamigo: Comparte deudas y gastos fácilmente. Registra, rastrea y salda cuentas con amigos. ¡Simplifica tus deudas compartidas hoy!",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

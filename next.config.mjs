@@ -3,6 +3,9 @@
  * This is especially useful for Docker builds.
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
+const withPWA = require("next-pwa")({
+  dest: "public",
+});
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -23,4 +26,4 @@ const config = {
     domains: ["lh3.googleusercontent.com"],
   },
 };
-export default config;
+export default withPWA(config);
