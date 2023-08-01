@@ -8,7 +8,7 @@ import { createEnv } from "@t3-oss/env-core";
 export const env = createEnv({
   clientPrefix: "NEXT_PUBLIC_",
   server: {
-    VERCEL_URL: z.string().url().optional(),
+    VERCEL_URL: z.string().optional(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     NEXTAUTH_SECRET:
