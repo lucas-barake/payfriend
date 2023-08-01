@@ -28,6 +28,12 @@ export async function subscriptionsWebhook(
       .parse(req.body);
     logger.dev("SUBSCRIPTIONS WEBHOOK BODY", body);
 
+    if (body.type === "subscription_authorized_payment") {
+      logger.info("Authorized Payment Invoice", body.data.id);
+      res.status(200).end();
+      return;
+    }
+
     const getSubscriptionRes = await fetch(
       `${env.MERCADOPAGO_URL}/preapproval/${body.data.id}`,
       {
