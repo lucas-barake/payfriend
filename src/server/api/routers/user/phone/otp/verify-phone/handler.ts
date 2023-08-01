@@ -4,11 +4,11 @@ import { PHONE_CODE_KEY } from "$/server/api/routers/user/phone/otp/(lib)/phone-
 import { DateTime } from "luxon";
 import { verifyPhoneInput } from "$/server/api/routers/user/phone/otp/verify-phone/input";
 
-export const verifyPhone = TRPCProcedures.protected
+export const verifyPhone = TRPCProcedures.protectedCritical
   .input(verifyPhoneInput)
   .mutation(async ({ input, ctx }) => {
     if (ctx.session.user.phoneVerified !== null) {
-      throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El email ya está verificado");
+      throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El celular ya está verificado.");
     }
 
     const storedCode = await ctx.redis.get(
