@@ -72,7 +72,6 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
           inviterEmail: ctx.session.user.email,
           inviterName: ctx.session.user.name,
           debtName: debt.name,
-          multiple: false,
         },
       });
     });

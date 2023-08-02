@@ -26,6 +26,7 @@ export async function checkAndMarkEmailSent(args: Args): Promise<boolean> {
     const emailAlreadySent = (await args.redis.exists(key)) === 1;
 
     if (emailAlreadySent) {
+      logger.info(`Email already sent to ${args.email}`);
       return true;
     }
 

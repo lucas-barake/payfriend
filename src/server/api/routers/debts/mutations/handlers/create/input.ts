@@ -23,9 +23,14 @@ export const createDebtInput = z.object({
     })
     .nullable()
     .transform((value) => (value === "" ? null : value)),
-  amount: z.number().min(1, {
-    message: "El monto debe ser mayor a 0",
-  }),
+  amount: z
+    .number()
+    .min(1, {
+      message: "El monto debe ser mayor a 0",
+    })
+    .max(1_000_000_000, {
+      message: "El monto debe ser menor a 1,000,000,000",
+    }),
   borrowerEmails: z
     .array(z.string().email("Debes agregar un correo válido"))
     .min(1, {
