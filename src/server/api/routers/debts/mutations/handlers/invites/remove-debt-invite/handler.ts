@@ -14,6 +14,7 @@ export const removeDebtInvite = TRPCProcedures.protected
       where: {
         debtId: input.debtId,
         inviterId: ctx.session.user.id,
+        inviteeEmail: input.inviteeEmail,
       },
       select: {
         inviteeEmail: true,
@@ -22,10 +23,6 @@ export const removeDebtInvite = TRPCProcedures.protected
 
     if (!pendingInvite) {
       throw CUSTOM_EXCEPTIONS.NOT_FOUND("Invitación no encontrada");
-    }
-
-    if (pendingInvite.inviteeEmail !== input.inviteeEmail) {
-      throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El email no coincide");
     }
 
     return ctx.prisma.pendingInvite.delete({
