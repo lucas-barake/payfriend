@@ -19,22 +19,27 @@ import { Pages } from "$/lib/enums/pages";
 
 const baseUrl = env.VERCEL_URL ? `https://${env.VERCEL_URL}` : `localhost:3000`;
 
-type Props = {
+type Invitee = {
+  inviteeEmail: string;
+  multiple: false;
+};
+type Multiple = {
+  multiple: true;
+};
+export type BaseProps = {
   debtName: string | null;
   inviterEmail: string;
   inviterName: string | null | undefined;
-  inviteeEmail: string;
 };
+export type InvitationEmailProps = BaseProps & (Invitee | Multiple);
 
-export const InvitationEmail: React.FC<Readonly<Props>> = ({
-  debtName,
-  inviterName,
-  inviteeEmail,
-  inviterEmail,
-}) => {
+export const InvitationEmail: React.FC<Readonly<InvitationEmailProps>> = (
+  props
+) => {
   const previewText = `Te invitaron a ${
-    debtName ?? "una deuda"
+    props.debtName ?? "una deuda"
   } en ${APP_NAME}`;
+  const inviteeName = props.multiple ? null : props.inviteeEmail.split("@")[0];
 
   return (
     <Html>
@@ -45,28 +50,38 @@ export const InvitationEmail: React.FC<Readonly<Props>> = ({
         <Body className="mx-auto my-auto bg-white font-sans">
           <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              Únete a <strong>{debtName ?? "una deuda"}</strong> en{" "}
+              Únete a <strong>{props.debtName ?? "una deuda"}</strong> en{" "}
               <strong>{APP_NAME}</strong>
             </Heading>
 
             <Text className="text-[14px] leading-[24px] text-black">
-              Hola {inviteeEmail.split("@")[0]},
+              Hola
+              {inviteeName === null ? (
+                "!"
+              ) : (
+                <>
+                  , <strong>{inviteeName}</strong>!
+                </>
+              )}
             </Text>
 
             <Text className="text-[14px] leading-[24px] text-black">
-              <strong>{inviterName ?? inviterEmail.split("@")[0]}</strong> (
+              <strong>
+                {props.inviterName ?? props.inviterEmail.split("@")[0]}
+              </strong>{" "}
+              (
               <Link
-                href={`mailto:${inviterEmail}`}
+                href={`mailto:${props.inviterEmail}`}
                 className="text-blue-600 no-underline"
               >
-                {inviterEmail}
+                {props.inviterEmail}
               </Link>
               ) te invitó a unirte a{" "}
-              {debtName === null ? (
+              {props.debtName === null ? (
                 "una deuda"
               ) : (
                 <>
-                  la deuda <strong>{debtName}</strong>
+                  la deuda <strong>{props.debtName}</strong>
                 </>
               )}{" "}
               en <strong>{APP_NAME}</strong>.
