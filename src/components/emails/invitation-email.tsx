@@ -19,19 +19,12 @@ import { Pages } from "$/lib/enums/pages";
 
 const baseUrl = env.VERCEL_URL ? `https://${env.VERCEL_URL}` : `localhost:3000`;
 
-type Invitee = {
-  inviteeEmail: string;
-  multiple: false;
-};
-type Multiple = {
-  multiple: true;
-};
-export type BaseProps = {
+export type InvitationEmailProps = {
   debtName: string | null;
   inviterEmail: string;
   inviterName: string | null | undefined;
+  inviteeEmail: string;
 };
-export type InvitationEmailProps = BaseProps & (Invitee | Multiple);
 
 export const InvitationEmail: React.FC<Readonly<InvitationEmailProps>> = (
   props
@@ -39,7 +32,7 @@ export const InvitationEmail: React.FC<Readonly<InvitationEmailProps>> = (
   const previewText = `Te invitaron a ${
     props.debtName ?? "una deuda"
   } en ${APP_NAME}`;
-  const inviteeName = props.multiple ? null : props.inviteeEmail.split("@")[0];
+  const inviteeName = props.inviteeEmail.split("@")[0] ?? null;
 
   return (
     <Html>
@@ -55,14 +48,7 @@ export const InvitationEmail: React.FC<Readonly<InvitationEmailProps>> = (
             </Heading>
 
             <Text className="text-[14px] leading-[24px] text-black">
-              Hola
-              {inviteeName === null ? (
-                "!"
-              ) : (
-                <>
-                  , <strong>{inviteeName}</strong>!
-                </>
-              )}
+              Hola, <strong>{inviteeName}</strong>!
             </Text>
 
             <Text className="text-[14px] leading-[24px] text-black">

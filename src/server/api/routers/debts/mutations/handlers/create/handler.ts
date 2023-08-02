@@ -58,7 +58,6 @@ export const create = TRPCProcedures.protectedLimited
           toEmails: unsentEmails,
           mail: ctx.mail,
           invitationEmailProps: {
-            multiple: true,
             inviterEmail: ctx.session.user.email,
             inviterName: ctx.session.user.name,
             debtName: input.name,
