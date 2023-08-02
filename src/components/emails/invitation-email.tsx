@@ -17,9 +17,7 @@ import { env } from "$/env.mjs";
 import { APP_NAME } from "$/lib/constants/app-name";
 import { Pages } from "$/lib/enums/pages";
 
-const baseUrl = env.VERCEL_URL
-  ? `https://${env.VERCEL_URL}`
-  : "https://localhost:3000";
+const baseUrl = env.VERCEL_URL ? `https://${env.VERCEL_URL}` : `localhost:3000`;
 
 type Props = {
   debtName: string | null;
