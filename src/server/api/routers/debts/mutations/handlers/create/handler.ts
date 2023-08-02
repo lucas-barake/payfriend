@@ -7,6 +7,9 @@ import { type MailDataRequired } from "@sendgrid/mail";
 import { logger } from "$/server/logger";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
 import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
+import { render } from "@react-email/render";
+import type React from "react";
+import { InvitationEmail } from "$/components/emails";
 
 export const create = TRPCProcedures.protectedLimited
   .input(createDebtInput)
@@ -21,20 +24,25 @@ export const create = TRPCProcedures.protectedLimited
 
     for (const email of input.borrowerEmails) {
       try {
+        const emailHtml = render(
+          <
+            React.ReactElement<
+              unknown,
+              string | React.JSXElementConstructor<unknown>
+            >
+          >InvitationEmail({
+            inviteeEmail: email,
+            inviterName: ctx.session.user.name,
+            inviterEmail: ctx.session.user.email,
+            debtName: null,
+          })
+        );
+
         const msg = {
           to: email,
           from: env.SENDGRID_FROM_EMAIL,
           subject: `Te invitaron a una deuda en ${APP_NAME}`,
-          text: `Entra a ${
-            env.VERCEL_URL !== undefined
-              ? `https://${env.VERCEL_URL}/dashboard`
-              : "http://localhost:3000/dashboard"
-          } para aceptar la invitación`,
-          html: `<strong>Entra a <a href="${
-            env.VERCEL_URL !== undefined
-              ? `https://${env.VERCEL_URL}/dashboard`
-              : "http://localhost:3000/dashboard"
-          }">${APP_NAME}</a> para aceptar la invitación</strong>`,
+          html: emailHtml,
           mailSettings: {
             sandboxMode: {
               enable: env.SENDGRID_SANDBOX_MODE,

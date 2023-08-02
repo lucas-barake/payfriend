@@ -7,17 +7,21 @@ import { APP_NAME } from "$/lib/constants/app-name";
 import { type MailDataRequired } from "@sendgrid/mail";
 import { logger } from "$/server/logger";
 import { Prisma } from "@prisma/client";
+import { render } from "@react-email/render";
+import { InvitationEmail } from "$/components/emails";
+import type React from "react";
 
 export const sendDebtInvite = TRPCProcedures.protectedLimited
   .input(sendDebtInviteInput)
   .mutation(async ({ ctx, input }) => {
-    const lender = await ctx.prisma.debt.findFirst({
+    const debt = await ctx.prisma.debt.findFirst({
       where: {
         id: input.debtId,
         lenderId: ctx.session.user.id,
         archived: false,
       },
       select: {
+        name: true,
         borrowers: {
           select: {
             id: true,
@@ -36,7 +40,7 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
       },
     });
 
-    if (!lender) {
+    if (!debt) {
       throw CUSTOM_EXCEPTIONS.UNAUTHORIZED();
     }
 
@@ -45,12 +49,12 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
     }
 
     if (
-      lender.borrowers.some((borrower) => borrower.user.email === input.email)
+      debt.borrowers.some((borrower) => borrower.user.email === input.email)
     ) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST("El usuario ya está en el grupo");
     }
 
-    const totalCount = lender.borrowers.length + lender.pendingInvites.length;
+    const totalCount = debt.borrowers.length + debt.pendingInvites.length;
 
     if (totalCount >= MAX_NUM_OF_GROUP_USERS) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
@@ -59,20 +63,25 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
     }
 
     try {
+      const emailHtml = render(
+        <
+          React.ReactElement<
+            unknown,
+            string | React.JSXElementConstructor<unknown>
+          >
+        >InvitationEmail({
+          inviteeEmail: input.email,
+          inviterName: ctx.session.user.name,
+          inviterEmail: ctx.session.user.email,
+          debtName: debt.name,
+        })
+      );
+
       const msg = {
         to: input.email,
         from: env.SENDGRID_FROM_EMAIL,
         subject: `Te invitaron a una deuda en ${APP_NAME}`,
-        text: `Entra a ${
-          env.NODE_ENV === "production"
-            ? `https://${env.VERCEL_URL ?? ""}/dashboard`
-            : "http://localhost:3000/dashboard"
-        } para aceptar la invitación`,
-        html: `<strong>Entra a <a href="${
-          env.NODE_ENV === "production"
-            ? `https://${env.VERCEL_URL ?? ""}/dashboard`
-            : "http://localhost:3000/dashboard"
-        }">Payfriend</a> para aceptar la invitación</strong>`,
+        html: emailHtml,
         mailSettings: {
           sandboxMode: {
             enable: env.SENDGRID_SANDBOX_MODE,

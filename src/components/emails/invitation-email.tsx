@@ -22,7 +22,7 @@ const baseUrl = env.VERCEL_URL
   : "https://localhost:3000";
 
 type Props = {
-  debtName: string;
+  debtName: string | null;
   inviterEmail: string;
   inviterName: string | null | undefined;
   inviteeEmail: string;
@@ -34,7 +34,9 @@ export const InvitationEmail: React.FC<Readonly<Props>> = ({
   inviteeEmail,
   inviterEmail,
 }) => {
-  const previewText = `Te invitaron a ${debtName} en ${APP_NAME}`;
+  const previewText = `Te invitaron a ${
+    debtName ?? "una deuda"
+  } en ${APP_NAME}`;
 
   return (
     <Html>
@@ -45,7 +47,8 @@ export const InvitationEmail: React.FC<Readonly<Props>> = ({
         <Body className="mx-auto my-auto bg-white font-sans">
           <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              Únete a <strong>{debtName}</strong> en <strong>{APP_NAME}</strong>
+              Únete a <strong>{debtName ?? "una deuda"}</strong> en{" "}
+              <strong>{APP_NAME}</strong>
             </Heading>
 
             <Text className="text-[14px] leading-[24px] text-black">
@@ -53,15 +56,22 @@ export const InvitationEmail: React.FC<Readonly<Props>> = ({
             </Text>
 
             <Text className="text-[14px] leading-[24px] text-black">
-              <strong>{inviterName ?? "Alguien"}</strong> (
+              <strong>{inviterName ?? inviterEmail.split("@")[0]}</strong> (
               <Link
                 href={`mailto:${inviterEmail}`}
                 className="text-blue-600 no-underline"
               >
                 {inviterEmail}
               </Link>
-              ) te invitó a unirte a la deuda <strong>{debtName}</strong> en{" "}
-              <strong>{APP_NAME}</strong>.
+              ) te invitó a unirte a{" "}
+              {debtName === null ? (
+                "una deuda"
+              ) : (
+                <>
+                  la deuda <strong>{debtName}</strong>
+                </>
+              )}{" "}
+              en <strong>{APP_NAME}</strong>.
             </Text>
 
             <Section className="mb-[32px] mt-[32px] text-center">
