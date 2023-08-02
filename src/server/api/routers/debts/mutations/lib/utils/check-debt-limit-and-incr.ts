@@ -3,11 +3,6 @@ import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { logger } from "$/server/logger";
 import { FREE_PLAN_DEBT_LIMIT } from "$/server/api/routers/user/free-plan/lib/constants/free-plan-debt-limit";
 
-type Args = {
-  session: NonNullable<InnerTRPCContext["session"]>;
-  redis: InnerTRPCContext["redis"];
-};
-
 export const FREE_PLAN_DEBT_LIMIT_KEY = "free-plan-debt-limit";
 
 export function getFreePlanDebtLimitKey(userId: string): string {
@@ -22,6 +17,11 @@ export async function getFreePlanDebtLimitCount(
   const value = await redis.get(key);
   return value !== null ? parseInt(value) : null;
 }
+
+type Args = {
+  session: NonNullable<InnerTRPCContext["session"]>;
+  redis: InnerTRPCContext["redis"];
+};
 
 /**
  * Checks if the user has exceeded the debt limit and increments the count of debts for a given user in the Redis database.

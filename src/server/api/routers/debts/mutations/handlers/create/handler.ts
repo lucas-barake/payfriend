@@ -1,15 +1,10 @@
 import { TRPCProcedures } from "$/server/api/trpc";
 import { createDebtInput } from "$/server/api/routers/debts/mutations/handlers/create/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { env } from "$/env.mjs";
-import { APP_NAME } from "$/lib/constants/app-name";
-import { type MailDataRequired } from "@sendgrid/mail";
-import { logger } from "$/server/logger";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
 import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
-import { render } from "@react-email/render";
-import type React from "react";
-import { InvitationEmail } from "$/components/emails";
+import { sendInvitationEmail } from "$/server/api/routers/debts/mutations/lib/utils/send-invitation-email";
+import { checkAndMarkEmailSent } from "$/server/api/routers/debts/mutations/lib/utils/check-and-mark-email-sent";
 
 export const create = TRPCProcedures.protectedLimited
   .input(createDebtInput)
@@ -22,41 +17,15 @@ export const create = TRPCProcedures.protectedLimited
 
     await checkDebtLimitAndIncr(ctx);
 
+    const unsentEmails: string[] = [];
     for (const email of input.borrowerEmails) {
-      try {
-        const emailHtml = render(
-          <
-            React.ReactElement<
-              unknown,
-              string | React.JSXElementConstructor<unknown>
-            >
-          >InvitationEmail({
-            inviteeEmail: email,
-            inviterName: ctx.session.user.name,
-            inviterEmail: ctx.session.user.email,
-            debtName: null,
-          })
-        );
+      const emailAlreadySent = await checkAndMarkEmailSent({
+        email,
+        redis: ctx.redis,
+      });
 
-        const msg = {
-          to: email,
-          from: env.SENDGRID_FROM_EMAIL,
-          subject: `Te invitaron a una deuda en ${APP_NAME}`,
-          html: emailHtml,
-          mailSettings: {
-            sandboxMode: {
-              enable: env.SENDGRID_SANDBOX_MODE,
-            },
-          },
-        } satisfies MailDataRequired;
-
-        if (env.SENDGRID_SANDBOX_MODE) {
-          logger.info(`Email sent to ${email}`);
-        }
-
-        void ctx.mail.send(msg);
-      } catch (err) {
-        logger.error(err);
+      if (!emailAlreadySent) {
+        unsentEmails.push(email);
       }
     }
 
@@ -82,6 +51,20 @@ export const create = TRPCProcedures.protectedLimited
           inviterId: ctx.session.user.id,
         })),
       });
+
+      if (unsentEmails.length > 0) {
+        sendInvitationEmail({
+          multiple: true,
+          toEmails: unsentEmails,
+          mail: ctx.mail,
+          invitationEmailProps: {
+            multiple: true,
+            inviterEmail: ctx.session.user.email,
+            inviterName: ctx.session.user.name,
+            debtName: input.name,
+          },
+        });
+      }
 
       return createdDebt;
     });
