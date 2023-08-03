@@ -58,7 +58,7 @@ const ActionsMenu: React.FC<Props> = ({
             variant="outline"
             className="relative flex items-center gap-1.5"
           >
-            <LucideIcons.MoreHorizontal className="h-4 w-4" />
+            <LucideIcons.Settings className="h-4 w-4" />
             <span className="sr-only">Más</span>
 
             {hasPendingConfirmations && <AttentionIndicator />}
