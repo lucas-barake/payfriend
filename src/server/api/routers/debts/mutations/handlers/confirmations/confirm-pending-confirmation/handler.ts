@@ -2,7 +2,6 @@ import { TRPCProcedures } from "$/server/api/trpc";
 import { z } from "zod";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { BorrowerStatus } from "@prisma/client";
-import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
 
 export const confirmPendingConfirmation = TRPCProcedures.protected
   .input(
@@ -12,8 +11,6 @@ export const confirmPendingConfirmation = TRPCProcedures.protected
     })
   )
   .mutation(async ({ ctx, input }) => {
-    await checkDebtLimitAndIncr(ctx);
-
     const debt = await ctx.prisma.debt.findFirst({
       where: {
         id: input.debtId,
