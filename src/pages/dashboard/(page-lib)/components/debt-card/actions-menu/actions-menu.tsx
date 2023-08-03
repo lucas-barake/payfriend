@@ -75,6 +75,7 @@ const ActionsMenu: React.FC<Props> = ({
               setOpenConfirmationsDialog(true);
             }}
             className="cursor-pointer"
+            highlight={hasPendingConfirmations}
           >
             <button
               type="button"
@@ -82,9 +83,6 @@ const ActionsMenu: React.FC<Props> = ({
             >
               <LucideIcons.UserCheck className="h-4 w-4" />
               Confirmar Pagos
-              {hasPendingConfirmations && (
-                <AttentionIndicator containerClassName="-top-0.5 -mr-2" />
-              )}
             </button>
           </DropdownMenu.Item>
 
