@@ -54,6 +54,9 @@
     --warning-foreground: 0 0% 100%;
     --warning-text: 27 96% 45%;
 
+    --highlight: 20 90% 47%;
+    --highlight-foreground: 0 0% 100%;
+
     --ring: 0 0% 63.9%;
 
     --radius: 0.5rem;
@@ -107,6 +110,9 @@
     --warning: 27 96% 35%;
     --warning-foreground: 0 0% 100%;
     --warning-text: 27 96% 55%;
+
+    --highlight: 20 90% 50%;
+    --highlight-foreground: 0 0% 100%;
 
     --ring: 239, 84%, 67%;
 

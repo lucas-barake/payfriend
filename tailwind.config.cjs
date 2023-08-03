@@ -49,6 +49,10 @@ const config = {
           foreground: "hsl(var(--warning-foreground))",
           text: "hsl(var(--warning-text))",
         },
+        highlight: {
+          DEFAULT: "hsl(var(--highlight))",
+          foreground: "hsl(var(--highlight-foreground))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -73,6 +77,19 @@ const config = {
       },
       screens: {
         xs: "375px",
+      },
+      keyframes: {
+        "pulse-darker": {
+          "0%, 100%": {
+            opacity: "1",
+          },
+          "65%": {
+            opacity: "0.65",
+          },
+        },
+      },
+      animation: {
+        "pulse-darker": "pulse-darker 2s ease-in-out infinite",
       },
     },
   },
