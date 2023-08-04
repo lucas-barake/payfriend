@@ -46,7 +46,7 @@ const AddDebtDialog: React.FC = () => {
       >
         <Button
           size="sm"
-          className="flex items-center gap-1 text-sm sm:text-base"
+          className="flex items-center gap-1"
           onClick={() => {
             if (freePlanLimit.reachedMonthlyLimit) {
               setOpenSubscriptionsDialog(true);

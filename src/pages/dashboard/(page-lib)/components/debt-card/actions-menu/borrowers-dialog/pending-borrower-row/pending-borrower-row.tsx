@@ -59,7 +59,9 @@ const PendingBorrowerRow: React.FC<Props> = ({ pendingBorrower, debtId }) => {
           </Avatar.Fallback>
         </Avatar>
 
-        <span className="text-foreground">{pendingBorrower.inviteeEmail}</span>
+        <span className="max-w-[150px] truncate text-foreground xs:max-w-[200px] sm:max-w-[250px]">
+          {pendingBorrower.inviteeEmail}
+        </span>
       </div>
 
       <Button

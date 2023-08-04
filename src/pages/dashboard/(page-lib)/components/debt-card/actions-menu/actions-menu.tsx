@@ -3,21 +3,19 @@ import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Button } from "$/components/ui/button";
 import * as LucideIcons from "lucide-react";
 import { type AppRouter } from "$/server/api/root";
-import {
-  type inferProcedureInput,
-  type inferProcedureOutput,
-} from "@trpc/server";
+import { type inferProcedureOutput } from "@trpc/server";
 import { AttentionIndicator } from "$/components/common/attention-indicator/attention-indicator";
 import ArchiveDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/archive-dialog";
 import ConfirmationsDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/confirmations-dialog";
 import BorrowersDialog from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/borrowers-dialog";
+import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
 
 type Props = {
   debt: NonNullable<
     inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
-  >["debtsAsBorrower"][number]["debt"];
+  >["debts"][number];
   hasPendingConfirmations: boolean;
-  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
+  queryVariables: LenderDebtsQueryInput;
 };
 
 const ActionsMenu: React.FC<Props> = ({
@@ -65,7 +63,7 @@ const ActionsMenu: React.FC<Props> = ({
           </Button>
         </DropdownMenu.Trigger>
 
-        <DropdownMenu.Content>
+        <DropdownMenu.Content align="end">
           <DropdownMenu.Label>Acciones</DropdownMenu.Label>
 
           <DropdownMenu.Separator />

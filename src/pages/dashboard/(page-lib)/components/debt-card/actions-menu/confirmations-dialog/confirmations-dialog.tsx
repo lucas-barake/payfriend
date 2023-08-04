@@ -5,14 +5,13 @@ import { TimeInMs } from "$/lib/enums/time";
 import { Loader2 } from "lucide-react";
 import { Button } from "$/components/ui/button";
 import UserRow from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/confirmations-dialog/user-row";
-import { type inferProcedureInput } from "@trpc/server";
-import { type AppRouter } from "$/server/api/root";
+import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   debtId: string;
-  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
+  queryVariables: LenderDebtsQueryInput;
 };
 
 const ConfirmationsDialog: React.FC<Props> = ({

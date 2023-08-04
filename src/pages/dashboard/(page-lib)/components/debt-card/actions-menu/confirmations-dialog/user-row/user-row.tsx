@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  type inferProcedureInput,
-  type inferProcedureOutput,
-} from "@trpc/server";
+import { type inferProcedureOutput } from "@trpc/server";
 import { type AppRouter } from "$/server/api/root";
 import { api } from "$/lib/utils/api";
 import { Avatar } from "$/components/ui/avatar";
@@ -10,13 +7,14 @@ import { Button } from "$/components/ui/button";
 import { Check } from "lucide-react";
 import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
+import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
 
 type Props = {
   user: NonNullable<
     inferProcedureOutput<AppRouter["debts"]["getPendingConfirmations"]>
   >["pendingConfirmations"][number]["user"];
   debtId: string;
-  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
+  queryVariables: LenderDebtsQueryInput;
 };
 
 const UserRow: React.FC<Props> = ({ user, debtId, queryVariables }) => {
@@ -36,29 +34,7 @@ const UserRow: React.FC<Props> = ({ user, debtId, queryVariables }) => {
       }
     );
 
-    apiContext.debts.getOwnedDebts.setData(queryVariables, (cachedData) => {
-      if (!cachedData) return cachedData;
-      const debtsAsLender = cachedData.debtsAsLender ?? [];
-
-      return {
-        ...cachedData,
-        debtsAsLender: debtsAsLender.map((debt) => {
-          if (debt.id !== debtId) return debt;
-
-          return {
-            ...debt,
-            borrowers: debt.borrowers.map((borrower) => {
-              if (borrower.user.id !== user.id) return borrower;
-
-              return {
-                ...borrower,
-                status: "CONFIRMED",
-              };
-            }),
-          };
-        }),
-      };
-    });
+    await apiContext.debts.getOwnedDebts.invalidate(queryVariables);
     apiContext.debts.getPendingConfirmations.setData(
       {
         debtId,

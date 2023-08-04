@@ -10,8 +10,8 @@ import { Button } from "$/components/ui/button";
 
 type Props = {
   debt: NonNullable<
-    inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
-  >["debtsAsBorrower"][number]["debt"];
+    inferProcedureOutput<AppRouter["debts"]["getOwnedDebts"]>
+  >["debts"][number];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };

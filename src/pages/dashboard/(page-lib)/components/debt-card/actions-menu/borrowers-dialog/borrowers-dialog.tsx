@@ -167,6 +167,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
 
                     <Avatar className="h-6 w-6 group-hover:opacity-0">
                       <Avatar.Image src={borrower.user.image ?? undefined} />
+
                       <Avatar.Fallback>
                         {borrower.user.name?.[0] ?? "?"}
                       </Avatar.Fallback>
@@ -174,10 +175,12 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
                   </Button>
                 </Popover.Trigger>
 
-                <Popover.Content className="flex flex-col gap-2">
+                <Popover.Content className="flex flex-col gap-2" align="start">
                   <div className="flex items-center gap-1.5 text-sm text-foreground">
                     <span>{borrower.user.name ?? "Sin nombre"}</span>
-                    <span className="opacity-50">{borrower.user.email}</span>
+                    <span className="truncate opacity-50">
+                      {borrower.user.email}
+                    </span>
                   </div>
 
                   <Separator />
@@ -203,7 +206,9 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
                 </Popover.Content>
               </Popover>
 
-              <span className="text-foreground">{borrower.user.email}</span>
+              <span className="max-w-[150px] truncate text-foreground xs:max-w-[200px] sm:max-w-[250px]">
+                {borrower.user.name ?? borrower.user.email}
+              </span>
             </div>
 
             <Popover>

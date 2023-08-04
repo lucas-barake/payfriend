@@ -10,12 +10,12 @@ function handleToastError(error: unknown, custom?: string): string {
 }
 
 const StyledToaster: FC = () => (
-  <Toaster>
+  <Toaster position="bottom-center">
     {(t) => (
       <Transition
         appear
         show={t.visible}
-        className="mt-6 flex max-w-lg items-center gap-3 rounded-md border border-border bg-background py-2 px-4 text-foreground text-black dark:bg-background-secondary"
+        className="mb-16 flex max-w-lg items-center gap-3 rounded-md border border-border bg-background px-4 py-2 text-black text-foreground dark:bg-background-secondary"
         enter="transition-all duration-150"
         enterFrom="opacity-0 scale-50"
         enterTo="opacity-100 scale-100"
