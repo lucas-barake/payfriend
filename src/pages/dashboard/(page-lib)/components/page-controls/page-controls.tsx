@@ -34,11 +34,11 @@ const PageControls: React.FC<Props> = ({ page, setPage, count }) => {
     [setPage]
   );
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 8;
   const canShowNextButton = (page + 1) * itemsPerPage < count;
 
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-end gap-2">
       {page !== 0 && (
         <Button
           variant="outline"

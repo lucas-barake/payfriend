@@ -30,8 +30,9 @@ export const getSharedDebts = TRPCProcedures.protected
       }),
       ctx.prisma.debt.count({
         where: {
-          archived:
-            input.status === "all" ? undefined : input.status !== "active",
+          ...((input.status === "archived" || input.status === "active") && {
+            archived: input.status === "archived",
+          }),
           lenderId: ctx.session.user.id,
         },
       }),

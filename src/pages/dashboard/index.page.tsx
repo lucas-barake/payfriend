@@ -48,7 +48,7 @@ const Dashboard: NextPageWithLayout = () => {
 
       <Tabs.Content
         value={tabs[0]}
-        className={cn("flex flex-col justify-between gap-8", {
+        className={cn("flex flex-col justify-between gap-4", {
           hidden: selectedTab !== tabs[0],
         })}
       >
@@ -57,7 +57,7 @@ const Dashboard: NextPageWithLayout = () => {
 
       <Tabs.Content
         value={tabs[1]}
-        className={cn("flex flex-col justify-between gap-8", {
+        className={cn("flex flex-col justify-between gap-4", {
           hidden: selectedTab !== tabs[1],
         })}
       >

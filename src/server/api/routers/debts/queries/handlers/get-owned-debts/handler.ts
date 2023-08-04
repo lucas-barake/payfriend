@@ -37,19 +37,20 @@ export const getOwnedDebts = TRPCProcedures.protected
       }),
       ctx.prisma.debt.count({
         where: {
-          archived:
-            input.status === "all" ? undefined : input.status !== "active",
+          ...((input.status === "archived" || input.status === "active") && {
+            archived: input.status === "archived",
+          }),
           lenderId: ctx.session.user.id,
-          borrowers: {
-            some: {
-              status: {
-                equals:
-                  input.status === "pending-confirmation"
-                    ? BorrowerStatus.PENDING_CONFIRMATION
-                    : undefined,
-              },
-            },
-          },
+          borrowers:
+            input.status === "pending-confirmation"
+              ? {
+                  some: {
+                    status: {
+                      equals: BorrowerStatus.PENDING_CONFIRMATION,
+                    },
+                  },
+                }
+              : undefined,
         },
       }),
     ]);
