@@ -7,19 +7,16 @@ import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls"
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
 import FiltersMenu from "$/pages/dashboard/(page-lib)/components/filters-menu";
 import { type BorrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
 
 const DebtsAsBorrowerTab: React.FC = () => {
-  const [page, setPage] = React.useState(0);
-  const [sort, setSort] =
-    React.useState<BorrowerDebtsQueryInput["sort"]>("desc");
-  const [status, setStatus] =
-    React.useState<BorrowerDebtsQueryInput["status"]>("active");
+  const [queryVariables, setQueryVariables] =
+    React.useState<BorrowerDebtsQueryInput>({
+      skip: 0,
+      sort: "desc",
+      status: "active",
+    });
 
-  const queryVariables = {
-    skip: page * 10,
-    sort,
-    status,
-  } satisfies BorrowerDebtsQueryInput;
   const query = api.debts.getSharedDebts.useQuery(queryVariables, {
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
@@ -30,9 +27,24 @@ const DebtsAsBorrowerTab: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-end gap-2">
-        <SortMenu sort={sort} setSort={setSort} />
+        <SortMenu
+          selectedSort={queryVariables.sort}
+          setSelectedSort={(sort) => {
+            setQueryVariables({ ...queryVariables, sort, skip: 0 });
+          }}
+        />
 
-        <FiltersMenu status={status} setStatus={setStatus} lender={false} />
+        <FiltersMenu
+          selectedStatus={queryVariables.status}
+          setSelectedStatus={(status) => {
+            setQueryVariables({
+              ...queryVariables,
+              status,
+              skip: 0,
+            });
+          }}
+          lender={false}
+        />
       </div>
 
       {query.isSuccess && debts.length === 0 && (
@@ -67,8 +79,13 @@ const DebtsAsBorrowerTab: React.FC = () => {
       </DebtsGrid>
 
       <PageControls
-        page={page}
-        setPage={setPage}
+        page={queryVariables.skip / DEBTS_QUERY_PAGINATION_LIMIT}
+        setPage={(page) => {
+          setQueryVariables({
+            ...queryVariables,
+            skip: page * DEBTS_QUERY_PAGINATION_LIMIT,
+          });
+        }}
         count={query.data?.count ?? 0}
       />
     </>

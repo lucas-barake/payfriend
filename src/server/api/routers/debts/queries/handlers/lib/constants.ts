@@ -1,0 +1,1 @@
+export const DEBTS_QUERY_PAGINATION_LIMIT = 8;

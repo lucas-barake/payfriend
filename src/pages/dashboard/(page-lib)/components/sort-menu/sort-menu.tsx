@@ -2,25 +2,15 @@ import React from "react";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import * as LucideIcons from "lucide-react";
 import { Button } from "$/components/ui/button";
-import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
-import { type BorrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { Prisma } from ".prisma/client";
+import SortOrder = Prisma.SortOrder;
 
-1;
-
-type LenderProps = {
-  sort: LenderDebtsQueryInput["sort"];
-  setSort: React.Dispatch<React.SetStateAction<LenderDebtsQueryInput["sort"]>>;
+type Props = {
+  selectedSort: SortOrder;
+  setSelectedSort: (sort: SortOrder) => void;
 };
-type BorrowerProps = {
-  sort: BorrowerDebtsQueryInput["sort"];
-  setSort: React.Dispatch<
-    React.SetStateAction<BorrowerDebtsQueryInput["sort"]>
-  >;
-};
-type Props = LenderProps | BorrowerProps;
 
-const SortMenu: React.FC<Props> = ({ sort, setSort }) => {
-  const selectedSort = sort;
+const SortMenu: React.FC<Props> = ({ setSelectedSort, selectedSort }) => {
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -41,7 +31,7 @@ const SortMenu: React.FC<Props> = ({ sort, setSort }) => {
         <DropdownMenu.CheckboxItem
           className="flex items-center gap-2"
           onClick={() => {
-            setSort("asc");
+            setSelectedSort("asc");
           }}
           checked={selectedSort === "asc"}
         >
@@ -51,7 +41,7 @@ const SortMenu: React.FC<Props> = ({ sort, setSort }) => {
         <DropdownMenu.CheckboxItem
           className="flex items-center gap-2"
           onClick={() => {
-            setSort("desc");
+            setSelectedSort("desc");
           }}
           checked={selectedSort === "desc"}
         >

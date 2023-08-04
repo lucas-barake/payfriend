@@ -1,6 +1,7 @@
 import { TRPCProcedures } from "$/server/api/trpc";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
 import { borrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
 
 export const getSharedDebts = TRPCProcedures.protected
   .input(borrowerDebtsQueryInput)
@@ -22,7 +23,7 @@ export const getSharedDebts = TRPCProcedures.protected
             createdAt: input.sort,
           },
         ],
-        take: input.limit ?? 8,
+        take: DEBTS_QUERY_PAGINATION_LIMIT,
         skip: input.skip,
         select: {
           ...getUserDebtsSelect,

@@ -2,12 +2,13 @@ import React from "react";
 import { Button } from "$/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import _ from "lodash";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
 
 const INTERVAL = 1_000; // 1 second
 
 type Props = {
   page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setPage: (page: number) => void;
   count: number;
 };
 
@@ -15,7 +16,7 @@ const PageControls: React.FC<Props> = ({ page, setPage, count }) => {
   const debouncedNextPage = React.useCallback(
     _.debounce(
       () => {
-        setPage((prev) => prev + 1);
+        setPage(page + 1);
       },
       INTERVAL,
       { leading: true, maxWait: INTERVAL }
@@ -26,7 +27,7 @@ const PageControls: React.FC<Props> = ({ page, setPage, count }) => {
   const debouncedPreviousPage = React.useCallback(
     _.debounce(
       () => {
-        setPage((prev) => prev - 1);
+        setPage(page - 1);
       },
       INTERVAL,
       { leading: true, maxWait: INTERVAL }
@@ -34,7 +35,7 @@ const PageControls: React.FC<Props> = ({ page, setPage, count }) => {
     [setPage]
   );
 
-  const itemsPerPage = 8;
+  const itemsPerPage = DEBTS_QUERY_PAGINATION_LIMIT;
   const canShowNextButton = (page + 1) * itemsPerPage < count;
 
   return (

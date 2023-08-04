@@ -1,8 +1,8 @@
 import { z } from "zod";
+import { paginationSkipSchema } from "$/server/api/routers/debts/queries/handlers/lib/pagination-skip-schema";
 
 export const lenderDebtsQueryInput = z.object({
-  limit: z.number().int().min(1).max(8).optional(),
-  skip: z.number().int().optional(),
+  skip: paginationSkipSchema,
   status: z.union([
     z.literal("active"),
     z.literal("archived"),

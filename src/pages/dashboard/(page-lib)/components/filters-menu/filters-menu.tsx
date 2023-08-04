@@ -12,23 +12,22 @@ import {
 } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
 
 type LenderProps = {
-  status: LenderDebtsQueryInput["status"];
-  setStatus: React.Dispatch<
-    React.SetStateAction<LenderDebtsQueryInput["status"]>
-  >;
+  selectedStatus: LenderDebtsQueryInput["status"];
+  setSelectedStatus: (status: LenderDebtsQueryInput["status"]) => void;
   lender: true;
 };
 type BorrowerProps = {
-  status: BorrowerDebtsQueryInput["status"];
-  setStatus: React.Dispatch<
-    React.SetStateAction<BorrowerDebtsQueryInput["status"]>
-  >;
+  selectedStatus: BorrowerDebtsQueryInput["status"];
+  setSelectedStatus: (status: BorrowerDebtsQueryInput["status"]) => void;
   lender: false;
 };
 type Props = LenderProps | BorrowerProps;
 
-const FiltersMenu: React.FC<Props> = ({ status, setStatus, lender }) => {
-  const selectedStatus = status;
+const FiltersMenu: React.FC<Props> = ({
+  selectedStatus,
+  setSelectedStatus,
+  lender,
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -52,7 +51,7 @@ const FiltersMenu: React.FC<Props> = ({ status, setStatus, lender }) => {
               <DropdownMenu.CheckboxItem
                 key={status.value}
                 onClick={() => {
-                  setStatus(status.value);
+                  setSelectedStatus(status.value);
                 }}
                 checked={status.value === selectedStatus}
                 className="flex items-center gap-2"
@@ -64,7 +63,7 @@ const FiltersMenu: React.FC<Props> = ({ status, setStatus, lender }) => {
               <DropdownMenu.CheckboxItem
                 key={status.value}
                 onClick={() => {
-                  setStatus(status.value);
+                  setSelectedStatus(status.value);
                 }}
                 checked={status.value === selectedStatus}
                 className="flex items-center gap-2"
