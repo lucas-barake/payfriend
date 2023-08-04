@@ -30,6 +30,11 @@ export const confirmPendingConfirmation = TRPCProcedures.protected
             },
           },
         },
+        pendingInvites: {
+          select: {
+            inviteeEmail: true,
+          },
+        },
       },
     });
 
@@ -51,7 +56,7 @@ export const confirmPendingConfirmation = TRPCProcedures.protected
       );
     }
 
-    const updatedBorrower = ctx.prisma.borrower.update({
+    const updatedBorrower = await ctx.prisma.borrower.update({
       where: {
         id: borrower.id,
       },
@@ -60,11 +65,13 @@ export const confirmPendingConfirmation = TRPCProcedures.protected
       },
     });
 
-    const allConfirmed = debt.borrowers.every(
-      (borrower) => borrower.status === BorrowerStatus.CONFIRMED
-    );
+    const allConfirmed = debt.borrowers
+      .map((borrower) =>
+        borrower.id === updatedBorrower.id ? updatedBorrower : borrower
+      )
+      .every((borrower) => borrower.status === BorrowerStatus.CONFIRMED);
 
-    if (allConfirmed) {
+    if (allConfirmed && debt.pendingInvites.length === 0) {
       await ctx.prisma.debt.update({
         where: {
           id: debt.id,

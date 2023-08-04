@@ -1,41 +1,46 @@
 import { TRPCProcedures } from "$/server/api/trpc";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
-import { paginationInput } from "$/server/api/routers/debts/queries/lib/shared-input";
+import { borrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
 
 export const getSharedDebts = TRPCProcedures.protected
-  .input(paginationInput)
-  .query(({ ctx, input }) => {
-    return ctx.prisma.user.findUnique({
-      where: {
-        id: ctx.session.user.id,
-      },
-      select: {
-        debtsAsBorrower: {
-          select: {
-            debt: {
-              select: getUserDebtsSelect,
+  .input(borrowerDebtsQueryInput)
+  .query(async ({ ctx, input }) => {
+    const [debts, count] = await ctx.prisma.$transaction([
+      ctx.prisma.debt.findMany({
+        where: {
+          ...((input.status === "archived" || input.status === "active") && {
+            archived: input.status === "archived",
+          }),
+          borrowers: {
+            some: {
+              userId: ctx.session.user.id,
             },
           },
-          take: input.limit,
-          skip: input.skip,
-          orderBy: [
-            {
-              debt: {
-                createdAt: "desc",
-              },
-            },
-            {
-              debt: {
-                archived: "asc",
-              },
-            },
-          ],
         },
-        _count: {
-          select: {
-            debtsAsBorrower: true,
+        orderBy: [
+          {
+            createdAt: input.sort,
           },
+        ],
+        take: DEBTS_QUERY_PAGINATION_LIMIT,
+        skip: input.skip,
+        select: {
+          ...getUserDebtsSelect,
         },
-      },
-    });
+      }),
+      ctx.prisma.debt.count({
+        where: {
+          ...((input.status === "archived" || input.status === "active") && {
+            archived: input.status === "archived",
+          }),
+          lenderId: ctx.session.user.id,
+        },
+      }),
+    ]);
+
+    return {
+      debts,
+      count,
+    };
   });

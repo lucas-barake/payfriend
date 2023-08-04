@@ -6,7 +6,7 @@ import { Tabs } from "$/components/ui/tabs";
 import { type TabList, useTabs } from "$/hooks/use-tabs/use-tabs";
 import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
 import DebtsAsLenderTab from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab";
-import AddDebtDialog from "$/pages/dashboard/(page-lib)/components/add-debt-dialog";
+import { cn } from "$/lib/utils/cn";
 
 const tabs = ["yours", "shared"] as const satisfies TabList;
 const tabIdsSchema = createManyUnion(
@@ -37,25 +37,29 @@ const Dashboard: NextPageWithLayout = () => {
         });
       }}
     >
-      <div className="mb-4 flex items-center gap-4">
-        <Tabs.List>
-          <Tabs.Trigger value={tabs[0]}>Prestador</Tabs.Trigger>
-          <Tabs.Trigger value={tabs[1]}>Deudor</Tabs.Trigger>
-        </Tabs.List>
-
-        {selectedTab === "yours" && <AddDebtDialog />}
+      <div className="flex items-center justify-between gap-4 border-b border-b-border/50 pb-2">
+        <div className="flex items-center gap-4">
+          <Tabs.List>
+            <Tabs.Trigger value={tabs[0]}>Prestador</Tabs.Trigger>
+            <Tabs.Trigger value={tabs[1]}>Deudor</Tabs.Trigger>
+          </Tabs.List>
+        </div>
       </div>
 
       <Tabs.Content
         value={tabs[0]}
-        className="flex flex-col justify-between gap-8"
+        className={cn("flex flex-col justify-between gap-4", {
+          hidden: selectedTab !== tabs[0],
+        })}
       >
         <DebtsAsLenderTab />
       </Tabs.Content>
 
       <Tabs.Content
         value={tabs[1]}
-        className="flex flex-col justify-between gap-8"
+        className={cn("flex flex-col justify-between gap-4", {
+          hidden: selectedTab !== tabs[1],
+        })}
       >
         <DebtsAsBorrowerTab />
       </Tabs.Content>

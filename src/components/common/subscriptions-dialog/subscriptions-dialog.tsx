@@ -100,7 +100,8 @@ export const SubscriptionsDialog: React.FC<Props> = ({
             >
               {reachedFreeLimit ? "¡Ups! Límite alcanzado" : "Suscripciones"}
             </Dialog.Title>
-            <Dialog.Description className="text-sm">
+
+            <Dialog.Description>
               {reachedFreeLimit
                 ? "Has alcanzado el límite de deudas gratuitas. Con nuestro plan gratuito, puedes crear y unirte a un máximo de 5 deudas al mes. Pero no te preocupes, puedes suscribirte a nuestro Plan Premium y disfrutar de todas las funcionalidades de la aplicación."
                 : "¡Aprovecha al máximo nuestra aplicación y eleva tu experiencia hoy mismo!"}
@@ -113,14 +114,14 @@ export const SubscriptionsDialog: React.FC<Props> = ({
               <Card.Subtitle className="text-success-text">
                 COP $5.900 / Mes
               </Card.Subtitle>
-              <Card.Description>
+              <Card.Description className="md:text-base">
                 Obtén lo mejor de nuestra aplicación con el Plan Premium. Lleva
                 el control de tus deudas de manera más efectiva y sin límites.
               </Card.Description>
             </Card.Header>
 
             <Card.Content>
-              <ul className="ml-4 list-disc text-sm [&>li:not(:first-child)]:mt-2">
+              <ul className="ml-4 list-disc text-sm md:text-base [&>li:not(:first-child)]:mt-2">
                 <li>
                   <span className="font-bold">Crea Deudas sin Límites</span>{" "}
                   <p className="block">

@@ -14,8 +14,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { type CreateDebtInput } from "$/server/api/routers/debts/mutations/handlers/create/input";
 import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
+import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
 
-const AddDebtDialog: React.FC = () => {
+type Props = {
+  queryVariables: LenderDebtsQueryInput;
+};
+
+const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
   const [open, setOpen] = React.useState(false);
   const [openSubscriptionsDialog, setOpenSubscriptionsDialog] =
     React.useState(false);
@@ -46,7 +51,7 @@ const AddDebtDialog: React.FC = () => {
       >
         <Button
           size="sm"
-          className="flex items-center gap-1 text-sm sm:text-base"
+          className="flex items-center gap-1"
           onClick={() => {
             if (freePlanLimit.reachedMonthlyLimit) {
               setOpenSubscriptionsDialog(true);
@@ -97,7 +102,11 @@ const AddDebtDialog: React.FC = () => {
               </Tabs.Content>
 
               <Tabs.Content value={addDebtTabs[1]}>
-                <BorrowersForm tabSetters={tabSetters} setOpen={setOpen} />
+                <BorrowersForm
+                  tabSetters={tabSetters}
+                  setOpen={setOpen}
+                  queryVariables={queryVariables}
+                />
               </Tabs.Content>
             </FormProvider>
           </Tabs>

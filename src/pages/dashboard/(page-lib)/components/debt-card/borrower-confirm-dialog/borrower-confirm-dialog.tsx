@@ -6,14 +6,14 @@ import { useSession } from "next-auth/react";
 import { BorrowerStatus } from "@prisma/client";
 import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
-import { type inferProcedureInput } from "@trpc/server";
-import { type AppRouter } from "$/server/api/root";
+import { type BorrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { type GetSharedDebtsOutput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/types";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   debtId: string;
-  queryVariables: inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
+  queryVariables: BorrowerDebtsQueryInput;
 };
 
 const BorrowerConfirmDialog: React.FC<Props> = ({
@@ -40,32 +40,27 @@ const BorrowerConfirmDialog: React.FC<Props> = ({
       }
     );
     apiContext.debts.getSharedDebts.setData(queryVariables, (cachedData) => {
-      if (cachedData) {
-        return {
-          ...cachedData,
-          debtsAsBorrower: cachedData.debtsAsBorrower.map((debt) => {
-            if (debt.debt.id === debtId) {
-              return {
-                ...debt,
-                debt: {
-                  ...debt.debt,
-                  borrowers: debt.debt.borrowers.map((borrower) => {
-                    if (borrower.user.id === session.data.user.id) {
-                      return {
-                        ...borrower,
-                        status: BorrowerStatus.PENDING_CONFIRMATION,
-                      };
+      if (!cachedData) return cachedData;
+
+      return {
+        debts: cachedData.debts.map((debt) => {
+          if (debt.id === debtId) {
+            return {
+              ...debt,
+              borrowers: debt.borrowers.map((borrower) =>
+                borrower.user.id === session.data.user.id
+                  ? {
+                      ...borrower,
+                      status: BorrowerStatus.PENDING_CONFIRMATION,
                     }
-                    return borrower;
-                  }),
-                },
-              };
-            }
-            return debt;
-          }),
-        };
-      }
-      return cachedData;
+                  : borrower
+              ),
+            };
+          }
+          return debt;
+        }),
+        count: cachedData.count,
+      } satisfies GetSharedDebtsOutput;
     });
     onOpenChange(false);
   }

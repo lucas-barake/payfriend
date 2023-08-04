@@ -4,37 +4,57 @@ import { TimeInMs } from "$/lib/enums/time";
 import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
-import { type inferProcedureInput } from "@trpc/server";
-import { type AppRouter } from "$/server/api/root";
+import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
+import FiltersMenu from "$/pages/dashboard/(page-lib)/components/filters-menu";
+import { type BorrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
 
 const DebtsAsBorrowerTab: React.FC = () => {
-  const [page, setPage] = React.useState(0);
-  const queryVariables = {
-    limit: 10,
-    skip: page * 10,
-  } satisfies inferProcedureInput<AppRouter["debts"]["getSharedDebts"]>;
+  const [queryVariables, setQueryVariables] =
+    React.useState<BorrowerDebtsQueryInput>({
+      skip: 0,
+      sort: "desc",
+      status: "active",
+    });
+
   const query = api.debts.getSharedDebts.useQuery(queryVariables, {
     staleTime: TimeInMs.FifteenSeconds,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
-  const debts = query.data?.debtsAsBorrower ?? [];
-  const normalizedDebts = debts.map((debt) => ({
-    ...debt.debt,
-  }));
-
-  if (query.isSuccess && normalizedDebts.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4">
-        <p className="text-center text-lg text-muted-foreground">
-          ¡Estás libre de deudas!
-        </p>
-      </div>
-    );
-  }
+  const debts = query.data?.debts ?? [];
 
   return (
     <>
+      <div className="flex items-center justify-end gap-2">
+        <SortMenu
+          selectedSort={queryVariables.sort}
+          setSelectedSort={(sort) => {
+            setQueryVariables({ ...queryVariables, sort, skip: 0 });
+          }}
+        />
+
+        <FiltersMenu
+          selectedStatus={queryVariables.status}
+          setSelectedStatus={(status) => {
+            setQueryVariables({
+              ...queryVariables,
+              status,
+              skip: 0,
+            });
+          }}
+          lender={false}
+        />
+      </div>
+
+      {query.isSuccess && debts.length === 0 && (
+        <div className="flex flex-col items-center justify-center gap-4">
+          <p className="text-center text-lg text-muted-foreground">
+            No hay nada aquí...
+          </p>
+        </div>
+      )}
+
       <DebtsGrid>
         {query.isLoading ? (
           <>
@@ -43,22 +63,30 @@ const DebtsAsBorrowerTab: React.FC = () => {
             ))}
           </>
         ) : (
-          <>
-            {normalizedDebts.map((debt) => (
-              <DebtCard
-                key={debt.id}
-                debt={debt}
-                queryVariables={queryVariables}
-              />
-            ))}
-          </>
+          query.isSuccess && (
+            <>
+              {debts.map((debt) => (
+                <DebtCard
+                  key={debt.id}
+                  debt={debt}
+                  queryVariables={queryVariables}
+                  lender={false}
+                />
+              ))}
+            </>
+          )
         )}
       </DebtsGrid>
 
       <PageControls
-        page={page}
-        setPage={setPage}
-        count={query.data?._count.debtsAsBorrower ?? 0}
+        page={queryVariables.skip / DEBTS_QUERY_PAGINATION_LIMIT}
+        setPage={(page) => {
+          setQueryVariables({
+            ...queryVariables,
+            skip: page * DEBTS_QUERY_PAGINATION_LIMIT,
+          });
+        }}
+        count={query.data?.count ?? 0}
       />
     </>
   );
