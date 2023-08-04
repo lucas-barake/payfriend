@@ -29,7 +29,7 @@ const DebtsAsLenderTab: React.FC = () => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <AddDebtDialog />
+        <AddDebtDialog queryVariables={queryVariables} />
 
         <div className="flex items-center gap-2">
           <SortMenu sort={sort} setSort={setSort} />

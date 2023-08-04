@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
+import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
 
 const formInput = z.object({
   borrowerEmail: z.string().email("Email inválido"),
@@ -26,9 +27,14 @@ type FormInput = z.infer<typeof formInput>;
 type Props = {
   tabSetters: TabSetters<typeof addDebtTabs>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  queryVariables: LenderDebtsQueryInput;
 };
 
-const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
+const MembersForm: React.FC<Props> = ({
+  tabSetters,
+  setOpen,
+  queryVariables,
+}) => {
   const session = useSession();
   const formContext = useFormContext<CreateDebtInput>();
   const freePlanLimit = useFreePlanLimit();
@@ -82,7 +88,7 @@ const MembersForm: React.FC<Props> = ({ tabSetters, setOpen }) => {
       success: "Deuda creada",
       error: handleMutationError,
     });
-    await apiContext.debts.getOwnedDebts.invalidate();
+    await apiContext.debts.getOwnedDebts.invalidate(queryVariables);
     await freePlanLimit.invalidateQuery();
 
     setOpen(false);
