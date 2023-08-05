@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const MAX_BORROWERS = 4;
+
 export const createDebtInput = z.object({
   name: z
     .string({
@@ -36,8 +38,8 @@ export const createDebtInput = z.object({
     .min(1, {
       message: "Debes agregar al menos un correo",
     })
-    .max(4, {
-      message: "No puedes agregar más de 4 correos",
+    .max(MAX_BORROWERS, {
+      message: `No puedes agregar más de ${MAX_BORROWERS} correos`,
     })
     .refine((emails) => {
       const uniqueEmails = new Set(emails);

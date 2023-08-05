@@ -1,0 +1,1 @@
+export const MAX_STORED_RECENT_EMAILS = 50;

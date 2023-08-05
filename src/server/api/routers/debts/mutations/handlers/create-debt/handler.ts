@@ -1,12 +1,13 @@
 import { TRPCProcedures } from "$/server/api/trpc";
-import { createDebtInput } from "$/server/api/routers/debts/mutations/handlers/create/input";
+import { createDebtInput } from "$/server/api/routers/debts/mutations/handlers/create-debt/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
 import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
 import { sendInvitationEmail } from "$/server/api/routers/debts/mutations/lib/utils/send-invitation-email";
 import { checkAndMarkEmailSent } from "$/server/api/routers/debts/mutations/lib/utils/check-and-mark-email-sent";
+import { addRecentEmail } from "$/server/api/routers/debts/mutations/lib/utils/stored-recent-emails";
 
-export const create = TRPCProcedures.protectedLimited
+export const createDebt = TRPCProcedures.protectedLimited
   .input(createDebtInput)
   .mutation(async ({ ctx, input }) => {
     if (
@@ -19,14 +20,16 @@ export const create = TRPCProcedures.protectedLimited
 
     const unsentEmails: string[] = [];
     for (const email of input.borrowerEmails) {
-      const emailAlreadySent = await checkAndMarkEmailSent({
-        email,
-        redis: ctx.redis,
-      });
+      const emailAlreadySent = await checkAndMarkEmailSent(email);
 
       if (!emailAlreadySent) {
         unsentEmails.push(email);
       }
+
+      void addRecentEmail({
+        email,
+        inviterId: ctx.session.user.id,
+      });
     }
 
     return ctx.prisma.$transaction(async (prisma) => {

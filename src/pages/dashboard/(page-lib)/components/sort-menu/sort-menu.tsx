@@ -16,11 +16,11 @@ const SortMenu: React.FC<Props> = ({ setSelectedSort, selectedSort }) => {
       <DropdownMenu.Trigger asChild>
         <Button variant="outline">
           {selectedSort === "asc" ? (
-            <LucideIcons.ArrowUp className="h-4 w-4 xs:mr-2" />
+            <LucideIcons.ArrowUp className="h-4 w-4 sm:mr-2" />
           ) : (
-            <LucideIcons.ArrowDown className="h-4 w-4 xs:mr-2" />
+            <LucideIcons.ArrowDown className="h-4 w-4 sm:mr-2" />
           )}
-          <span className="hidden xs:inline">Ordenar</span>
+          <span className="hidden sm:inline">Ordenar</span>
         </Button>
       </DropdownMenu.Trigger>
 
