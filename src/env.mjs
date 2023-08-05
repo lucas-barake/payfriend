@@ -12,6 +12,7 @@ export const env = createEnv({
     VERCEL_URL: z.string().optional(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
+    PRIMARY_DOMAIN: z.string().url(),
     /* NextAuth */
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
