@@ -2,6 +2,7 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { z } from "zod";
 import { env } from "$/env.mjs";
 import {
+  type GetInvoiceResponse,
   type GetSubscriptionResponse,
   type SubscriptionId,
   type UserId,
@@ -28,161 +29,184 @@ export async function subscriptionsWebhook(
       .parse(req.body);
     logger.dev("SUBSCRIPTIONS WEBHOOK BODY", body);
 
-    if (body.type === "subscription_authorized_payment") {
-      logger.info("Authorized Payment Invoice", body.data.id);
-      res.status(200).end();
-      return;
-    }
+    switch (body.type) {
+      case "subscription_preapproval": {
+        const getSubscriptionRes = await fetch(
+          `${env.MERCADOPAGO_URL}/preapproval/${body.data.id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${env.MERCADOPAGO_ACCESS_TOKEN}`,
+            },
+          }
+        );
 
-    const getSubscriptionRes = await fetch(
-      `${env.MERCADOPAGO_URL}/preapproval/${body.data.id}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${env.MERCADOPAGO_ACCESS_TOKEN}`,
-        },
+        const json =
+          (await getSubscriptionRes.json()) as GetSubscriptionResponse;
+        logger.dev("SUBSCRIPTIONS WEBHOOK GET SUBSCRIPTION", json);
+
+        const userId = json.external_reference.split(":")[1] as UserId;
+        const subscriptionType = json.external_reference.split(
+          ":"
+        )[2] as SubscriptionId;
+
+        switch (json.status) {
+          case "paused":
+            await prisma.subscriptionHistory.update({
+              where: {
+                id: json.id,
+              },
+              data: {
+                status: "FAILED",
+              },
+            });
+            logger.info(`Paused subscription ${json.id}`);
+            break;
+
+          case "pending":
+            await prisma.subscriptionHistory.create({
+              data: {
+                id: json.id,
+                userId,
+                type: SubscriptionType[subscriptionType],
+                status: "PENDING",
+                externalReference: json.external_reference,
+                nextDueDate: DateTime.fromISO(json.date_created)
+                  .plus({
+                    months: 1,
+                  })
+                  .toISO(),
+                startDate: DateTime.fromISO(json.auto_recurring.start_date)
+                  .toUTC()
+                  .toISO(),
+                endDate: DateTime.fromISO(json.auto_recurring.end_date)
+                  .toUTC()
+                  .toISO(),
+              },
+            });
+            logger.info(`Added pending subscription ${json.id}`);
+            break;
+
+          case "authorized":
+            await prisma.$transaction(async (prisma) => {
+              await prisma.activeSubscription.upsert({
+                where: {
+                  userId,
+                },
+                create: {
+                  id: json.id,
+                  userId,
+                  type: SubscriptionType[subscriptionType],
+                  externalReference: json.external_reference,
+                  nextDueDate: DateTime.fromISO(json.last_modified)
+                    .plus({
+                      months: 1,
+                    })
+                    .toISO(),
+                  status: "SUCCESS",
+                  startDate: DateTime.fromISO(json.auto_recurring.start_date)
+                    .toUTC()
+                    .toISO(),
+                  endDate: DateTime.fromISO(json.auto_recurring.end_date)
+                    .toUTC()
+                    .toISO(),
+                },
+                update: {
+                  id: json.id,
+                  type: SubscriptionType[subscriptionType],
+                  externalReference: json.external_reference,
+                  nextDueDate: DateTime.fromISO(json.last_modified)
+                    .plus({
+                      months: 1,
+                    })
+                    .toISO(),
+                  status: "SUCCESS",
+                  startDate: DateTime.fromISO(json.auto_recurring.start_date)
+                    .toUTC()
+                    .toISO(),
+                  endDate: DateTime.fromISO(json.auto_recurring.end_date)
+                    .toUTC()
+                    .toISO(),
+                },
+              });
+
+              await prisma.subscriptionHistory.upsert({
+                where: {
+                  id: json.id,
+                },
+                create: {
+                  status: "SUCCESS",
+                  type: SubscriptionType[subscriptionType],
+                  userId,
+                  nextDueDate: DateTime.fromISO(json.last_modified)
+                    .plus({
+                      months: 1,
+                    })
+                    .toISO(),
+                  externalReference: json.external_reference,
+                  id: json.id,
+                  startDate: DateTime.fromISO(json.auto_recurring.start_date)
+                    .toUTC()
+                    .toISO(),
+                  endDate: DateTime.fromISO(json.auto_recurring.end_date)
+                    .toUTC()
+                    .toISO(),
+                },
+                update: {
+                  status: "SUCCESS",
+                },
+              });
+            });
+            logger.info(`Authorized subscription ${json.id}`);
+            break;
+          case "cancelled":
+            await prisma.$transaction(async (prisma) => {
+              await prisma.activeSubscription.update({
+                where: {
+                  userId,
+                },
+                data: {
+                  status: "CANCELLED",
+                },
+              });
+
+              await prisma.subscriptionHistory.update({
+                where: {
+                  id: json.id,
+                },
+                data: {
+                  status: "CANCELLED",
+                },
+              });
+            });
+            logger.info(`Cancelled subscription ${json.id}`);
+        }
+        break;
       }
-    );
+      case "subscription_authorized_payment": {
+        const getInvoiceRes = await fetch(
+          `${env.MERCADOPAGO_URL}/authorized_payments/${body.data.id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${env.MERCADOPAGO_ACCESS_TOKEN}`,
+            },
+          }
+        );
+        const invoiceJson = (await getInvoiceRes.json()) as GetInvoiceResponse;
+        logger.dev("SUBSCRIPTIONS WEBHOOK GET INVOICE", invoiceJson);
 
-    const json = (await getSubscriptionRes.json()) as GetSubscriptionResponse;
-    logger.dev("SUBSCRIPTIONS WEBHOOK GET SUBSCRIPTION", json);
+        const userId = invoiceJson.external_reference.split(":")[1] as UserId;
 
-    const _cuid2 = json.external_reference.split(":")[0];
-    const userId = json.external_reference.split(":")[1] as UserId;
-    const subscriptionType = json.external_reference.split(
-      ":"
-    )[2] as SubscriptionId;
-
-    switch (json.status) {
-      case "paused":
-        await prisma.subscriptionHistory.update({
-          where: {
-            id: json.id,
-          },
+        await prisma.subscriptionInvoice.create({
           data: {
-            status: "FAILED",
-          },
-        });
-        logger.info(`Paused subscription ${json.id}`);
-        break;
-
-      case "pending":
-        await prisma.subscriptionHistory.create({
-          data: {
-            id: json.id,
+            invoiceId: invoiceJson.id,
             userId,
-            type: SubscriptionType[subscriptionType],
-            status: "PENDING",
-            externalReference: json.external_reference,
-            nextDueDate: DateTime.fromISO(json.date_created)
-              .plus({
-                months: 1,
-              })
-              .toISO(),
-            startDate: DateTime.fromISO(json.auto_recurring.start_date)
-              .toUTC()
-              .toISO(),
-            endDate: DateTime.fromISO(json.auto_recurring.end_date)
-              .toUTC()
-              .toISO(),
+            externalReference: invoiceJson.external_reference,
           },
         });
-        logger.info(`Added pending subscription ${json.id}`);
-        break;
-
-      case "authorized":
-        await prisma.$transaction(async (prisma) => {
-          await prisma.activeSubscription.upsert({
-            where: {
-              userId,
-            },
-            create: {
-              id: json.id,
-              userId,
-              type: SubscriptionType[subscriptionType],
-              externalReference: json.external_reference,
-              nextDueDate: DateTime.fromISO(json.last_modified)
-                .plus({
-                  months: 1,
-                })
-                .toISO(),
-              status: "SUCCESS",
-              startDate: DateTime.fromISO(json.auto_recurring.start_date)
-                .toUTC()
-                .toISO(),
-              endDate: DateTime.fromISO(json.auto_recurring.end_date)
-                .toUTC()
-                .toISO(),
-            },
-            update: {
-              id: json.id,
-              type: SubscriptionType[subscriptionType],
-              externalReference: json.external_reference,
-              nextDueDate: DateTime.fromISO(json.last_modified)
-                .plus({
-                  months: 1,
-                })
-                .toISO(),
-              status: "SUCCESS",
-              startDate: DateTime.fromISO(json.auto_recurring.start_date)
-                .toUTC()
-                .toISO(),
-              endDate: DateTime.fromISO(json.auto_recurring.end_date)
-                .toUTC()
-                .toISO(),
-            },
-          });
-
-          await prisma.subscriptionHistory.upsert({
-            where: {
-              id: json.id,
-            },
-            create: {
-              status: "SUCCESS",
-              type: SubscriptionType[subscriptionType],
-              userId,
-              nextDueDate: DateTime.fromISO(json.last_modified)
-                .plus({
-                  months: 1,
-                })
-                .toISO(),
-              externalReference: json.external_reference,
-              id: json.id,
-              startDate: DateTime.fromISO(json.auto_recurring.start_date)
-                .toUTC()
-                .toISO(),
-              endDate: DateTime.fromISO(json.auto_recurring.end_date)
-                .toUTC()
-                .toISO(),
-            },
-            update: {
-              status: "SUCCESS",
-            },
-          });
-        });
-        logger.info(`Authorized subscription ${json.id}`);
-        break;
-      case "cancelled":
-        await prisma.$transaction(async (prisma) => {
-          await prisma.activeSubscription.update({
-            where: {
-              userId,
-            },
-            data: {
-              status: "CANCELLED",
-            },
-          });
-
-          await prisma.subscriptionHistory.update({
-            where: {
-              id: json.id,
-            },
-            data: {
-              status: "CANCELLED",
-            },
-          });
-        });
-        logger.info(`Cancelled subscription ${json.id}`);
+        logger.info(`Added invoice ${invoiceJson.id}`);
+      }
     }
 
     res.status(200).send("OK");

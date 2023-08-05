@@ -168,3 +168,33 @@ export type UpdateSubscriptionResponse = {
   };
   status: Status;
 };
+
+export type GetInvoiceResponse = {
+  preapproval_id: string;
+  id: number;
+  type: "scheduled";
+  status: "scheduled" | "processed" | "recycling" | "cancelled";
+  date_created: string;
+  last_modified: string;
+  transaction_amount: number;
+  currency_id: CurrencyId;
+  reason: string;
+  external_reference: ExternalReference;
+  payment: {
+    id: number;
+    status:
+      | "pending"
+      | "approved"
+      | "authorized"
+      | "in_process"
+      | "in_mediation"
+      | "rejected"
+      | "cancelled"
+      | "refunded"
+      | "charged_back";
+    status_detail: "accredited";
+  };
+  retry_attempt: number;
+  debit_date: string;
+  payment_method_id: string;
+};
