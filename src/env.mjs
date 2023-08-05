@@ -55,6 +55,7 @@ export const env = createEnv({
     VERCEL_URL: process.env.VERCEL_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    PRIMARY_DOMAIN: process.env.PRIMARY_DOMAIN,
     /* NextAuth */
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
