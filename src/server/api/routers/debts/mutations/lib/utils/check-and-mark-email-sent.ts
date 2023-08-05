@@ -30,8 +30,8 @@ export async function checkAndMarkEmailSent(args: Args): Promise<boolean> {
       return true;
     }
 
-    const oneMonthInSeconds = 60 * 60 * 24 * 30;
-    await args.redis.set(key, "sent", "EX", oneMonthInSeconds);
+    const fourteenDaysInSeconds = 60 * 60 * 24 * 14;
+    await args.redis.set(key, "", "EX", fourteenDaysInSeconds);
     return false;
   } catch (error) {
     logger.error(error);
