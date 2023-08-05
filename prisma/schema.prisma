@@ -131,6 +131,15 @@ model SubscriptionHistory {
   endDate           DateTime           @db.Timestamptz(6)
 }
 
+model SubscriptionInvoice {
+  id                String   @id @default(uuid())
+  invoiceId         BigInt // MercadoPago's generated ID for the invoice
+  createdAt         DateTime @default(now()) @db.Timestamptz(6)
+  user              User     @relation(fields: [userId], references: [id])
+  userId            String
+  externalReference String
+}
+
 model User {
   id                  String                @id @default(uuid())
   name                String?
@@ -146,6 +155,7 @@ model User {
   pendingInvites      PendingInvite[]
   activeSubscription  ActiveSubscription?
   subscriptionHistory SubscriptionHistory[]
+  suscriptionInvoices SubscriptionInvoice[]
 }
 
 model VerificationToken {
