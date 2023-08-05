@@ -1,5 +1,5 @@
 import { createTRPCRouter } from "$/server/api/trpc";
-import { create } from "$/server/api/routers/debts/mutations/handlers/create/handler";
+import { createDebt } from "$/server/api/routers/debts/mutations/handlers/create-debt/handler";
 import { archiveDebt } from "$/server/api/routers/debts/mutations/handlers/archive/handler";
 import { setPendingConfirmation } from "$/server/api/routers/debts/mutations/handlers/confirmations/set-pending-confirmation/handler";
 import { confirmPendingConfirmation } from "$/server/api/routers/debts/mutations/handlers/confirmations/confirm-pending-confirmation/handler";
@@ -8,7 +8,7 @@ import { sendDebtInvite } from "$/server/api/routers/debts/mutations/handlers/in
 import { removeDebtInvite } from "$/server/api/routers/debts/mutations/handlers/invites/remove-debt-invite/handler";
 
 export const debtsMutations = createTRPCRouter({
-  create,
+  createDebt,
   archiveDebt,
   setPendingConfirmation,
   confirmPendingConfirmation,

@@ -84,6 +84,6 @@ export function sendInvitationEmail(args: Args): void {
       logger.info("Invitation email sent to: ", args.toEmail);
     });
   } catch (err) {
-    logger.error(err);
+    logger.error("Error sending invitation email: ", err);
   }
 }

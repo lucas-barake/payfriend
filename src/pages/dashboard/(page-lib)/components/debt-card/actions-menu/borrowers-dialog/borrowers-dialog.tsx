@@ -20,6 +20,7 @@ import * as LucideIcons from "lucide-react";
 import PendingBorrowerRow from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/borrowers-dialog/pending-borrower-row";
 import { borrowerStatusLabels } from "$/lib/shared/borrower-status-labels";
 import { Badge } from "$/components/ui/badge";
+import RecentEmailsPopover from "$/pages/dashboard/(page-lib)/components/recent-emails-popover";
 
 type Props = {
   open: boolean;
@@ -42,6 +43,11 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
   );
   const borrowers = query.data?.borrowers ?? [];
   const pendingBorrowers = query.data?.pendingBorrowers ?? [];
+  // @ts-expect-error - TypeScript can't infer filter removes nulls
+  const allEmails: string[] = borrowers
+    .filter((b) => b.user.email !== null)
+    .map((b) => b.user.email)
+    .concat(pendingBorrowers.map((b) => b.inviteeEmail));
 
   const session = useSession();
   const sendInviteForm = useForm<SendDebtInviteInput>({
@@ -73,6 +79,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
   });
 
   const sendInviteMutation = api.debts.sendDebtInvite.useMutation();
+
   async function handleSendInvite(input: SendDebtInviteInput): Promise<void> {
     await toast.promise(sendInviteMutation.mutateAsync(input), {
       loading: "Enviando invitación...",
@@ -100,6 +107,8 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
         return cachedData;
       }
     );
+
+    sendInviteForm.reset();
   }
 
   return (
@@ -118,9 +127,22 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <Form onSubmit={sendInviteForm.handleSubmit(handleSendInvite)}>
           <Form.Group>
-            <Form.Label htmlFor="email">Invitar a un deudor</Form.Label>
+            <div className="flex items-center justify-between gap-3 sm:justify-start">
+              <Form.Label htmlFor="email">Invitar a un deudor</Form.Label>
 
-            <div className="flex items-center gap-2">
+              <RecentEmailsPopover
+                currentEmails={allEmails}
+                onSelect={(email) => {
+                  void handleSendInvite({
+                    email,
+                    debtId,
+                  });
+                }}
+                disableSelected
+              />
+            </div>
+
+            <div className="flex flex-col items-center gap-2 sm:flex-row">
               <Form.Input
                 type="email"
                 placeholder="Correo electrónico"
@@ -134,7 +156,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
 
               <Button
                 size="sm"
-                className="text-sm sm:text-base"
+                className="w-full text-sm sm:w-auto sm:text-base"
                 type="submit"
                 loading={sendInviteMutation.isLoading}
               >

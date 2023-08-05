@@ -11,7 +11,7 @@ import {
 } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { Tabs } from "$/components/ui/tabs";
 import { FormProvider, useForm } from "react-hook-form";
-import { type CreateDebtInput } from "$/server/api/routers/debts/mutations/handlers/create/input";
+import { type CreateDebtInput } from "$/server/api/routers/debts/mutations/handlers/create-debt/input";
 import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
 import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";

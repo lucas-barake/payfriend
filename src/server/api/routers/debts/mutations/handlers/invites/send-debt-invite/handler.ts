@@ -1,10 +1,11 @@
 import { TRPCProcedures } from "$/server/api/trpc";
 import { sendDebtInviteInput } from "$/server/api/routers/debts/mutations/handlers/invites/send-debt-invite/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { MAX_NUM_OF_GROUP_USERS } from "$/server/api/routers/user/restrictions";
 import { Prisma } from "@prisma/client";
 import { checkAndMarkEmailSent } from "$/server/api/routers/debts/mutations/lib/utils/check-and-mark-email-sent";
 import { sendInvitationEmail } from "$/server/api/routers/debts/mutations/lib/utils/send-invitation-email";
+import { addRecentEmail } from "$/server/api/routers/debts/mutations/lib/utils/stored-recent-emails";
+import { MAX_BORROWERS } from "$/server/api/routers/debts/mutations/handlers/create-debt/input";
 
 export const sendDebtInvite = TRPCProcedures.protectedLimited
   .input(sendDebtInviteInput)
@@ -51,16 +52,13 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
 
     const totalCount = debt.borrowers.length + debt.pendingInvites.length;
 
-    if (totalCount >= MAX_NUM_OF_GROUP_USERS) {
+    if (totalCount >= MAX_BORROWERS) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
         "El grupo ya tiene el máximo de usuarios"
       );
     }
 
-    void checkAndMarkEmailSent({
-      email: input.email,
-      redis: ctx.redis,
-    }).then((emailAlreadySent) => {
+    void checkAndMarkEmailSent(input.email).then((emailAlreadySent) => {
       if (emailAlreadySent) return;
 
       sendInvitationEmail({
@@ -74,6 +72,11 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
           debtName: debt.name,
         },
       });
+    });
+
+    void addRecentEmail({
+      email: input.email,
+      inviterId: ctx.session.user.id,
     });
 
     try {
