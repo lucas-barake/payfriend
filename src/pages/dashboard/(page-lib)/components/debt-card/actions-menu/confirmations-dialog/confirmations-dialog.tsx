@@ -2,10 +2,10 @@ import React from "react";
 import { Dialog } from "$/components/ui/dialog";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
-import { Loader2 } from "lucide-react";
 import { Button } from "$/components/ui/button";
 import UserRow from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu/confirmations-dialog/user-row";
 import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
+import { Loader } from "$/components/ui/loader";
 
 type Props = {
   open: boolean;
@@ -26,6 +26,7 @@ const ConfirmationsDialog: React.FC<Props> = ({
     },
     {
       staleTime: TimeInMs.TenSeconds,
+      cacheTime: TimeInMs.TenSeconds,
       refetchOnWindowFocus: true,
       refetchOnMount: true,
       enabled: open,
@@ -46,7 +47,7 @@ const ConfirmationsDialog: React.FC<Props> = ({
 
         {query.isFetching ? (
           <div className="flex items-center justify-center">
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Loader />
           </div>
         ) : pendingConfirmations.length === 0 ? (
           <p className="text-center text-foreground">
