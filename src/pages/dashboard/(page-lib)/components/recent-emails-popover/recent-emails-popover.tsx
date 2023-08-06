@@ -1,9 +1,8 @@
 import React from "react";
 import { Popover } from "$/components/ui/popover";
 import { Button } from "$/components/ui/button";
-import { Loader2, Users2 } from "lucide-react";
+import { Users2, CheckIcon } from "lucide-react";
 import { Command } from "$/components/ui/command";
-import { CheckIcon } from "@radix-ui/react-icons";
 import { useWindowDimensions } from "$/hooks/use-window-dimensions";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
@@ -11,6 +10,7 @@ import { FieldError } from "$/components/ui/form/field-error";
 import { ScrollArea } from "$/components/ui/scroll-area";
 import { Separator } from "$/components/ui/separator";
 import { MAX_STORED_RECENT_EMAILS } from "$/server/api/routers/debts/mutations/lib/constants/stored-recent-emails";
+import { Loader } from "$/components/ui/loader";
 
 type Props = {
   onSelect(email: string): void;
@@ -23,7 +23,6 @@ const RecentEmailsPopover: React.FC<Props> = ({
   onSelect,
   currentEmails,
   disabled = false,
-
   disableSelected = false,
 }) => {
   const recentEmailsQuery = api.user.getRecentEmails.useQuery(undefined, {
@@ -59,7 +58,7 @@ const RecentEmailsPopover: React.FC<Props> = ({
       >
         {recentEmailsQuery.isFetching ? (
           <div className="flex items-center justify-center p-2">
-            <Loader2 className="h-5 w-5" />
+            <Loader />
           </div>
         ) : recentEmailsQuery.isError ? (
           <FieldError className="p-2 text-center">
