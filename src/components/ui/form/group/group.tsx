@@ -7,7 +7,5 @@ type Props = {
 };
 
 export const Group: React.FC<Props> = ({ children, className }) => (
-  <div className={cn("grid w-full items-center gap-2", className)}>
-    {children}
-  </div>
+  <div className={cn("flex w-full flex-col gap-2", className)}>{children}</div>
 );

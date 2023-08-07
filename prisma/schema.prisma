@@ -1,16 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
 }
 
@@ -27,13 +20,32 @@ model Debt {
   name               String
   description        String?                 @db.Text
   amount             Float
-  dueDate            DateTime?               @db.Timestamptz(6)
   lenderId           String
   lender             User                    @relation(fields: [lenderId], references: [id])
   archived           Boolean                 @default(false)
   recurringFrequency DebtRecurringFrequency?
+  dueDate            DateTime?               @db.Timestamptz(6)
+  duration           Int? // number of periods (if recurring)
+  payments           Payment[]
   borrowers          Borrower[]
   pendingInvites     PendingInvite[]
+}
+
+enum PaymentStatus {
+  PAID // for both recurrent and non-recurrent debts
+  MISSED // for recurrent debts and non-recurrent debts with due date
+  PARTIALLY_PAID // when the borrower pays less than the amount due (not for recurrent debts)
+}
+
+model Payment {
+  id         String        @id @default(uuid())
+  createdAt  DateTime      @default(now()) @db.Timestamptz(6)
+  amount     Float
+  status     PaymentStatus
+  borrowerId String
+  borrower   Borrower      @relation(fields: [borrowerId], references: [id])
+  debtId     String
+  debt       Debt          @relation(fields: [debtId], references: [id])
 }
 
 enum BorrowerStatus {
@@ -51,6 +63,8 @@ model Borrower {
   debtId    String
   debt      Debt           @relation(fields: [debtId], references: [id])
   status    BorrowerStatus @default(YET_TO_PAY)
+  payments  Payment[]
+  balance   Float // amount remaining to be paid by the borrower for the debt or payment
 
   @@unique([userId, debtId])
 }

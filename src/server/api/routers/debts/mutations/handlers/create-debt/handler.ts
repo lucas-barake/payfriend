@@ -35,14 +35,17 @@ export const createDebt = TRPCProcedures.protectedLimited
     return ctx.prisma.$transaction(async (prisma) => {
       const createdDebt = await prisma.debt.create({
         data: {
-          name: input.name,
-          description: input.description,
+          name: input.generalInfo.name,
+          description: input.generalInfo.description,
           lender: {
             connect: {
               id: ctx.session.user.id,
             },
           },
-          amount: input.amount,
+          amount: input.generalInfo.amount,
+          dueDate: input.generalInfo.dueDate,
+          recurringFrequency: input.generalInfo.recurrency.data.frequency,
+          duration: input.generalInfo.recurrency.data.duration,
         },
         select: getUserDebtsSelect,
       });
@@ -63,7 +66,7 @@ export const createDebt = TRPCProcedures.protectedLimited
           invitationEmailProps: {
             inviterEmail: ctx.session.user.email,
             inviterName: ctx.session.user.name,
-            debtName: input.name,
+            debtName: input.generalInfo.name,
           },
         });
       }
