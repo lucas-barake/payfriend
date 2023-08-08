@@ -30,6 +30,7 @@ const ViewOwnPaymentsDialog: React.FC<Props> = ({
       cacheTime: TimeInMs.FiveSeconds,
       staleTime: TimeInMs.FiveSeconds,
       refetchOnMount: true,
+      refetchOnWindowFocus: false,
     }
   );
   const payments = query.data ?? [];
