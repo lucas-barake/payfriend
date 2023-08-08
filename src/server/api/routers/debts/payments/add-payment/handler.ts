@@ -56,17 +56,20 @@ export const addPaymentHandler = TRPCProcedures.protected
 
     const newBalance = borrower.balance - amount;
 
-    await ctx.prisma.$transaction(async (prisma) => {
-      await prisma.payment.create({
+    return ctx.prisma.$transaction(async (prisma) => {
+      const createdPayment = await prisma.payment.create({
         data: {
           amount,
           debtId: debt.id,
           borrowerId: borrower.userId,
           status: PaymentStatus.PENDING_CONFIRMATION,
         },
+        select: {
+          id: true,
+        },
       });
 
-      await prisma.borrower.update({
+      const updatedBorrower = await prisma.borrower.update({
         where: {
           userId_debtId: {
             userId: borrower.userId,
@@ -76,8 +79,14 @@ export const addPaymentHandler = TRPCProcedures.protected
         data: {
           balance: newBalance,
         },
+        select: {
+          balance: true,
+        },
       });
-    });
 
-    return true;
+      return {
+        newPaymentId: createdPayment.id,
+        newBalance: updatedBorrower.balance,
+      };
+    });
   });

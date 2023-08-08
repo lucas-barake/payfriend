@@ -59,7 +59,7 @@ const AddPaymentDialog: React.FC<Props> = ({
   const apiContext = api.useContext();
 
   async function handleSubmit(data: AddPaymentInput): Promise<void> {
-    await toast.promise(addPaymentMutation.mutateAsync(data), {
+    const result = await toast.promise(addPaymentMutation.mutateAsync(data), {
       loading: "Agregando pago...",
       success: "Pago agregado exitosamente.",
       error: handleMutationError,
@@ -75,15 +75,16 @@ const AddPaymentDialog: React.FC<Props> = ({
             ...cachedDebt,
             payments: [
               ...cachedDebt.payments,
-              { status: PaymentStatus.PENDING_CONFIRMATION },
+              {
+                status: PaymentStatus.PENDING_CONFIRMATION,
+                id: result.newPaymentId,
+              },
             ],
             borrowers: cachedDebt.borrowers.map((cachedBorrower) => {
               if (cachedBorrower.user.id === session.data?.user?.id) {
                 return {
                   ...cachedBorrower,
-                  balance: data.fullPayment
-                    ? 0
-                    : cachedBorrower.balance - data.amount,
+                  balance: result.newBalance,
                 };
               }
               return cachedBorrower;
