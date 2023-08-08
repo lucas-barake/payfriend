@@ -1,4 +1,5 @@
 export enum TimeInMs {
+  FiveSeconds = 5000,
   TenSeconds = 10000,
   FifteenSeconds = 15000,
   TwentySeconds = 20000,
@@ -11,6 +12,7 @@ export enum TimeInMs {
 }
 
 export enum TimeInSeconds {
+  FiveSeconds = 5,
   TenSeconds = 10,
   FifteenSeconds = 15,
   TwentySeconds = 20,

@@ -27,8 +27,9 @@ const ViewOwnPaymentsDialog: React.FC<Props> = ({
     },
     {
       enabled: open,
-      cacheTime: TimeInMs.TenSeconds,
-      staleTime: TimeInMs.TenSeconds,
+      cacheTime: TimeInMs.FiveSeconds,
+      staleTime: TimeInMs.FiveSeconds,
+      refetchOnMount: true,
     }
   );
   const payments = query.data ?? [];
