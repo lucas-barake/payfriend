@@ -1,64 +1,90 @@
 import React, { type FC } from "react";
 import { DateTime } from "luxon";
-import { type AppRouter } from "$/server/api/root";
-import { BadgeCheck, CalendarIcon } from "lucide-react";
+import {
+  BadgeCheck,
+  CalendarCheck,
+  Clock,
+  CalendarIcon,
+  DollarSign,
+} from "lucide-react";
 import { Skeleton } from "$/components/ui/skeleton";
-import { type inferProcedureOutput } from "@trpc/server";
-import { Button } from "$/components/ui/button";
 import { Badge } from "$/components/ui/badge";
 import { Avatar } from "$/components/ui/avatar";
-import { useSession } from "next-auth/react";
-import { BorrowerStatus } from "@prisma/client";
-import BorrowerConfirmDialog from "src/pages/dashboard/(page-lib)/components/debt-card/borrower-confirm-dialog";
-import ActionsMenu from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu";
+import { PaymentStatus, type DebtRecurringFrequency } from "@prisma/client";
+import LenderActionsMenu from "src/pages/dashboard/(page-lib)/components/debt-card/lender-actions-menu";
 import { cn } from "$/lib/utils/cn";
-import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
-import { type BorrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/input";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/input";
+import BorrowerActionsMenu from "$/pages/dashboard/(page-lib)/components/debt-card/borrower-actions-menu";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/types";
+import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/types";
+
+const recurringFrequencyMap = new Map<DebtRecurringFrequency, string>([
+  ["MONTHLY", "Mensual"],
+  ["WEEKLY", "Semanal"],
+  ["BIWEEKLY", "Quincenal"],
+]);
+
+const interval = {
+  WEEKLY: {
+    weeks: 1,
+  },
+  BIWEEKLY: {
+    weeks: 2,
+  },
+  MONTHLY: {
+    months: 1,
+  },
+};
 
 type BorrowerProps = {
   lender: false;
-  debt: NonNullable<
-    inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
-  >["debts"][number];
-  queryVariables: BorrowerDebtsQueryInput;
+  debt: DebtsAsLenderResult["debts"][number];
+  queryVariables: DebtsAsBorrowerInput;
 };
 type LenderProps = {
   lender: true;
-  debt: NonNullable<
-    inferProcedureOutput<AppRouter["debts"]["getOwnedDebts"]>
-  >["debts"][number];
-  queryVariables: LenderDebtsQueryInput;
+  debt: DebtsAsBorrowerResult["debts"][number];
+  queryVariables: DebtsAsLenderInput;
 };
 type Props = BorrowerProps | LenderProps;
 
 const BaseDebtCard: FC<Props> = ({ debt, lender, queryVariables }) => {
-  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
-  const session = useSession();
-  const currentBorrower = debt.borrowers.find(
-    ({ user }) => user.id === session.data?.user?.id
-  );
-  const paymentStatus = currentBorrower?.status ?? BorrowerStatus.YET_TO_PAY;
   const normalizedBorrowers = debt.borrowers.map(({ user }) => user);
   const members = [debt.lender, ...normalizedBorrowers];
   const hasPendingConfirmations =
-    debt.borrowers.filter(
-      ({ status }) => status === BorrowerStatus.PENDING_CONFIRMATION
+    debt.payments.filter(
+      ({ status }) => status === PaymentStatus.PENDING_CONFIRMATION
     ).length > 0;
+  const isRecurring =
+    debt.recurringFrequency !== null && debt.duration !== null;
+  const nextPaymentDate = isRecurring
+    ? DateTime.fromJSDate(debt.createdAt).plus(
+        interval[debt.recurringFrequency!]
+      )
+    : null;
+  const finalPaymentDate = isRecurring
+    ? DateTime.fromJSDate(debt.createdAt).plus({
+        ...(debt.recurringFrequency === "MONTHLY" && { month: debt.duration! }),
+        ...(debt.recurringFrequency === "WEEKLY" && {
+          month: debt.duration! / 4,
+        }),
+        ...(debt.recurringFrequency === "BIWEEKLY" && {
+          month: debt.duration! / 2,
+        }),
+      })
+    : debt.dueDate ?? null;
+  const endsToday =
+    finalPaymentDate !== null && finalPaymentDate <= DateTime.now();
+  const createdAt = DateTime.fromJSDate(debt.createdAt).toLocaleString(
+    DateTime.DATE_MED
+  );
 
   return (
     <>
-      {!lender && (
-        <BorrowerConfirmDialog
-          open={openConfirmDialog}
-          onOpenChange={setOpenConfirmDialog}
-          debtId={debt.id}
-          queryVariables={queryVariables}
-        />
-      )}
-
       <div
         className={cn(
-          "relative flex flex-col gap-2 rounded-lg border border-border p-6 shadow-sm",
+          "relative flex flex-col gap-3 rounded-lg border border-border p-6 shadow-sm",
           debt.archived && "pointer-events-none select-none"
         )}
       >
@@ -88,61 +114,53 @@ const BaseDebtCard: FC<Props> = ({ debt, lender, queryVariables }) => {
           </div>
         </div>
 
-        <Badge className="self-start rounded-sm text-base" variant="success">
-          💵 {debt.amount.toLocaleString()}
-        </Badge>
+        <div className="flex flex-wrap items-center justify-start gap-1.5">
+          <Badge variant="success">
+            <DollarSign className="mr-1.5 h-3.5 w-3.5" />
+            {debt.amount.toLocaleString()}
+          </Badge>
+
+          {isRecurring && (
+            <Badge variant="outline" className="self-start">
+              Paga hasta el {nextPaymentDate?.toLocaleString(DateTime.DATE_MED)}
+            </Badge>
+          )}
+
+          {finalPaymentDate !== null && (
+            <Badge
+              variant={endsToday ? "destructive" : "outline"}
+              className="self-start"
+            >
+              <CalendarCheck className="mr-1.5 h-3.5 w-3.5" />
+              Finaliza {finalPaymentDate.toLocaleString(DateTime.DATE_MED)}
+            </Badge>
+          )}
+
+          {isRecurring && (
+            <Badge variant="outline" className="self-start">
+              <Clock className="mr-1.5 h-3.5 w-3.5" />
+              {recurringFrequencyMap.get(debt.recurringFrequency!)} (
+              {debt.duration})
+            </Badge>
+          )}
+        </div>
 
         <p className="mb-6 mt-2 pr-2 lg:pr-3 xl:pr-6">{debt.description}</p>
 
-        <div className="mt-auto flex w-full items-center justify-between">
-          <Badge variant="secondary">
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {DateTime.fromJSDate(debt.createdAt).toLocaleString(
-              DateTime.DATE_MED
-            )}
+        <div className="mt-auto flex w-full items-center justify-between gap-4">
+          <Badge variant="outline" className="h-full break-all">
+            <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+            <span>Creada {createdAt}</span>
           </Badge>
 
           {lender ? (
-            <ActionsMenu
+            <LenderActionsMenu
               debt={debt}
               hasPendingConfirmations={hasPendingConfirmations}
               queryVariables={queryVariables}
             />
           ) : (
-            <Button
-              size="sm"
-              className="text-sm"
-              disabled={
-                paymentStatus === BorrowerStatus.CONFIRMED ||
-                paymentStatus === BorrowerStatus.PENDING_CONFIRMATION
-              }
-              variant={
-                paymentStatus === BorrowerStatus.YET_TO_PAY
-                  ? "default"
-                  : paymentStatus === BorrowerStatus.PENDING_CONFIRMATION
-                  ? "secondary"
-                  : "success"
-              }
-              onClick={() => {
-                if (paymentStatus === BorrowerStatus.YET_TO_PAY) {
-                  setOpenConfirmDialog(true);
-                }
-              }}
-            >
-              {paymentStatus === BorrowerStatus.YET_TO_PAY ? (
-                <>
-                  <span className="xs:mr-1">Confirmar</span>{" "}
-                  <span className="hidden xs:inline">Pago</span>
-                </>
-              ) : paymentStatus === BorrowerStatus.PENDING_CONFIRMATION ? (
-                "Pendiente"
-              ) : (
-                <>
-                  <BadgeCheck className="mr-1 h-4 w-4" />
-                  <span>Pagado</span>
-                </>
-              )}
-            </Button>
+            <BorrowerActionsMenu debt={debt} queryVariables={queryVariables} />
           )}
         </div>
       </div>

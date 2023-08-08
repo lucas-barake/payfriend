@@ -97,7 +97,7 @@ const DropdownMenuItem: DropdownMenuItemDefinition = React.forwardRef(
     <DropdownMenuPrimitive.Item
       ref={ref}
       className={cn(
-        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         inset && "pl-8",
         highlight &&
           "animate-pulse-darker bg-highlight text-highlight-foreground focus:animate-none focus:bg-highlight focus:text-highlight-foreground",
@@ -108,6 +108,20 @@ const DropdownMenuItem: DropdownMenuItemDefinition = React.forwardRef(
   )
 );
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+
+const DropdownMenuButton: React.FC<
+  React.ComponentPropsWithoutRef<"button"> & {
+    children: React.ReactNode;
+  }
+> = ({ className, children, ...props }) => (
+  <button
+    type="button"
+    className={cn("relative flex w-full items-center gap-1.5", className)}
+    {...props}
+  >
+    {children}
+  </button>
+);
 
 type DropdownMenuCheckboxItemDefinition = React.ForwardRefExoticComponent<
   React.PropsWithoutRef<
@@ -230,6 +244,7 @@ export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,
+  Button: DropdownMenuButton,
   CheckboxItem: DropdownMenuCheckboxItem,
   RadioItem: DropdownMenuRadioItem,
   Label: DropdownMenuLabel,

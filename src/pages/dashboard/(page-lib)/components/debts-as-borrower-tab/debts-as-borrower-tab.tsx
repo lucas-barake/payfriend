@@ -6,12 +6,12 @@ import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
 import FiltersMenu from "$/pages/dashboard/(page-lib)/components/filters-menu";
-import { type BorrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/input";
 import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
 
 const DebtsAsBorrowerTab: React.FC = () => {
   const [queryVariables, setQueryVariables] =
-    React.useState<BorrowerDebtsQueryInput>({
+    React.useState<DebtsAsBorrowerInput>({
       skip: 0,
       sort: "desc",
       status: "active",

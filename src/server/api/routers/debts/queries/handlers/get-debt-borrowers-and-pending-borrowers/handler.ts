@@ -18,8 +18,6 @@ export const getDebtBorrowersAndPendingBorrowers = TRPCProcedures.protected
         id: true,
         borrowers: {
           select: {
-            id: true,
-            status: true,
             user: {
               select: {
                 id: true,

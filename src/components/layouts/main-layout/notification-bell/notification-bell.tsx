@@ -62,7 +62,7 @@ const NotificationBell: React.FC = () => {
 
         <Dialog.Footer>
           <Dialog.Trigger asChild>
-            <Button size="sm" className="text-sm" variant="tertiary">
+            <Button size="sm" className="text-sm" variant="secondary">
               Cerrar
             </Button>
           </Dialog.Trigger>

@@ -1,7 +1,7 @@
 import { createTRPCRouter } from "$/server/api/trpc";
 import { type Prisma } from "@prisma/client";
-import { getOwnedDebts } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/handler";
-import { getSharedDebts } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/handler";
+import { getOwnedDebts } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/handler";
+import { getSharedDebts } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/handler";
 import { getPendingConfirmations } from "$/server/api/routers/debts/queries/handlers/get-pending-confirmations/handler";
 import { getDebtBorrowersAndPendingBorrowers } from "$/server/api/routers/debts/queries/handlers/get-debt-borrowers-and-pending-borrowers/handler";
 
@@ -12,6 +12,9 @@ export const getUserDebtsSelect = {
   createdAt: true,
   amount: true,
   archived: true,
+  dueDate: true,
+  recurringFrequency: true,
+  duration: true,
   lender: {
     select: {
       id: true,
@@ -30,6 +33,12 @@ export const getUserDebtsSelect = {
           email: true,
         },
       },
+      balance: true,
+    },
+  },
+  payments: {
+    select: {
+      id: true,
       status: true,
     },
   },

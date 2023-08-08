@@ -7,12 +7,12 @@ import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls"
 import AddDebtDialog from "$/pages/dashboard/(page-lib)/components/add-debt-dialog";
 import FiltersMenu from "src/pages/dashboard/(page-lib)/components/filters-menu";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
-import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/input";
 import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
 
 const DebtsAsLenderTab: React.FC = () => {
   const [queryVariables, setQueryVariables] =
-    React.useState<LenderDebtsQueryInput>({
+    React.useState<DebtsAsLenderInput>({
       skip: 0,
       sort: "desc",
       status: "active",

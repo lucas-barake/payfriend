@@ -8,7 +8,7 @@ import {
   MAX_MONTHLY_DURATION,
   MAX_WEEKLY_DURATION,
   recurrentOptions,
-} from "$/server/api/routers/debts/mutations/handlers/create-debt/input";
+} from "$/server/api/routers/debts/create-debt/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";
@@ -109,6 +109,7 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
           {...form.register("amount", { valueAsNumber: true })}
           required
           error={form.formState.errors.amount !== undefined}
+          min={0}
         />
 
         {form.watch("amount") !== undefined && !isNaN(form.watch("amount")) && (

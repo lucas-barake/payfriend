@@ -4,7 +4,7 @@ import {
   createDebtInput,
   type CreateDebtInput,
   MAX_BORROWERS,
-} from "$/server/api/routers/debts/mutations/handlers/create-debt/input";
+} from "$/server/api/routers/debts/create-debt/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";
@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
-import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/input";
 import RecentEmailsPopover from "$/pages/dashboard/(page-lib)/components/recent-emails-popover/recent-emails-popover";
 import MemberRow from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/members-form/member-row";
 
@@ -29,7 +29,7 @@ type FormInput = z.infer<typeof formInput>;
 type Props = {
   tabSetters: TabSetters<typeof addDebtTabs>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  queryVariables: LenderDebtsQueryInput;
+  queryVariables: DebtsAsLenderInput;
 };
 
 const MembersForm: React.FC<Props> = ({
