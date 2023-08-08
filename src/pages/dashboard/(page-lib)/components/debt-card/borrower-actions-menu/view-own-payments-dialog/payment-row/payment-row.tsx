@@ -9,16 +9,10 @@ import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { Trash } from "lucide-react";
 import { Card } from "$/components/ui/card";
-import { type PaymentStatus } from "@prisma/client";
 import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/input";
 import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/types";
 import { useSession } from "next-auth/react";
-
-const paymentStatusMap = new Map<PaymentStatus, string>([
-  ["PENDING_CONFIRMATION", "Por confirmar"],
-  ["PAID", "Pagado"],
-  ["MISSED", "Sin pagar"],
-]);
+import { paymentStatusMap } from "$/pages/dashboard/(page-lib)/lib/payment-status-map";
 
 type Props = {
   payment: GetPaymentsAsBorrowerResult[number];
@@ -62,12 +56,14 @@ const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
           if (debt.id !== debtId) return debt;
           return {
             ...debt,
-            payments: debt.payments.filter(({ id }) => id !== payment.id),
             borrowers: debt.borrowers.map((borrower) => {
               if (borrower.user.id !== session.data?.user.id) return borrower;
               return {
                 ...borrower,
                 balance: borrower.balance + payment.amount,
+                payments: borrower.payments.filter(
+                  ({ id }) => id !== payment.id
+                ),
               };
             }),
           };

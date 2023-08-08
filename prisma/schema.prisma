@@ -20,7 +20,6 @@ model Debt {
   name               String
   description        String?                 @db.Text
   amount             Float
-  currency           String
   lenderId           String
   lender             User                    @relation(fields: [lenderId], references: [id])
   archived           Boolean                 @default(false)
@@ -154,22 +153,22 @@ model SubscriptionInvoice {
 }
 
 model User {
-  id                  String                @id @default(uuid())
-  name                String?
-  email               String?               @unique
-  emailVerified       DateTime?             @db.Timestamptz(6)
-  phoneNumber         String?               @unique
-  phoneVerified       DateTime?             @db.Timestamptz(6)
-  image               String?
-  currency            String?
-  accounts            Account[]
-  sessions            Session[]
-  debtsAsLender       Debt[]
-  debtsAsBorrower     Borrower[]
-  pendingInvites      PendingInvite[]
-  activeSubscription  ActiveSubscription?
-  subscriptionHistory SubscriptionHistory[]
-  suscriptionInvoices SubscriptionInvoice[]
+  id                   String                @id @default(uuid())
+  name                 String?
+  email                String?               @unique
+  emailVerified        DateTime?             @db.Timestamptz(6)
+  phoneNumber          String?               @unique
+  phoneVerified        DateTime?             @db.Timestamptz(6)
+  image                String?
+  currency             String?
+  accounts             Account[]
+  sessions             Session[]
+  debtsAsLender        Debt[]
+  debtsAsBorrower      Borrower[]
+  pendingInvites       PendingInvite[]
+  activeSubscription   ActiveSubscription?
+  subscriptionHistory  SubscriptionHistory[]
+  subscriptionInvoices SubscriptionInvoice[]
 }
 
 model VerificationToken {

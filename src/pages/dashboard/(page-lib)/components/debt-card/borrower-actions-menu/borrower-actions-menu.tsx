@@ -68,6 +68,15 @@ const BorrowerActionsMenu: React.FC<Props> = ({ debt, queryVariables }) => {
               Ver Tus Pagos
             </DropdownMenu.Button>
           </DropdownMenu.Item>
+
+          <DropdownMenu.Item
+            className="cursor-pointer"
+            onClick={() => {
+              setOpenViewOwnPaymentsDialog(true);
+            }}
+          >
+            Prestamista
+          </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>
     </>

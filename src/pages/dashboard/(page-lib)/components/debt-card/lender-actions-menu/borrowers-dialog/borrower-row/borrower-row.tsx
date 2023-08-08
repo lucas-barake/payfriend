@@ -5,6 +5,8 @@ import * as LucideIcons from "lucide-react";
 import { Avatar } from "$/components/ui/avatar";
 import { Separator } from "$/components/ui/separator";
 import { type GetDebtBorrowersAndPendingBorrowersResult } from "$/server/api/routers/debts/queries/handlers/get-debt-borrowers-and-pending-borrowers/types";
+import { formatCurrency } from "$/lib/utils/format-currency";
+import { cn } from "$/lib/utils/cn";
 
 type Props = {
   borrower: GetDebtBorrowersAndPendingBorrowersResult["borrowers"][number];
@@ -21,15 +23,18 @@ const BorrowerRow: React.FC<Props> = ({ borrower }) => {
           <Popover.Trigger asChild>
             <Button variant="outline" className="group relative">
               <span className="sr-only">Ver información del deudor</span>
-              <LucideIcons.Eye className="absolute left-1/2 top-1/2 z-50 h-6 w-6 -translate-x-1/2 -translate-y-1/2 transform opacity-0 group-hover:opacity-100" />
 
-              <Avatar className="h-6 w-6 group-hover:opacity-0">
+              <Avatar className="h-6 w-6">
                 <Avatar.Image src={borrower.user.image ?? undefined} />
 
                 <Avatar.Fallback>
                   {borrower.user.name?.[0] ?? "?"}
                 </Avatar.Fallback>
               </Avatar>
+
+              <span className="ml-2 max-w-[150px] truncate text-foreground xs:max-w-[200px] sm:max-w-[250px]">
+                {borrower.user.name ?? "Sin nombre"}
+              </span>
             </Button>
           </Popover.Trigger>
 
@@ -41,15 +46,20 @@ const BorrowerRow: React.FC<Props> = ({ borrower }) => {
 
             <Separator />
 
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-foreground">Estado de pago:</span>
+            <div className="flex flex-col gap-1.5 text-sm">
+              Saldo pendiente:
+              <span
+                className={cn(
+                  borrower.balance === 0
+                    ? "text-success-text"
+                    : "text-warning-text"
+                )}
+              >
+                {formatCurrency(borrower.balance)}
+              </span>
             </div>
           </Popover.Content>
         </Popover>
-
-        <span className="max-w-[150px] truncate text-foreground xs:max-w-[200px] sm:max-w-[250px]">
-          {borrower.user.name ?? borrower.user.email}
-        </span>
       </div>
 
       <Popover>

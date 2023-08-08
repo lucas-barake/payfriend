@@ -2,10 +2,10 @@ import { TRPCProcedures } from "$/server/api/trpc";
 import { createDebtInput } from "$/server/api/routers/debts/create-debt/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
-import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
-import { sendInvitationEmail } from "$/server/api/routers/debts/mutations/lib/utils/send-invitation-email";
-import { checkAndMarkEmailSent } from "$/server/api/routers/debts/mutations/lib/utils/check-and-mark-email-sent";
-import { addRecentEmail } from "$/server/api/routers/debts/mutations/lib/utils/stored-recent-emails";
+import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/(lib)/utils/check-debt-limit-and-incr";
+import { sendInvitationEmail } from "$/server/api/routers/debts/(lib)/utils/send-invitation-email";
+import { checkAndMarkEmailSent } from "$/server/api/routers/debts/(lib)/utils/check-and-mark-email-sent";
+import { addRecentEmail } from "$/server/api/routers/debts/(lib)/utils/stored-recent-emails";
 
 export const createDebt = TRPCProcedures.protectedLimited
   .input(createDebtInput)

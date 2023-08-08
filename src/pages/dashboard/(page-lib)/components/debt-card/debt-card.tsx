@@ -18,6 +18,9 @@ import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/ha
 import BorrowerActionsMenu from "$/pages/dashboard/(page-lib)/components/debt-card/borrower-actions-menu";
 import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/types";
 import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/types";
+import { Button } from "$/components/ui/button";
+import { Popover } from "$/components/ui/popover";
+import { useSession } from "next-auth/react";
 
 const recurringFrequencyMap = new Map<DebtRecurringFrequency, string>([
   ["MONTHLY", "Mensual"],
@@ -52,10 +55,24 @@ type Props = BorrowerProps | LenderProps;
 const BaseDebtCard: FC<Props> = ({ debt, lender, queryVariables }) => {
   const normalizedBorrowers = debt.borrowers.map(({ user }) => user);
   const members = [debt.lender, ...normalizedBorrowers];
-  const hasPendingConfirmations =
-    debt.payments.filter(
+  const hasPendingConfirmations = debt.borrowers.some((borrower) =>
+    borrower.payments.some(
       ({ status }) => status === PaymentStatus.PENDING_CONFIRMATION
-    ).length > 0;
+    )
+  );
+
+  const session = useSession();
+  const borrower = debt.borrowers.find(
+    ({ user }) => user.id === session.data?.user.id
+  );
+  const isBorrower = borrower !== undefined;
+  const isPaid = isBorrower
+    ? borrower.balance === 0 &&
+      borrower.payments.every(({ status }) => status === PaymentStatus.PAID)
+    : null;
+
+  const isDebtConcluded = isPaid || debt.archived;
+
   const isRecurring =
     debt.recurringFrequency !== null && debt.duration !== null;
   const nextPaymentDate = isRecurring
@@ -85,10 +102,10 @@ const BaseDebtCard: FC<Props> = ({ debt, lender, queryVariables }) => {
       <div
         className={cn(
           "relative flex flex-col gap-3 rounded-lg border border-border p-6 shadow-sm",
-          debt.archived && "pointer-events-none select-none"
+          isDebtConcluded && "pointer-events-none select-none"
         )}
       >
-        {debt.archived && (
+        {isDebtConcluded && (
           <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-lg bg-background/50">
             <div className="flex h-full items-center justify-center">
               <BadgeCheck className="h-12 w-12 text-foreground" />
@@ -100,17 +117,47 @@ const BaseDebtCard: FC<Props> = ({ debt, lender, queryVariables }) => {
           <span className="max-w-[250px] text-lg font-bold">{debt.name}</span>
 
           <div className="flex -space-x-2 overflow-hidden">
-            {members.map((user) => (
-              <Avatar key={user.email} className="h-7 w-7">
-                <Avatar.Image src={user.image ?? undefined} />
+            {lender ? (
+              members.map((user) => (
+                <Avatar key={user.email} className="h-7 w-7">
+                  <Avatar.Image src={user.image ?? undefined} />
 
-                <Avatar.Fallback>
-                  {user.name?.[0]?.toUpperCase() ??
-                    user.email?.[0]?.toUpperCase() ??
-                    "?"}
-                </Avatar.Fallback>
-              </Avatar>
-            ))}
+                  <Avatar.Fallback>
+                    {user.name?.[0]?.toUpperCase() ??
+                      user.email?.[0]?.toUpperCase() ??
+                      "?"}
+                  </Avatar.Fallback>
+                </Avatar>
+              ))
+            ) : (
+              <Popover>
+                <Popover.Trigger asChild>
+                  <Button variant="outline" className="h-10 w-10">
+                    <Avatar className="h-6 w-6">
+                      <Avatar.Image src={debt.lender.image ?? undefined} />
+
+                      <Avatar.Fallback>
+                        {debt.lender.name?.[0]?.toUpperCase() ??
+                          debt.lender.email?.[0]?.toUpperCase() ??
+                          "?"}
+                      </Avatar.Fallback>
+                    </Avatar>
+                  </Button>
+                </Popover.Trigger>
+
+                <Popover.Content align="end" className="w-60">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-sm font-bold">
+                      {debt.lender.name ?? debt.lender.email}
+                    </span>
+
+                    <span className="text-xs text-foreground/50">
+                      {debt.lender.email}
+                    </span>
+                  </div>
+                </Popover.Content>
+              </Popover>
+            )}
           </div>
         </div>
 

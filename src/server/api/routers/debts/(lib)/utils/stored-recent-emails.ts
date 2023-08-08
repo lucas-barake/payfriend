@@ -1,6 +1,6 @@
 import { logger } from "$/server/logger";
 import { redis } from "$/server/redis";
-import { MAX_STORED_RECENT_EMAILS } from "$/server/api/routers/debts/mutations/lib/constants/stored-recent-emails";
+import { MAX_STORED_RECENT_EMAILS } from "$/server/api/routers/debts/(lib)/constants/stored-recent-emails";
 
 const STORED_RECENT_EMAILS_KEY_PREFIX = "stored-recent-emails";
 

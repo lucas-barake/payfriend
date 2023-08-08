@@ -50,7 +50,6 @@ const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
         }}
       >
         <Button
-          size="sm"
           className="flex items-center gap-1"
           onClick={() => {
             if (freePlanLimit.reachedMonthlyLimit) {

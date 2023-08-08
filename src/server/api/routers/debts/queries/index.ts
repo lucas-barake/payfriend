@@ -25,6 +25,13 @@ export const getUserDebtsSelect = {
   },
   borrowers: {
     select: {
+      payments: {
+        select: {
+          id: true,
+          status: true,
+          amount: true,
+        },
+      },
       user: {
         select: {
           id: true,
@@ -34,12 +41,6 @@ export const getUserDebtsSelect = {
         },
       },
       balance: true,
-    },
-  },
-  payments: {
-    select: {
-      id: true,
-      status: true,
     },
   },
 } satisfies Prisma.DebtSelect;

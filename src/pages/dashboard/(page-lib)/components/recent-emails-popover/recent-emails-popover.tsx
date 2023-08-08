@@ -9,7 +9,7 @@ import { TimeInMs } from "$/lib/enums/time";
 import { FieldError } from "$/components/ui/form/field-error";
 import { ScrollArea } from "$/components/ui/scroll-area";
 import { Separator } from "$/components/ui/separator";
-import { MAX_STORED_RECENT_EMAILS } from "$/server/api/routers/debts/mutations/lib/constants/stored-recent-emails";
+import { MAX_STORED_RECENT_EMAILS } from "$/server/api/routers/debts/(lib)/constants/stored-recent-emails";
 import { Loader } from "$/components/ui/loader";
 
 type Props = {
