@@ -29,6 +29,10 @@ model Debt {
   payments           Payment[]
   borrowers          Borrower[]
   pendingInvites     PendingInvite[]
+  processedAt        DateTime?               @db.Timestamptz(6) // when the debt was processed by the cron job
+
+  @@index([lenderId, archived])
+  @@index([createdAt])
 }
 
 enum PaymentStatus {
@@ -48,12 +52,6 @@ model Payment {
   debt       Debt          @relation(fields: [debtId], references: [id])
 }
 
-enum BorrowerStatus {
-  YET_TO_PAY
-  PENDING_CONFIRMATION
-  CONFIRMED
-}
-
 model Borrower {
   createdAt DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt DateTime  @updatedAt @db.Timestamptz(6)
@@ -65,6 +63,7 @@ model Borrower {
   balance   Float // amount remaining to be paid by the borrower for the debt or payment
 
   @@id([userId, debtId])
+  @@index([debtId])
 }
 
 model PendingInvite {

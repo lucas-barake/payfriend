@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "$/server/api/trpc";
 import userRouter from "$/server/api/routers/user/router";
-import { debtsSubRouter } from "$/server/api/routers/debts/subrouter";
+import { debtsSubRouter } from "$/server/api/routers/debts/router";
 import { subscriptionPlansRouter } from "$/server/api/routers/subscription-plans/router";
 
 /**

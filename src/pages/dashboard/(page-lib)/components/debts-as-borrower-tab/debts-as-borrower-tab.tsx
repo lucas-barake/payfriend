@@ -6,8 +6,9 @@ import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
 import FiltersMenu from "$/pages/dashboard/(page-lib)/components/filters-menu";
-import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/input";
-import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/get-debts/(lib)/constants";
+import DebtAsBorrowerCard from "$/pages/dashboard/(page-lib)/components/debts-as-borrower-tab/debt-as-borrower-card";
 
 const DebtsAsBorrowerTab: React.FC = () => {
   const [queryVariables, setQueryVariables] =
@@ -66,11 +67,10 @@ const DebtsAsBorrowerTab: React.FC = () => {
           query.isSuccess && (
             <>
               {debts.map((debt) => (
-                <DebtCard
+                <DebtAsBorrowerCard
                   key={debt.id}
                   debt={debt}
                   queryVariables={queryVariables}
-                  lender={false}
                 />
               ))}
             </>

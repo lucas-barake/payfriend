@@ -59,17 +59,18 @@ export const generalInfoInput = z
       })
       .multipleOf(0.01, "La cantidad debe ser múltiplo de 0.01"),
     dueDate: z
-      .string()
-      .refine(
-        (value) => {
-          const date = new Date(value);
-          return !isNaN(date.getTime());
-        },
-        {
-          message: "Debes seleccionar una fecha",
-        }
+      .union([
+        z.date(),
+        z.string().refine((value) => !isNaN(Date.parse(value))),
+      ])
+      .refine((value) => {
+        const now = DateTime.now().toUTC();
+        const dueDate = DateTime.fromJSDate(new Date(value)).toUTC();
+        return dueDate > now;
+      }, "La fecha de vencimiento debe ser mayor a hoy")
+      .transform((value) =>
+        DateTime.fromJSDate(new Date(value)).toUTC().toISO()
       )
-      .transform((value) => DateTime.fromJSDate(new Date(value)).toISODate())
       .optional(),
     recurrency: z.discriminatedUnion("recurrent", [
       z.object({
@@ -81,11 +82,15 @@ export const generalInfoInput = z
                 "Debes seleccionar una frecuencia de recurrencia",
               required_error: "Debes seleccionar una frecuencia de recurrencia",
             }),
-            duration: z.number({
-              coerce: true,
-              invalid_type_error: "Debes seleccionar una duración",
-              required_error: "Debes seleccionar una duración",
-            }),
+            duration: z
+              .number({
+                coerce: true,
+                invalid_type_error: "Debes seleccionar una duración",
+                required_error: "Debes seleccionar una duración",
+              })
+              .gte(2, {
+                message: "La duración debe ser mayor a 1",
+              }),
           })
           .superRefine((arg, ctx) => {
             if (arg.frequency === "WEEKLY") {

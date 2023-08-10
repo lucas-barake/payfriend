@@ -48,6 +48,8 @@ export const env = createEnv({
     MERCADOPAGO_PAYER_EMAIL: z.string().email().optional(),
     /* Tunnel */
     NGROK_FORWARDING_URL: z.string().url().optional(),
+    /* CRON */
+    CRON_JOB_KEY: z.string().min(1),
   },
   client: {},
   runtimeEnv: {
@@ -79,5 +81,7 @@ export const env = createEnv({
     MERCADOPAGO_PAYER_EMAIL: process.env.MERCADOPAGO_PAYER_EMAIL,
     /* Tunnel */
     NGROK_FORWARDING_URL: process.env.NGROK_FORWARDING_URL,
+    /* CRON */
+    CRON_JOB_KEY: process.env.CRON_JOB_KEY,
   },
 });

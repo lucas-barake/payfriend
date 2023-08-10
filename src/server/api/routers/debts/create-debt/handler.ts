@@ -1,7 +1,7 @@
 import { TRPCProcedures } from "$/server/api/trpc";
 import { createDebtInput } from "$/server/api/routers/debts/create-debt/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { getUserDebtsSelect } from "$/server/api/routers/debts/queries";
+import { getUserDebtsSelect } from "$/server/api/routers/debts/get-debts/subrouter";
 import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/(lib)/utils/check-debt-limit-and-incr";
 import { sendInvitationEmail } from "$/server/api/routers/debts/(lib)/utils/send-invitation-email";
 import { checkAndMarkEmailSent } from "$/server/api/routers/debts/(lib)/utils/check-and-mark-email-sent";

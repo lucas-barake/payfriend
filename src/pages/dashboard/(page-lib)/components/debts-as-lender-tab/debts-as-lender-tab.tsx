@@ -1,14 +1,15 @@
 import React from "react";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
-import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
 import AddDebtDialog from "$/pages/dashboard/(page-lib)/components/add-debt-dialog";
 import FiltersMenu from "src/pages/dashboard/(page-lib)/components/filters-menu";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/input";
-import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/get-debts/(lib)/constants";
+import DebtAsLenderCard from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card";
+import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 
 const DebtsAsLenderTab: React.FC = () => {
   const [queryVariables, setQueryVariables] =
@@ -70,10 +71,9 @@ const DebtsAsLenderTab: React.FC = () => {
         ) : (
           <>
             {debts.map((debt) => (
-              <DebtCard
+              <DebtAsLenderCard
                 key={debt.id}
                 debt={debt}
-                lender
                 queryVariables={queryVariables}
               />
             ))}

@@ -14,7 +14,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { type CreateDebtInput } from "$/server/api/routers/debts/create-debt/input";
 import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/input";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 
 type Props = {
   queryVariables: DebtsAsLenderInput;

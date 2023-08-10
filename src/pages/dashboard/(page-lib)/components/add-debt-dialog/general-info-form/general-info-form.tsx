@@ -15,6 +15,7 @@ import { Button } from "$/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { type TabSetters } from "$/hooks/use-tabs/use-tabs";
 import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
+import { DatePicker } from "$/components/ui/date-picker";
 
 type Props = {
   tabSetters: TabSetters<typeof addDebtTabs>;
@@ -48,6 +49,7 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
               duration: undefined,
             },
           },
+      dueDate: formContext.watch("generalInfo.dueDate") ?? undefined,
     },
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -69,6 +71,11 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
         "generalInfo.recurrency.data.duration",
         data.recurrency.data.duration
       );
+    } else {
+      formContext.setValue("generalInfo.recurrency.recurrent", false);
+      formContext.setValue("generalInfo.recurrency.data.frequency", undefined);
+      formContext.setValue("generalInfo.recurrency.data.duration", undefined);
+      formContext.setValue("generalInfo.dueDate", data.dueDate);
     }
     tabSetters.next();
   }
@@ -141,6 +148,24 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
         <Form.Label htmlFor="recurrent">Recurrente</Form.Label>
       </Form.Group>
 
+      {!isRecurrent && (
+        <Form.Group>
+          <Form.Label htmlFor="dueDate">Fecha de vencimiento</Form.Label>
+
+          <Controller
+            name="dueDate"
+            control={form.control}
+            render={({ field }) => (
+              <DatePicker value={field.value} onChange={field.onChange} />
+            )}
+          />
+
+          <Form.FieldError>
+            {form.formState.errors.dueDate?.message}
+          </Form.FieldError>
+        </Form.Group>
+      )}
+
       {isRecurrent && (
         <>
           <Form.Group>
@@ -186,6 +211,7 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
               control={form.control}
               render={({ field }) => {
                 const frequency = form.watch("recurrency.data.frequency");
+                const startValue = 2;
 
                 return (
                   <Form.Select
@@ -198,40 +224,40 @@ const GeneralInfoForm: React.FC<Props> = ({ tabSetters }) => {
 
                     <Form.Select.Content>
                       {frequency === "WEEKLY" &&
-                        Array.from({ length: MAX_WEEKLY_DURATION }).map(
-                          (_, index) => (
-                            <Form.Select.Item
-                              key={index}
-                              value={String(index + 1)}
-                            >
-                              {`${index + 1} semana${index === 0 ? "" : "s"}`}
-                            </Form.Select.Item>
-                          )
-                        )}
+                        Array.from({
+                          length: MAX_WEEKLY_DURATION - startValue + 1,
+                        }).map((_, index) => (
+                          <Form.Select.Item
+                            key={index}
+                            value={String(index + startValue)}
+                          >
+                            {`${index + startValue} semanas`}
+                          </Form.Select.Item>
+                        ))}
 
                       {frequency === "BIWEEKLY" &&
-                        Array.from({ length: MAX_BIWEEKLY_DURATION }).map(
-                          (_, index) => (
-                            <Form.Select.Item
-                              key={index}
-                              value={String(index + 1)}
-                            >
-                              {`${index + 1} quincena${index === 0 ? "" : "s"}`}
-                            </Form.Select.Item>
-                          )
-                        )}
+                        Array.from({
+                          length: MAX_BIWEEKLY_DURATION - startValue + 1,
+                        }).map((_, index) => (
+                          <Form.Select.Item
+                            key={index}
+                            value={String(index + startValue)}
+                          >
+                            {`${index + startValue} quincenas`}
+                          </Form.Select.Item>
+                        ))}
 
                       {frequency === "MONTHLY" &&
-                        Array.from({ length: MAX_MONTHLY_DURATION }).map(
-                          (_, index) => (
-                            <Form.Select.Item
-                              key={index}
-                              value={String(index + 1)}
-                            >
-                              {`${index + 1} mes${index === 0 ? "" : "es"}`}
-                            </Form.Select.Item>
-                          )
-                        )}
+                        Array.from({
+                          length: MAX_MONTHLY_DURATION - startValue + 1,
+                        }).map((_, index) => (
+                          <Form.Select.Item
+                            key={index}
+                            value={String(index + startValue)}
+                          >
+                            {`${index + startValue} meses`}
+                          </Form.Select.Item>
+                        ))}
                     </Form.Select.Content>
                   </Form.Select>
                 );

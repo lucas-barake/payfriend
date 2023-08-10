@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/handlers/debts-as-lender/input";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import RecentEmailsPopover from "$/pages/dashboard/(page-lib)/components/recent-emails-popover/recent-emails-popover";
 import MemberRow from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/members-form/member-row";
 
@@ -82,6 +82,7 @@ const MembersForm: React.FC<Props> = ({
     const values = formContext.getValues();
     const result = createDebtInput.safeParse(values);
     if (!result.success) {
+      console.log(result);
       toast.error(result.error.errors[0]?.message ?? "Error al crear grupo");
       return;
     }

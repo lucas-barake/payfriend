@@ -5,11 +5,11 @@ import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import {
   type DebtsAsLenderInput,
   statusOptions,
-} from "$/server/api/routers/debts/queries/handlers/debts-as-lender/input";
+} from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import {
   type DebtsAsBorrowerInput,
   borrowerStatusOptions,
-} from "$/server/api/routers/debts/queries/handlers/debts-as-borrower/input";
+} from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
 
 type LenderProps = {
   selectedStatus: DebtsAsLenderInput["status"];

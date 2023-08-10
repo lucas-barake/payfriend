@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "$/lib/utils/cn";
+import { Slot } from "@radix-ui/react-slot";
 
 const badgeVariants = cva(
   "inline-flex items-center justify-center border rounded-sm px-2.5 py-0.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
@@ -27,11 +28,20 @@ const badgeVariants = cva(
 );
 
 export type BadgeProps = React.HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof badgeVariants>;
+  VariantProps<typeof badgeVariants> & {
+    asChild?: boolean;
+  };
 
-const Badge: React.FC<BadgeProps> = ({ className, variant, ...props }) => {
+const Badge: React.FC<BadgeProps> = ({
+  className,
+  variant,
+  asChild,
+  ...props
+}) => {
+  const Comp = asChild ? Slot : "div";
+
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <Comp className={cn(badgeVariants({ variant }), className)} {...props} />
   );
 };
 

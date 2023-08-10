@@ -6,7 +6,6 @@ import { PaymentStatus } from "@prisma/client";
 export const addPaymentHandler = TRPCProcedures.protected
   .input(addPaymentInput)
   .mutation(async ({ ctx, input }) => {
-    console.log(input, ctx.session.user.id);
     const debt = await ctx.prisma.debt.findFirst({
       where: {
         id: input.debtId,
@@ -87,6 +86,7 @@ export const addPaymentHandler = TRPCProcedures.protected
       return {
         newPaymentId: createdPayment.id,
         newBalance: updatedBorrower.balance,
+        amount,
       };
     });
   });
