@@ -14,7 +14,9 @@ export const addPaymentHandler = TRPCProcedures.protected
             userId: ctx.session.user.id,
           },
         },
-        archived: false,
+        archived: {
+          equals: null,
+        },
       },
       select: {
         id: true,

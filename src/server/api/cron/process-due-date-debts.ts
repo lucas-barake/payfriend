@@ -19,9 +19,15 @@ export async function processDueDateDebtsCronJob(
     const allDebtsWithDueDate = await prisma.debt.findMany({
       where: {
         dueDate: {
-          not: null,
+          not: {
+            equals: null,
+          },
         },
-        archived: false,
+        archived: {
+          not: {
+            equals: null,
+          },
+        },
       },
       select: {
         id: true,
@@ -87,7 +93,7 @@ export async function processDueDateDebtsCronJob(
           id: debt.id,
         },
         data: {
-          archived: true,
+          archived: DateTime.now().toUTC().toISO(),
         },
       });
       logger.info(`Debt ${debt.id} archived`);

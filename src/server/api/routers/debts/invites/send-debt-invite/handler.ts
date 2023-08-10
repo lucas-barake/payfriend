@@ -14,7 +14,9 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
       where: {
         id: input.debtId,
         lenderId: ctx.session.user.id,
-        archived: false,
+        archived: {
+          equals: null,
+        },
       },
       select: {
         name: true,

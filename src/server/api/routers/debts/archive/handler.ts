@@ -1,6 +1,7 @@
 import { TRPCProcedures } from "$/server/api/trpc";
 import { z } from "zod";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
+import { DateTime } from "luxon";
 
 export const archiveDebt = TRPCProcedures.protected
   .input(
@@ -13,7 +14,9 @@ export const archiveDebt = TRPCProcedures.protected
       where: {
         id: input.debtId,
         lenderId: ctx.session.user.id,
-        archived: false,
+        archived: {
+          equals: null,
+        },
       },
       select: {
         id: true,
@@ -36,7 +39,7 @@ export const archiveDebt = TRPCProcedures.protected
           id: debt.id,
         },
         data: {
-          archived: true,
+          archived: DateTime.now().toUTC().toISO(),
         },
       });
     });

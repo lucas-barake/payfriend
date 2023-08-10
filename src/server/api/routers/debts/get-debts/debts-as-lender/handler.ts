@@ -2,29 +2,41 @@ import { TRPCProcedures } from "$/server/api/trpc";
 import { getUserDebtsSelect } from "$/server/api/routers/debts/get-debts/subrouter";
 import { debtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/get-debts/(lib)/constants";
-import { PaymentStatus } from "@prisma/client";
+import { PaymentStatus, Prisma } from "@prisma/client";
+import DebtWhereInput = Prisma.DebtWhereInput;
 
 export const getOwnedDebts = TRPCProcedures.protected
   .input(debtsAsLenderInput)
   .query(async ({ ctx, input }) => {
+    const where = {
+      ...(input.status === "active" && {
+        archived: {
+          equals: null,
+        },
+      }),
+      ...(input.status === "archived" && {
+        archived: {
+          not: {
+            equals: null,
+          },
+        },
+      }),
+      lenderId: ctx.session.user.id,
+      payments:
+        input.status === "pending-confirmation"
+          ? {
+              some: {
+                status: {
+                  equals: PaymentStatus.PENDING_CONFIRMATION,
+                },
+              },
+            }
+          : undefined,
+    } satisfies DebtWhereInput;
+
     const [debts, count] = await ctx.prisma.$transaction([
       ctx.prisma.debt.findMany({
-        where: {
-          ...((input.status === "archived" || input.status === "active") && {
-            archived: input.status === "archived",
-          }),
-          lenderId: ctx.session.user.id,
-          payments:
-            input.status === "pending-confirmation"
-              ? {
-                  some: {
-                    status: {
-                      equals: PaymentStatus.PENDING_CONFIRMATION,
-                    },
-                  },
-                }
-              : undefined,
-        },
+        where,
         orderBy: [
           {
             createdAt: input.sort,
@@ -37,22 +49,7 @@ export const getOwnedDebts = TRPCProcedures.protected
         },
       }),
       ctx.prisma.debt.count({
-        where: {
-          ...((input.status === "archived" || input.status === "active") && {
-            archived: input.status === "archived",
-          }),
-          lenderId: ctx.session.user.id,
-          payments:
-            input.status === "pending-confirmation"
-              ? {
-                  some: {
-                    status: {
-                      equals: PaymentStatus.PENDING_CONFIRMATION,
-                    },
-                  },
-                }
-              : undefined,
-        },
+        where,
       }),
     ]);
 

@@ -21,7 +21,9 @@ export const confirmPayment = TRPCProcedures.protected
             userId: input.borrowerId,
           },
         },
-        archived: false,
+        archived: {
+          equals: null,
+        },
         payments: {
           some: {
             id: input.paymentId,

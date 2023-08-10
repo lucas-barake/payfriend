@@ -21,7 +21,7 @@ const DebtAsBorrowerCard: React.FC<Props> = ({ debt, queryVariables }) => {
   const isDebtPaid =
     borrower.balance === 0 &&
     borrower.payments.every(({ status }) => status === PaymentStatus.PAID);
-  const isDebtConcluded = isDebtPaid || debt.archived;
+  const isDebtConcluded = isDebtPaid || debt.archived !== null;
 
   return (
     <DebtCard isConcluded={isDebtConcluded}>

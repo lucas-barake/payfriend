@@ -24,7 +24,9 @@ export async function processRecurrentDebtsCronJob(
         duration: {
           not: null,
         },
-        archived: false,
+        archived: {
+          equals: null,
+        },
       },
       select: {
         id: true,
@@ -150,7 +152,7 @@ export async function processRecurrentDebtsCronJob(
                 id: debt.id,
               },
               data: {
-                archived: true,
+                archived: DateTime.now().toUTC().toISO(),
               },
             });
             logger.info(`Archived debt ${debt.id}`);

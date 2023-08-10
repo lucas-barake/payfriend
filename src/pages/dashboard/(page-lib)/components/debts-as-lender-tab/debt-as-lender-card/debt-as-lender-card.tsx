@@ -1,5 +1,4 @@
 import React from "react";
-import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/get-debts/debts-as-borrower/types";
 import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 import { Popover } from "$/components/ui/popover";
@@ -7,9 +6,10 @@ import { Button } from "$/components/ui/button";
 import { PaymentStatus } from "@prisma/client";
 import LenderActionsMenu from "src/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu";
 import { Separator } from "$/components/ui/separator";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 
 type Props = {
-  debt: DebtsAsBorrowerResult["debts"][number];
+  debt: DebtsAsLenderResult["debts"][number];
   queryVariables: DebtsAsLenderInput;
 };
 
@@ -23,7 +23,7 @@ const DebtAsLenderCard: React.FC<Props> = ({ debt, queryVariables }) => {
   );
 
   return (
-    <DebtCard isConcluded={debt.archived}>
+    <DebtCard isConcluded={debt.archived !== null}>
       <DebtCard.Header>
         <DebtCard.Title>{debt.name}</DebtCard.Title>
 

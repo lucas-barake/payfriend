@@ -181,8 +181,8 @@ const DueDateBadge: React.FC<RecurrentBadgeProps> = ({
       {...props}
     >
       <CalendarCheck className="mr-1.5 h-3.5 w-3.5" />
-      {hasEnded ? "Finalizó" : "Finaliza"}{" "}
-      {finalPaymentDate.toLocaleString(DateTime.DATE_MED)}
+      {endsToday ? "Finaliza hoy" : hasEnded ? "Finalizó" : "Finaliza"}{" "}
+      {!endsToday && finalPaymentDate.toLocaleString(DateTime.DATE_MED)}
     </Badge>
   );
 };

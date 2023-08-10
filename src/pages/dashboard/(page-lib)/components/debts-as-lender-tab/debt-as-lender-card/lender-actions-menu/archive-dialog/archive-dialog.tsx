@@ -2,16 +2,13 @@ import React from "react";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
-import { type AppRouter } from "$/server/api/root";
-import { type inferProcedureOutput } from "@trpc/server";
 import { Dialog } from "$/components/ui/dialog";
 import { AlertTriangle, BadgeCheck } from "lucide-react";
 import { Button } from "$/components/ui/button";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 
 type Props = {
-  debt: NonNullable<
-    inferProcedureOutput<AppRouter["debts"]["getOwnedDebts"]>
-  >["debts"][number];
+  debt: DebtsAsLenderResult["debts"][number];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };

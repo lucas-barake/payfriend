@@ -22,7 +22,7 @@ model Debt {
   amount             Float
   lenderId           String
   lender             User                    @relation(fields: [lenderId], references: [id])
-  archived           Boolean                 @default(false)
+  archived           DateTime?               @db.Timestamptz(6)
   recurringFrequency DebtRecurringFrequency?
   dueDate            DateTime?               @db.Timestamptz(6)
   duration           Int? // number of periods (if recurring)

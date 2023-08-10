@@ -2,18 +2,15 @@ import React from "react";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Button } from "$/components/ui/button";
 import * as LucideIcons from "lucide-react";
-import { type AppRouter } from "$/server/api/root";
-import { type inferProcedureOutput } from "@trpc/server";
 import { AttentionIndicator } from "$/components/common/attention-indicator/attention-indicator";
 import ArchiveDialog from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/archive-dialog";
 import BorrowersDialog from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/borrowers-dialog";
 import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import PaymentsDialog from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/payments-dialog";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 
 type Props = {
-  debt: NonNullable<
-    inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
-  >["debts"][number];
+  debt: DebtsAsLenderResult["debts"][number];
   hasPendingConfirmations: boolean;
   queryVariables: DebtsAsLenderInput;
 };

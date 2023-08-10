@@ -16,7 +16,9 @@ export const removePayment = TRPCProcedures.protected
         borrowerId: ctx.session.user.id,
         status: "PENDING_CONFIRMATION",
         debt: {
-          archived: false,
+          archived: {
+            equals: null,
+          },
         },
       },
       select: {
