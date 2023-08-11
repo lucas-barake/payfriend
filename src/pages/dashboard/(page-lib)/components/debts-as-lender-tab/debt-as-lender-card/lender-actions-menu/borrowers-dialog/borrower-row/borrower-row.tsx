@@ -38,20 +38,23 @@ const BorrowerRow: React.FC<Props> = ({ borrower, currency }) => {
           </Popover.Trigger>
 
           <Popover.Content className="flex flex-col gap-2" align="start">
-            <div className="flex items-center gap-1.5 text-sm text-foreground">
+            <div className="flex flex-col gap-1 text-foreground">
               <span>{borrower.user.name ?? "Sin nombre"}</span>
-              <span className="truncate opacity-50">{borrower.user.email}</span>
+              <span className="break-all opacity-50">
+                {borrower.user.email}
+              </span>
             </div>
 
             <Separator />
 
-            <div className="flex flex-col gap-1.5 text-sm">
+            <div className="flex flex-col gap-1.5">
               Saldo pendiente:
               <span
                 className={cn(
                   borrower.balance === 0
                     ? "text-success-text"
-                    : "text-warning-text"
+                    : "text-warning-text",
+                  "break-all"
                 )}
               >
                 {formatCurrency(borrower.balance, currency)}
@@ -63,7 +66,7 @@ const BorrowerRow: React.FC<Props> = ({ borrower, currency }) => {
 
       <Popover>
         <Popover.Trigger asChild>
-          <Button size="sm" variant="destructive" className="opacity-50">
+          <Button size="sm" variant="secondary" className="opacity-50">
             <LucideIcons.UserMinus className="h-5 w-5 sm:mr-1.5" />
             <span className="sr-only sm:not-sr-only">Eliminar</span>
           </Button>
