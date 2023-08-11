@@ -34,11 +34,17 @@ const PaymentsDialog: React.FC<Props> = ({
     }
   );
   const payments = query.data?.payments ?? [];
+  const paymentsDescending = payments.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
   const [filteredBorrowersIds, setFilteredBorrowersIds] = React.useState<
     string[]
   >(debt.borrowers.map((borrower) => borrower.user.id));
-  const filteredPayments = payments.filter((payment) =>
+  const filteredPayments = paymentsDescending.filter((payment) =>
     filteredBorrowersIds.includes(payment.borrower.user.id)
+  );
+  const dedupedBorrowers = Array.from(
+    new Set(payments.map((payment) => payment.borrower.user.id))
   );
 
   return (
@@ -61,29 +67,28 @@ const PaymentsDialog: React.FC<Props> = ({
             </DropdownMenu.Trigger>
 
             <DropdownMenu.Content align="end">
-              {payments.map((payment) => (
+              {dedupedBorrowers.map((borrowerId) => (
                 <DropdownMenu.CheckboxItem
-                  key={payment.id}
-                  checked={filteredBorrowersIds.includes(
-                    payment.borrower.user.id
-                  )}
+                  key={borrowerId}
+                  checked={filteredBorrowersIds.includes(borrowerId)}
                   onSelect={(event): void => {
                     event.preventDefault();
                   }}
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      setFilteredBorrowersIds((ids) => [
-                        ...ids,
-                        payment.borrower.user.id,
-                      ]);
+                      setFilteredBorrowersIds((ids) => [...ids, borrowerId]);
                     } else {
                       setFilteredBorrowersIds((ids) =>
-                        ids.filter((id) => id !== payment.borrower.user.id)
+                        ids.filter((id) => id !== borrowerId)
                       );
                     }
                   }}
                 >
-                  {payment.borrower.user.email}
+                  {
+                    debt.borrowers.find(
+                      (borrower) => borrower.user.id === borrowerId
+                    )?.user.email
+                  }
                 </DropdownMenu.CheckboxItem>
               ))}
             </DropdownMenu.Content>

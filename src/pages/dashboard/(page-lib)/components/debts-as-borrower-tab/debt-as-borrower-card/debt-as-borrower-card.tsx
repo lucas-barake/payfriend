@@ -59,15 +59,23 @@ const DebtAsBorrowerCard: React.FC<Props> = ({ debt, queryVariables }) => {
       </DebtCard.Header>
 
       <DebtCard.BadgeContainer>
-        <DebtCard.AmountBadge
-          amount={borrower.balance}
-          currency={debt.currency}
-        />
+        <DebtCard.AmountBadge amount={debt.amount} currency={debt.currency} />
 
         <DebtCard.DueDateBadge
           dueDate={debt.dueDate}
           recurringFrequency={debt.recurringFrequency}
           createdAt={debt.createdAt}
+          duration={debt.duration}
+        />
+
+        <DebtCard.PayUntilRecurrenceBadge
+          recurringFrequency={debt.recurringFrequency}
+          duration={debt.duration}
+          createdAt={debt.createdAt}
+        />
+
+        <DebtCard.RecurringFrequencyBadge
+          recurringFrequency={debt.recurringFrequency}
           duration={debt.duration}
         />
       </DebtCard.BadgeContainer>

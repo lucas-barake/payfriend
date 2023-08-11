@@ -7,6 +7,7 @@ import { Button } from "$/components/ui/button";
 import PendingInviteRow from "$/components/layouts/main-layout/notification-bell/pending-invite-row";
 import { Separator } from "$/components/ui/separator";
 import { ScrollArea } from "$/components/ui/scroll-area";
+import { AttentionIndicator } from "$/components/common/attention-indicator";
 
 const NotificationBell: React.FC = () => {
   const [hasAlreadyOpened, setHasAlreadyOpened] = React.useState(false);
@@ -30,13 +31,7 @@ const NotificationBell: React.FC = () => {
         <Button variant="ghost" size="icon">
           <div className="relative inline-flex">
             <Bell className="h-5 w-5" />
-
-            {allPendingInvites.length > 0 && (
-              <span className="absolute right-0.5 top-0.5 -mr-1 -mt-1 flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-600 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
-              </span>
-            )}
+            {allPendingInvites.length > 0 && <AttentionIndicator />}
           </div>
 
           <span className="sr-only">Notificaciones</span>
@@ -46,17 +41,14 @@ const NotificationBell: React.FC = () => {
       <Dialog.Content>
         <Dialog.Header className="text-lg">Notificaciones</Dialog.Header>
 
-        <ScrollArea className="my-4 h-96 px-1 py-2.5">
+        <ScrollArea className="my-4 h-96 px-1">
           {allPendingInvites.length === 0 ? (
             <div className="flex w-full items-center gap-1 self-stretch text-sm">
               No hay invitaciones pendientes
             </div>
           ) : (
             allPendingInvites.map((invite) => (
-              <div
-                key={invite.debt.id}
-                className="mt-2 flex flex-col gap-2 first:mt-0"
-              >
+              <div key={invite.debt.id} className="flex flex-col gap-2 py-2">
                 <PendingInviteRow invite={invite} />
                 <Separator />
               </div>

@@ -21,9 +21,6 @@ const DebtAsLenderCard: React.FC<Props> = ({ debt, queryVariables }) => {
       ({ status }) => status === PaymentStatus.PENDING_CONFIRMATION
     )
   );
-  if (debt.recurringFrequency !== null) {
-    console.log(debt);
-  }
 
   return (
     <DebtCard isConcluded={debt.archived !== null}>

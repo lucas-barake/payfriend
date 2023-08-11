@@ -16,10 +16,7 @@ type Props = {
 
 const BorrowerRow: React.FC<Props> = ({ borrower, currency }) => {
   return (
-    <div
-      className="my-2 flex items-center justify-between"
-      key={borrower.user.id}
-    >
+    <div className="flex items-center justify-between" key={borrower.user.id}>
       <div className="flex items-center gap-3">
         <Popover>
           <Popover.Trigger asChild>

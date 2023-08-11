@@ -177,30 +177,32 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debt }) => {
 
         <Separator />
 
-        {query.isFetching ? (
-          <div className="flex justify-center">
-            <Loader />
-          </div>
-        ) : (
-          <>
-            {borrowers.map((borrower) => (
-              <BorrowerRow
-                borrower={borrower}
-                key={borrower.user.id}
-                currency={debt.currency}
-              />
-            ))}
-
-            {!isArchived &&
-              pendingBorrowers.map((pendingBorrower) => (
-                <PendingBorrowerRow
-                  key={pendingBorrower.inviteeEmail}
-                  pendingBorrower={pendingBorrower}
-                  debtId={debt.id}
+        <div className="flex flex-col gap-2.5">
+          {query.isFetching ? (
+            <div className="flex justify-center">
+              <Loader />
+            </div>
+          ) : (
+            <>
+              {borrowers.map((borrower) => (
+                <BorrowerRow
+                  borrower={borrower}
+                  key={borrower.user.id}
+                  currency={debt.currency}
                 />
               ))}
-          </>
-        )}
+
+              {!isArchived &&
+                pendingBorrowers.map((pendingBorrower) => (
+                  <PendingBorrowerRow
+                    key={pendingBorrower.inviteeEmail}
+                    pendingBorrower={pendingBorrower}
+                    debtId={debt.id}
+                  />
+                ))}
+            </>
+          )}
+        </div>
 
         <Dialog.Footer>
           <Dialog.Trigger asChild>
