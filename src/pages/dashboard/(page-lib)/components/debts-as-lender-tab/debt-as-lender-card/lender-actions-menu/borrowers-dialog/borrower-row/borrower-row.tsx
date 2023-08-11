@@ -7,12 +7,14 @@ import { Separator } from "$/components/ui/separator";
 import { type GetDebtBorrowersAndPendingBorrowersResult } from "$/server/api/routers/debts/get-debts/get-debt-borrowers-and-pending-borrowers/types";
 import { formatCurrency } from "$/lib/utils/format-currency";
 import { cn } from "$/lib/utils/cn";
+import { type Currency } from "$/server/api/routers/debts/create-debt/input";
 
 type Props = {
   borrower: GetDebtBorrowersAndPendingBorrowersResult["borrowers"][number];
+  currency: Currency;
 };
 
-const BorrowerRow: React.FC<Props> = ({ borrower }) => {
+const BorrowerRow: React.FC<Props> = ({ borrower, currency }) => {
   return (
     <div
       className="my-2 flex items-center justify-between"
@@ -55,7 +57,7 @@ const BorrowerRow: React.FC<Props> = ({ borrower }) => {
                     : "text-warning-text"
                 )}
               >
-                {formatCurrency(borrower.balance)}
+                {formatCurrency(borrower.balance, currency)}
               </span>
             </div>
           </Popover.Content>

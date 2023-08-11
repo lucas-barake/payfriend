@@ -20,6 +20,11 @@ export const getPaymentsAsLender = TRPCProcedures.protected
             status: true,
             amount: true,
             createdAt: true,
+            debt: {
+              select: {
+                currency: true,
+              },
+            },
             borrower: {
               select: {
                 balance: true,

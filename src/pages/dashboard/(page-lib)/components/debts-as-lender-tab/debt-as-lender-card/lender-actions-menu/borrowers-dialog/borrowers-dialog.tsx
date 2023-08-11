@@ -184,7 +184,11 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debt }) => {
         ) : (
           <>
             {borrowers.map((borrower) => (
-              <BorrowerRow borrower={borrower} key={borrower.user.id} />
+              <BorrowerRow
+                borrower={borrower}
+                key={borrower.user.id}
+                currency={debt.currency}
+              />
             ))}
 
             {!isArchived &&

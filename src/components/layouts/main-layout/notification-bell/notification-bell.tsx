@@ -46,7 +46,7 @@ const NotificationBell: React.FC = () => {
       <Dialog.Content>
         <Dialog.Header className="text-lg">Notificaciones</Dialog.Header>
 
-        <ScrollArea className="my-4 h-96 p-1">
+        <ScrollArea className="my-4 h-96 px-1 py-2.5">
           {allPendingInvites.length === 0 ? (
             <div className="flex w-full items-center gap-1 self-stretch text-sm">
               No hay invitaciones pendientes

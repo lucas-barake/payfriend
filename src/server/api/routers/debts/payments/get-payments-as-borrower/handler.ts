@@ -18,6 +18,11 @@ export const getPaymentsAsBorrower = TRPCProcedures.protected
         status: true,
         amount: true,
         createdAt: true,
+        debt: {
+          select: {
+            currency: true,
+          },
+        },
       },
     });
   });

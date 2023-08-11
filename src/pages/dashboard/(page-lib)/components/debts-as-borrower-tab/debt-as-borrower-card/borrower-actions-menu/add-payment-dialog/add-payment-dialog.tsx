@@ -139,7 +139,10 @@ const AddPaymentDialog: React.FC<Props> = ({
               <Form.Label>Cantidad</Form.Label>
               <Form.Input
                 type="number"
-                placeholder={`Máximo ${formatCurrency(borrowerBalance)}`}
+                placeholder={`Máximo ${formatCurrency(
+                  borrowerBalance,
+                  debt.currency
+                )}`}
                 {...form.register("amount", {
                   valueAsNumber: true,
                 })}
@@ -159,7 +162,9 @@ const AddPaymentDialog: React.FC<Props> = ({
                 : formatCurrency(form.watch("amount") as number, debt.currency)}
             </span>{" "}
             de{" "}
-            <span className="font-bold">{formatCurrency(borrowerBalance)}</span>{" "}
+            <span className="font-bold">
+              {formatCurrency(borrowerBalance, debt.currency)}
+            </span>{" "}
           </span>
 
           <Dialog.Footer>

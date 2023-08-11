@@ -72,7 +72,7 @@ const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
         </div>
 
         <div className="flex flex-col text-success-text xs:flex-row xs:items-center xs:gap-1.5">
-          {formatCurrency(payment.amount)}{" "}
+          {formatCurrency(payment.amount, payment.debt.currency)}{" "}
           <span className="text-sm text-muted-foreground">
             {DateTime.fromJSDate(payment.createdAt).toLocaleString(
               DateTime.DATE_MED
