@@ -41,7 +41,7 @@ const RecurringCyclesDialog: React.FC<Props> = ({
             return (
               <Card
                 key={cycle.toUTC().toString()}
-                className={cn("flex items-center gap-1 p-2 text-sm", {
+                className={cn("flex items-center gap-1 px-3 py-2 text-sm", {
                   "bg-muted": isPreviousCycle && !isCurrentCycle,
                   "bg-primary": isCurrentCycle,
                 })}

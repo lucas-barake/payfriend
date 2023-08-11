@@ -49,12 +49,12 @@ const DebtAsLenderCard: React.FC<Props> = ({ debt, queryVariables }) => {
               <div className="flex flex-col gap-2">
                 {members.map((user) => (
                   <React.Fragment key={user.id}>
-                    <span className="text-sm font-bold">
+                    <span className="font-bold">
                       {user.name ?? "Sin nombre"}{" "}
                       {user.id === debt.lender.id && "(Tú)"}
                     </span>
 
-                    <span className="text-xs text-foreground/50">
+                    <span className="break-all text-sm text-foreground/50">
                       {user.email}
                     </span>
 
