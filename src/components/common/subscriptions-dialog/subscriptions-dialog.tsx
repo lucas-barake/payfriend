@@ -108,7 +108,7 @@ export const SubscriptionsDialog: React.FC<Props> = ({
             </Dialog.Description>
           </Dialog.Header>
 
-          <Card>
+          <Card className="mt-2">
             <Card.Header>
               <Card.Title>Plan Premium</Card.Title>
               <Card.Subtitle className="text-success-text">

@@ -92,8 +92,7 @@ const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
         <Popover>
           <Popover.Trigger asChild>
             <Button
-              variant="success"
-              className="mt-4 sm:mt-0"
+              className="mt-4 text-sm sm:mt-0"
               size="sm"
               disabled={isArchived}
             >
@@ -111,7 +110,7 @@ const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
 
             <Button
               variant="destructive"
-              className="mt-2 self-center"
+              className="mt-2 self-center text-sm"
               size="sm"
               loading={confirmPaymentMutation.isLoading}
               onClick={() => {
