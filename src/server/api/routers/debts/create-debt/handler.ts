@@ -37,6 +37,7 @@ export const createDebt = TRPCProcedures.protectedLimited
         data: {
           name: input.generalInfo.name,
           description: input.generalInfo.description,
+          currency: input.generalInfo.currency,
           lender: {
             connect: {
               id: ctx.session.user.id,

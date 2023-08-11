@@ -58,7 +58,7 @@ const ViewOwnPaymentsDialog: React.FC<Props> = ({
               <PaymentRow
                 key={payment.id}
                 payment={payment}
-                debtId={debt.id}
+                debt={debt}
                 queryVariables={queryVariables}
               />
             ))}

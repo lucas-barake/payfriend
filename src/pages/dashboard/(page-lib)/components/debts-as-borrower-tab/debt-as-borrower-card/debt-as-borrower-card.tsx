@@ -59,7 +59,10 @@ const DebtAsBorrowerCard: React.FC<Props> = ({ debt, queryVariables }) => {
       </DebtCard.Header>
 
       <DebtCard.BadgeContainer>
-        <DebtCard.AmountBadge amount={borrower.balance} />
+        <DebtCard.AmountBadge
+          amount={borrower.balance}
+          currency={debt.currency}
+        />
 
         <DebtCard.DueDateBadge
           dueDate={debt.dueDate}
@@ -74,7 +77,11 @@ const DebtAsBorrowerCard: React.FC<Props> = ({ debt, queryVariables }) => {
       <DebtCard.Footer>
         <DebtCard.CreatedAtBadge createdAt={debt.createdAt} />
 
-        <BorrowerActionsMenu debt={debt} queryVariables={queryVariables} />
+        <BorrowerActionsMenu
+          debt={debt}
+          queryVariables={queryVariables}
+          isConcluded={isDebtConcluded}
+        />
       </DebtCard.Footer>
     </DebtCard>
   );

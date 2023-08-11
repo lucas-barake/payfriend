@@ -8,6 +8,8 @@ import BorrowersDialog from "$/pages/dashboard/(page-lib)/components/debts-as-le
 import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import PaymentsDialog from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/payments-dialog";
 import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
+import RecurringCyclesDialog from "$/pages/dashboard/(page-lib)/components/recurring-cycles-dialog";
+import { InfoIcon } from "lucide-react";
 
 type Props = {
   debt: DebtsAsLenderResult["debts"][number];
@@ -23,6 +25,10 @@ const LenderActionsMenu: React.FC<Props> = ({
   const [openArchiveDialog, setOpenArchiveDialog] = React.useState(false);
   const [openPaymentsDialog, setOpenPaymentsDialog] = React.useState(false);
   const [openBorrowersDialog, setOpenBorrowersDialog] = React.useState(false);
+  const isRecurrent =
+    debt.recurringFrequency !== null && debt.duration !== null;
+  const [openRecurringCyclesDialog, setOpenRecurringCyclesDialog] =
+    React.useState(false);
 
   return (
     <>
@@ -35,15 +41,27 @@ const LenderActionsMenu: React.FC<Props> = ({
       <PaymentsDialog
         open={openPaymentsDialog}
         onOpenChange={setOpenPaymentsDialog}
-        debtId={debt.id}
+        debt={debt}
         queryVariables={queryVariables}
       />
 
       <BorrowersDialog
         open={openBorrowersDialog}
         onOpenChange={setOpenBorrowersDialog}
-        debtId={debt.id}
+        debt={debt}
       />
+
+      {isRecurrent && (
+        <RecurringCyclesDialog
+          open={openRecurringCyclesDialog}
+          onOpenChange={setOpenRecurringCyclesDialog}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- isRecurrent is true
+          recurringFrequency={debt.recurringFrequency!}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- isRecurrent is true
+          duration={debt.duration!}
+          createdAt={debt.createdAt}
+        />
+      )}
 
       <DropdownMenu>
         <DropdownMenu.Trigger asChild>
@@ -88,11 +106,26 @@ const LenderActionsMenu: React.FC<Props> = ({
             </button>
           </DropdownMenu.Item>
 
+          {isRecurrent && (
+            <DropdownMenu.Item
+              className="cursor-pointer"
+              onClick={() => {
+                setOpenRecurringCyclesDialog(true);
+              }}
+            >
+              <DropdownMenu.Button>
+                <InfoIcon className="h-4 w-4" />
+                Detalles de Recurrencia
+              </DropdownMenu.Button>
+            </DropdownMenu.Item>
+          )}
+
           <DropdownMenu.Item
             onClick={() => {
               setOpenArchiveDialog(true);
             }}
             className="cursor-pointer"
+            disabled={debt.archived !== null}
           >
             <button type="button" className="flex w-full items-center gap-1.5">
               <LucideIcons.BadgeCheck className="h-4 w-4" />

@@ -3,7 +3,7 @@ import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
 import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
-import AddDebtDialog from "$/pages/dashboard/(page-lib)/components/add-debt-dialog";
+import AddDebtDialog from "src/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog";
 import FiltersMenu from "src/pages/dashboard/(page-lib)/components/filters-menu";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
 import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";

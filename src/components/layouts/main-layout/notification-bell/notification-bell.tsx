@@ -6,6 +6,7 @@ import { Dialog } from "$/components/ui/dialog";
 import { Button } from "$/components/ui/button";
 import PendingInviteRow from "$/components/layouts/main-layout/notification-bell/pending-invite-row";
 import { Separator } from "$/components/ui/separator";
+import { ScrollArea } from "$/components/ui/scroll-area";
 
 const NotificationBell: React.FC = () => {
   const [hasAlreadyOpened, setHasAlreadyOpened] = React.useState(false);
@@ -45,20 +46,23 @@ const NotificationBell: React.FC = () => {
       <Dialog.Content>
         <Dialog.Header className="text-lg">Notificaciones</Dialog.Header>
 
-        <div className="my-4 flex flex-col gap-4">
+        <ScrollArea className="my-4 h-96 p-1">
           {allPendingInvites.length === 0 ? (
             <div className="flex w-full items-center gap-1 self-stretch text-sm">
               No hay invitaciones pendientes
             </div>
           ) : (
             allPendingInvites.map((invite) => (
-              <div key={invite.debt.id} className="flex flex-col gap-2">
+              <div
+                key={invite.debt.id}
+                className="mt-2 flex flex-col gap-2 first:mt-0"
+              >
                 <PendingInviteRow invite={invite} />
                 <Separator />
               </div>
             ))
           )}
-        </div>
+        </ScrollArea>
 
         <Dialog.Footer>
           <Dialog.Trigger asChild>

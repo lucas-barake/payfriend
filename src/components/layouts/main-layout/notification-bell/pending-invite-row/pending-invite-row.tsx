@@ -1,11 +1,9 @@
 import React from "react";
-import { type AppRouter } from "$/server/api/root";
 import { cn } from "$/lib/utils/cn";
 import toast from "react-hot-toast";
 import { handleToastError } from "$/components/ui/styled-toaster";
 import { api } from "$/lib/utils/api";
 import { Check, EyeIcon, X } from "lucide-react";
-import { type inferProcedureOutput } from "@trpc/server";
 import { Popover } from "$/components/ui/popover";
 import { Button } from "$/components/ui/button";
 import { Separator } from "$/components/ui/separator";
@@ -13,11 +11,11 @@ import { useRouter } from "next/router";
 import { Pages } from "$/lib/enums/pages";
 import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
+import { type GetDebtInvitesResult } from "$/server/api/routers/user/debt-invites/queries/types";
+import DebtCard from "$/pages/dashboard/(page-lib)/components/debt-card";
 
 type Props = {
-  invite: NonNullable<
-    inferProcedureOutput<AppRouter["user"]["getDebtsInvites"]>
-  >[number];
+  invite: GetDebtInvitesResult[number];
 };
 
 const PendingInviteRow: React.FC<Props> = ({ invite }) => {
@@ -75,7 +73,7 @@ const PendingInviteRow: React.FC<Props> = ({ invite }) => {
             <Popover.Trigger asChild>
               <Button variant="outline" size="sm" className="self-start">
                 <EyeIcon className="mr-2 h-4 w-4" />
-                <span className="max-w-[100px] truncate">
+                <span className="max-w-[100px] truncate xs:max-w-[175px]">
                   {invite.debt.name}
                 </span>
               </Button>
@@ -88,7 +86,14 @@ const PendingInviteRow: React.FC<Props> = ({ invite }) => {
                   <span className="text-sm">{invite.debt.description}</span>
                 )}
                 <Separator />
-                Monto: {invite.debt.amount.toLocaleString()}
+                <DebtCard.AmountBadge
+                  amount={invite.debt.amount}
+                  currency={invite.debt.currency}
+                />
+                <DebtCard.RecurringFrequencyBadge
+                  recurringFrequency={invite.debt.recurringFrequency}
+                  duration={invite.debt.duration}
+                />
               </div>
             </Popover.Content>
           </Popover>

@@ -20,18 +20,20 @@ import RecentEmailsPopover from "$/pages/dashboard/(page-lib)/components/recent-
 import BorrowerRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/borrowers-dialog/borrower-row";
 import { type GetDebtBorrowersAndPendingBorrowersResult } from "$/server/api/routers/debts/get-debts/get-debt-borrowers-and-pending-borrowers/types";
 import { Loader } from "$/components/ui/loader";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  debtId: string;
+  debt: DebtsAsLenderResult["debts"][number];
 };
 
-const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
+const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debt }) => {
+  const isArchived = debt.archived !== null;
   const apiContext = api.useContext();
   const query = api.debts.getDebtBorrowersAndPendingBorrowers.useQuery(
     {
-      debtId,
+      debtId: debt.id,
     },
     {
       enabled: open,
@@ -52,7 +54,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
   const session = useSession();
   const sendInviteForm = useForm<SendDebtInviteInput>({
     defaultValues: {
-      debtId,
+      debtId: debt.id,
     },
     resolver: zodResolver(
       sendDebtInviteInput
@@ -89,7 +91,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
 
     apiContext.debts.getDebtBorrowersAndPendingBorrowers.setData(
       {
-        debtId,
+        debtId: debt.id,
       },
       (cachedData) => {
         if (cachedData === undefined) return cachedData;
@@ -132,9 +134,10 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
                 onSelect={(email) => {
                   void handleSendInvite({
                     email,
-                    debtId,
+                    debtId: debt.id,
                   });
                 }}
+                disabled={isArchived}
                 disableSelected
               />
             </div>
@@ -149,6 +152,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
                 error={
                   sendInviteForm.formState.errors.email?.message !== undefined
                 }
+                disabled={isArchived}
               />
 
               <Button
@@ -156,6 +160,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
                 className="w-full text-sm sm:w-auto sm:text-base"
                 type="submit"
                 loading={sendInviteMutation.isLoading}
+                disabled={isArchived}
               >
                 {!sendInviteMutation.isLoading && (
                   <LucideIcons.LucideMail className="mr-1.5 h-4 w-4 sm:h-5 sm:w-5" />
@@ -182,13 +187,14 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debtId }) => {
               <BorrowerRow borrower={borrower} key={borrower.user.id} />
             ))}
 
-            {pendingBorrowers.map((pendingBorrower) => (
-              <PendingBorrowerRow
-                key={pendingBorrower.inviteeEmail}
-                pendingBorrower={pendingBorrower}
-                debtId={debtId}
-              />
-            ))}
+            {!isArchived &&
+              pendingBorrowers.map((pendingBorrower) => (
+                <PendingBorrowerRow
+                  key={pendingBorrower.inviteeEmail}
+                  pendingBorrower={pendingBorrower}
+                  debtId={debt.id}
+                />
+              ))}
           </>
         )}
 

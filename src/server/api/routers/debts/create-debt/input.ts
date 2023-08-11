@@ -2,6 +2,8 @@ import { z } from "zod";
 import { type DebtRecurringFrequency } from "@prisma/client";
 import { DateTime } from "luxon";
 
+export const CURRENCIES = ["COP", "USD", "MXN", "EUR", "UYU", "ARS"] as const;
+export type Currency = typeof CURRENCIES[number] | string;
 export const MAX_BORROWERS = 4;
 export const MAX_WEEKLY_DURATION = 8;
 export const MAX_BIWEEKLY_DURATION = 6;
@@ -36,7 +38,7 @@ export const generalInfoInput = z
       .min(1, {
         message: "El nombre es requerido",
       })
-      .max(40, {
+      .max(50, {
         message: "El nombre debe tener menos de 40 caracteres",
       }),
     description: z
@@ -58,20 +60,17 @@ export const generalInfoInput = z
         message: "La cantidad debe ser menor o igual a 1,000,000,000",
       })
       .multipleOf(0.01, "La cantidad debe ser múltiplo de 0.01"),
+    currency: z.enum(CURRENCIES),
     dueDate: z
-      .union([
-        z.date(),
-        z.string().refine((value) => !isNaN(Date.parse(value))),
-      ])
-      .refine((value) => {
+      .string()
+      .refine((iso) => DateTime.fromISO(iso).isValid, "Fecha inválida")
+      .transform((iso) => DateTime.fromISO(iso).toUTC().toISO())
+      .refine((iso) => {
         const now = DateTime.now().toUTC();
-        const dueDate = DateTime.fromJSDate(new Date(value)).toUTC();
+        const dueDate = DateTime.fromISO(iso).toUTC();
         return dueDate > now;
       }, "La fecha de vencimiento debe ser mayor a hoy")
-      .transform((value) =>
-        DateTime.fromJSDate(new Date(value)).toUTC().toISO()
-      )
-      .optional(),
+      .nullable(),
     recurrency: z.discriminatedUnion("recurrent", [
       z.object({
         recurrent: z.literal(true),
@@ -134,9 +133,7 @@ export const generalInfoInput = z
     ]),
   })
   .transform((value) => {
-    return value.recurrency.recurrent
-      ? { ...value, dueDate: undefined }
-      : value;
+    return value.recurrency.recurrent ? { ...value, dueDate: null } : value;
   });
 export type GeneralInfoInput = z.infer<typeof generalInfoInput>;
 
@@ -155,5 +152,22 @@ export const createDebtInput = z.object({
       return uniqueEmails.size === emails.length;
     }, "No puedes agregar correos duplicados"),
 });
-
 export type CreateDebtInput = z.infer<typeof createDebtInput>;
+
+export const defaultCreateDebtInput = {
+  borrowerEmails: [],
+  generalInfo: {
+    amount: 0,
+    currency: "COP",
+    name: "",
+    description: null,
+    dueDate: null,
+    recurrency: {
+      recurrent: false,
+      data: {
+        duration: undefined,
+        frequency: undefined,
+      },
+    },
+  },
+} satisfies CreateDebtInput;

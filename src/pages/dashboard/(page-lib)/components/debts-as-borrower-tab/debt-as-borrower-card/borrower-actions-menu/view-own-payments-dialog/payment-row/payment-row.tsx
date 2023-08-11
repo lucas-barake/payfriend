@@ -17,11 +17,11 @@ import { paymentStatusVariantsMap } from "$/pages/dashboard/(page-lib)/lib/payme
 
 type Props = {
   payment: GetPaymentsAsBorrowerResult[number];
-  debtId: string;
+  debt: DebtsAsBorrowerResult["debts"][number];
   queryVariables: DebtsAsBorrowerInput;
 };
 
-const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
+const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
   const apiContext = api.useContext();
   const removePaymentMutation = api.debts.removePayment.useMutation();
   const session = useSession();
@@ -30,7 +30,7 @@ const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
     await toast.promise(
       removePaymentMutation.mutateAsync({
         paymentId: payment.id,
-        debtId,
+        debtId: debt.id,
       }),
       {
         loading: "Eliminando pago...",
@@ -41,7 +41,7 @@ const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
 
     apiContext.debts.getPaymentsAsBorrower.setData(
       {
-        debtId,
+        debtId: debt.id,
       },
       (cache) => {
         return cache?.filter(({ id }) => id !== payment.id) satisfies
@@ -53,11 +53,11 @@ const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
     apiContext.debts.getSharedDebts.setData(queryVariables, (cache) => {
       if (cache === undefined) return cache;
       return {
-        debts: cache.debts.map((debt) => {
-          if (debt.id !== debtId) return debt;
+        debts: cache.debts.map((cachedDebts) => {
+          if (cachedDebts.id !== debt.id) return cachedDebts;
           return {
-            ...debt,
-            borrowers: debt.borrowers.map((borrower) => {
+            ...cachedDebts,
+            borrowers: cachedDebts.borrowers.map((borrower) => {
               if (borrower.user.id !== session.data?.user.id) return borrower;
               return {
                 ...borrower,
@@ -97,7 +97,11 @@ const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
       <Button
         size="icon"
         variant="destructive"
-        disabled={payment.status === "PAID" || payment.status === "MISSED"}
+        disabled={
+          payment.status === "PAID" ||
+          payment.status === "MISSED" ||
+          debt.archived !== null
+        }
         onClick={() => {
           void handleRemove();
         }}

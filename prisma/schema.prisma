@@ -19,6 +19,7 @@ model Debt {
   updatedAt          DateTime                @updatedAt @db.Timestamptz(6)
   name               String
   description        String?                 @db.Text
+  currency           String
   amount             Float
   lenderId           String
   lender             User                    @relation(fields: [lenderId], references: [id])

@@ -41,6 +41,9 @@ export const archiveDebt = TRPCProcedures.protected
         data: {
           archived: DateTime.now().toUTC().toISO(),
         },
+        select: {
+          id: true,
+        },
       });
     });
   });

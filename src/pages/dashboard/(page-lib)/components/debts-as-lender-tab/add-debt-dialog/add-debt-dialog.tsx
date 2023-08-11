@@ -2,16 +2,18 @@ import React from "react";
 import { Button } from "$/components/ui/button";
 import { Plus } from "lucide-react";
 import { Dialog } from "$/components/ui/dialog";
-import GeneralInfoForm from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/general-info-form";
-import BorrowersForm from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/members-form";
+import GeneralInfoForm from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog/general-info-form";
+import BorrowersForm from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog/members-form";
 import { useTabs } from "$/hooks/use-tabs/use-tabs";
 import {
   type AddDebtTab,
   addDebtTabs,
-} from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
+} from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { Tabs } from "$/components/ui/tabs";
-import { FormProvider, useForm } from "react-hook-form";
-import { type CreateDebtInput } from "$/server/api/routers/debts/create-debt/input";
+import {
+  type CreateDebtInput,
+  defaultCreateDebtInput,
+} from "$/server/api/routers/debts/create-debt/input";
 import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
 import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
@@ -21,15 +23,13 @@ type Props = {
 };
 
 const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
+  const [formData, setFormData] = React.useState<CreateDebtInput>(
+    defaultCreateDebtInput
+  );
   const [open, setOpen] = React.useState(false);
   const [openSubscriptionsDialog, setOpenSubscriptionsDialog] =
     React.useState(false);
   const [selectedTab, tabSetters] = useTabs(addDebtTabs);
-  const form = useForm<CreateDebtInput>({
-    defaultValues: {
-      borrowerEmails: [],
-    },
-  });
   const freePlanLimit = useFreePlanLimit();
 
   return (
@@ -95,19 +95,23 @@ const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
               tabSetters.set(v as AddDebtTab);
             }}
           >
-            <FormProvider {...form}>
-              <Tabs.Content value={addDebtTabs[0]}>
-                <GeneralInfoForm tabSetters={tabSetters} />
-              </Tabs.Content>
+            <Tabs.Content value={addDebtTabs[0]}>
+              <GeneralInfoForm
+                tabSetters={tabSetters}
+                formData={formData}
+                setFormData={setFormData}
+              />
+            </Tabs.Content>
 
-              <Tabs.Content value={addDebtTabs[1]}>
-                <BorrowersForm
-                  tabSetters={tabSetters}
-                  setOpen={setOpen}
-                  queryVariables={queryVariables}
-                />
-              </Tabs.Content>
-            </FormProvider>
+            <Tabs.Content value={addDebtTabs[1]}>
+              <BorrowersForm
+                tabSetters={tabSetters}
+                setOpen={setOpen}
+                queryVariables={queryVariables}
+                formData={formData}
+                setFormData={setFormData}
+              />
+            </Tabs.Content>
           </Tabs>
         </Dialog.Content>
       </Dialog>

@@ -21,6 +21,9 @@ const DebtAsLenderCard: React.FC<Props> = ({ debt, queryVariables }) => {
       ({ status }) => status === PaymentStatus.PENDING_CONFIRMATION
     )
   );
+  if (debt.recurringFrequency !== null) {
+    console.log(debt);
+  }
 
   return (
     <DebtCard isConcluded={debt.archived !== null}>
@@ -68,12 +71,23 @@ const DebtAsLenderCard: React.FC<Props> = ({ debt, queryVariables }) => {
       </DebtCard.Header>
 
       <DebtCard.BadgeContainer>
-        <DebtCard.AmountBadge amount={debt.amount} />
+        <DebtCard.AmountBadge amount={debt.amount} currency={debt.currency} />
 
         <DebtCard.DueDateBadge
           dueDate={debt.dueDate}
           recurringFrequency={debt.recurringFrequency}
           createdAt={debt.createdAt}
+          duration={debt.duration}
+        />
+
+        <DebtCard.PayUntilRecurrenceBadge
+          recurringFrequency={debt.recurringFrequency}
+          duration={debt.duration}
+          createdAt={debt.createdAt}
+        />
+
+        <DebtCard.RecurringFrequencyBadge
+          recurringFrequency={debt.recurringFrequency}
           duration={debt.duration}
         />
       </DebtCard.BadgeContainer>

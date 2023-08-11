@@ -9,26 +9,16 @@ export const getSharedDebts = TRPCProcedures.protected
   .input(debtsAsBorrowerInput)
   .query(async ({ ctx, input }) => {
     const where = {
-      ...(input.status === "active" && {
+      ...(input.status === "archived" && {
         archived: {
-          equals: null,
+          not: {
+            equals: null,
+          },
         },
       }),
       borrowers: {
         some: {
           userId: ctx.session.user.id,
-          ...(input.status === "active" && {
-            balance: {
-              gt: 0,
-            },
-            payments: {
-              some: {
-                status: {
-                  equals: PaymentStatus.PENDING_CONFIRMATION,
-                },
-              },
-            },
-          }),
           ...(input.status === "archived" && {
             balance: {
               equals: 0,

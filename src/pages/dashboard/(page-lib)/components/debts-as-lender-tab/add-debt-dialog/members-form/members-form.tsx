@@ -1,8 +1,9 @@
 import React from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   createDebtInput,
   type CreateDebtInput,
+  defaultCreateDebtInput,
   MAX_BORROWERS,
 } from "$/server/api/routers/debts/create-debt/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +12,7 @@ import { Button } from "$/components/ui/button";
 import { z } from "zod";
 import { ArrowLeft, Plus } from "lucide-react";
 import { type TabSetters } from "$/hooks/use-tabs/use-tabs";
-import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/(component-lib)/add-debt-tabs";
+import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
@@ -19,7 +20,7 @@ import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
 import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import RecentEmailsPopover from "$/pages/dashboard/(page-lib)/components/recent-emails-popover/recent-emails-popover";
-import MemberRow from "$/pages/dashboard/(page-lib)/components/add-debt-dialog/members-form/member-row";
+import MemberRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog/members-form/member-row";
 
 const formInput = z.object({
   borrowerEmail: z.string().email("Email inválido"),
@@ -30,15 +31,18 @@ type Props = {
   tabSetters: TabSetters<typeof addDebtTabs>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   queryVariables: DebtsAsLenderInput;
+  formData: CreateDebtInput;
+  setFormData: React.Dispatch<React.SetStateAction<CreateDebtInput>>;
 };
 
 const MembersForm: React.FC<Props> = ({
   tabSetters,
   setOpen,
   queryVariables,
+  formData,
+  setFormData,
 }) => {
   const session = useSession();
-  const formContext = useFormContext<CreateDebtInput>();
   const freePlanLimit = useFreePlanLimit();
   const form = useForm<FormInput>({
     mode: "onSubmit",
@@ -50,18 +54,18 @@ const MembersForm: React.FC<Props> = ({
       })
     ),
   });
-  const borrowerEmails = formContext.watch("borrowerEmails");
 
   function addEmail(data: FormInput): void {
-    const allEmails = formContext.getValues("borrowerEmails");
-
-    if (allEmails.length === 0) {
-      formContext.setValue("borrowerEmails", [data.borrowerEmail]);
+    if (formData.borrowerEmails.length === 0) {
+      setFormData((prev) => ({
+        ...prev,
+        borrowerEmails: [data.borrowerEmail],
+      }));
       form.reset();
       return;
     }
 
-    const newEmails = [...allEmails, data.borrowerEmail];
+    const newEmails = [...formData.borrowerEmails, data.borrowerEmail];
     const result = createDebtInput.shape.borrowerEmails.safeParse(newEmails);
     if (!result.success) {
       const errorMessage = result.error.errors[0]?.message;
@@ -72,17 +76,18 @@ const MembersForm: React.FC<Props> = ({
       return;
     }
     form.reset();
-    formContext.setValue("borrowerEmails", result.data);
+    setFormData((prev) => ({
+      ...prev,
+      borrowerEmails: newEmails,
+    }));
   }
 
   const apiContext = api.useContext();
   const createMutation = api.debts.createDebt.useMutation();
 
   async function handleCreate(): Promise<void> {
-    const values = formContext.getValues();
-    const result = createDebtInput.safeParse(values);
+    const result = createDebtInput.safeParse(formData);
     if (!result.success) {
-      console.log(result);
       toast.error(result.error.errors[0]?.message ?? "Error al crear grupo");
       return;
     }
@@ -97,7 +102,7 @@ const MembersForm: React.FC<Props> = ({
 
     setOpen(false);
     tabSetters.reset();
-    formContext.reset();
+    setFormData(defaultCreateDebtInput);
   }
 
   return (
@@ -111,17 +116,19 @@ const MembersForm: React.FC<Props> = ({
 
           <RecentEmailsPopover
             onSelect={(email) => {
-              if (borrowerEmails.includes(email)) {
-                formContext.setValue(
-                  "borrowerEmails",
-                  borrowerEmails.filter((e) => e !== email)
-                );
+              if (formData.borrowerEmails.includes(email)) {
+                setFormData((prev) => ({
+                  ...prev,
+                  borrowerEmails: prev.borrowerEmails.filter(
+                    (e) => e !== email
+                  ),
+                }));
                 form.clearErrors("borrowerEmail");
               } else {
                 addEmail({ borrowerEmail: email });
               }
             }}
-            currentEmails={borrowerEmails}
+            currentEmails={formData.borrowerEmails}
           />
         </div>
 
@@ -158,13 +165,16 @@ const MembersForm: React.FC<Props> = ({
       </Form.Group>
 
       <div className="my-6 flex flex-col gap-4">
-        {formContext.watch("borrowerEmails").map((email) => (
+        {formData.borrowerEmails.map((email) => (
           <MemberRow
             onRemove={() => {
-              const newEmails = formContext
-                .getValues("borrowerEmails")
-                .filter((e) => e !== email);
-              formContext.setValue("borrowerEmails", newEmails);
+              const newEmails = formData.borrowerEmails.filter(
+                (e) => e !== email
+              );
+              setFormData((prev) => ({
+                ...prev,
+                borrowerEmails: newEmails,
+              }));
               form.clearErrors("borrowerEmail");
             }}
             email={email}

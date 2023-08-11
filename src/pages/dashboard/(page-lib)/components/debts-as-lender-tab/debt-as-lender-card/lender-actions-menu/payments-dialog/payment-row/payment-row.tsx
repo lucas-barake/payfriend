@@ -14,21 +14,23 @@ import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import { paymentStatusVariantsMap } from "$/pages/dashboard/(page-lib)/lib/payment-status-variants-map";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 
 type Props = {
   payment: GetPaymentsAsLenderResult["payments"][number];
-  debtId: string;
+  debt: DebtsAsLenderResult["debts"][number];
   queryVariables: DebtsAsLenderInput;
 };
 
-const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
+const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
   const confirmPaymentMutation = api.debts.confirmPayment.useMutation();
   const apiContext = api.useContext();
+  const isArchived = debt.archived !== null;
 
   async function handleConfirmPayment(): Promise<void> {
     await toast.promise(
       confirmPaymentMutation.mutateAsync({
-        debtId,
+        debtId: debt.id,
         paymentId: payment.id,
         borrowerId: payment.borrower.user.id,
       }),
@@ -41,18 +43,21 @@ const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
 
     void apiContext.debts.getOwnedDebts.invalidate(queryVariables);
 
-    apiContext.debts.getPaymentsAsLender.setData({ debtId }, (cache) => {
-      if (cache === undefined) return cache;
-      return {
-        payments: cache.payments.map((cachedPayment) => {
-          if (cachedPayment.id !== payment.id) return cachedPayment;
-          return {
-            ...cachedPayment,
-            status: PaymentStatus.PAID,
-          };
-        }),
-      } satisfies GetPaymentsAsLenderResult;
-    });
+    apiContext.debts.getPaymentsAsLender.setData(
+      { debtId: debt.id },
+      (cache) => {
+        if (cache === undefined) return cache;
+        return {
+          payments: cache.payments.map((cachedPayment) => {
+            if (cachedPayment.id !== payment.id) return cachedPayment;
+            return {
+              ...cachedPayment,
+              status: PaymentStatus.PAID,
+            };
+          }),
+        } satisfies GetPaymentsAsLenderResult;
+      }
+    );
   }
 
   return (
@@ -86,8 +91,13 @@ const PaymentRow: React.FC<Props> = ({ payment, debtId, queryVariables }) => {
       {payment.status === PaymentStatus.PENDING_CONFIRMATION && (
         <Popover>
           <Popover.Trigger asChild>
-            <Button variant="success" className="mt-4 sm:mt-0" size="sm">
-              <span className="">Confirmar Pago</span>
+            <Button
+              variant="success"
+              className="mt-4 sm:mt-0"
+              size="sm"
+              disabled={isArchived}
+            >
+              Confirmar Pago
             </Button>
           </Popover.Trigger>
 

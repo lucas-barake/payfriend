@@ -6,12 +6,16 @@ import {
   BadgeCheck,
   CalendarCheck,
   CalendarIcon,
-  DollarSign,
+  Clock,
+  RotateCw,
 } from "lucide-react";
 import { DateTime } from "luxon";
 import { getRecurrentDebtFinalPayment } from "$/pages/dashboard/(page-lib)/utils/get-recurrent-debt-final-payment";
-import { type DebtRecurringFrequency } from "@prisma/client";
+import { DebtRecurringFrequency } from "@prisma/client";
 import { Skeleton } from "$/components/ui/skeleton";
+import { getRecurrentCycleDates } from "$/pages/dashboard/(page-lib)/utils/get-recurrent-cycle-dates";
+import { formatCurrency } from "$/lib/utils/format-currency";
+import { type Currency } from "$/server/api/routers/debts/create-debt/input";
 
 type RootProps = {
   children: React.ReactNode;
@@ -135,23 +139,27 @@ const BadgeContainer: React.FC<BadgeContainerProps> = ({
 
 type AmountBadgeProps = {
   amount: number;
+  currency: Currency;
 } & React.ComponentPropsWithoutRef<typeof Badge>;
-const AmountBadge: React.FC<AmountBadgeProps> = ({ amount, ...props }) => {
+const AmountBadge: React.FC<AmountBadgeProps> = ({
+  amount,
+  currency,
+  ...props
+}) => {
   return (
     <Badge variant="success" {...props}>
-      <DollarSign className="mr-0.5 h-3.5 w-3.5" />
-      {amount.toLocaleString()}
+      {formatCurrency(amount, currency)}
     </Badge>
   );
 };
 
-type RecurrentBadgeProps = {
+type DueDateBadgeProps = {
   recurringFrequency: DebtRecurringFrequency | null;
   duration: number | null;
   createdAt: Date | null;
   dueDate: Date | null;
 } & React.ComponentPropsWithoutRef<typeof Badge>;
-const DueDateBadge: React.FC<RecurrentBadgeProps> = ({
+const DueDateBadge: React.FC<DueDateBadgeProps> = ({
   className,
   recurringFrequency,
   duration,
@@ -172,7 +180,7 @@ const DueDateBadge: React.FC<RecurrentBadgeProps> = ({
     : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- We know it's not null because of the previous condition
       DateTime.fromJSDate(dueDate!);
   const endsToday = finalPaymentDate.hasSame(DateTime.now(), "day");
-  const hasEnded = finalPaymentDate.diffNow("days").days > 0;
+  const hasEnded = finalPaymentDate < DateTime.now();
 
   return (
     <Badge
@@ -183,6 +191,63 @@ const DueDateBadge: React.FC<RecurrentBadgeProps> = ({
       <CalendarCheck className="mr-1.5 h-3.5 w-3.5" />
       {endsToday ? "Finaliza hoy" : hasEnded ? "Finalizó" : "Finaliza"}{" "}
       {!endsToday && finalPaymentDate.toLocaleString(DateTime.DATE_MED)}
+    </Badge>
+  );
+};
+
+export const recurringFrequencyLabels = new Map<DebtRecurringFrequency, string>(
+  [
+    [DebtRecurringFrequency.WEEKLY, "Semanal"],
+    [DebtRecurringFrequency.BIWEEKLY, "Quincenal"],
+    [DebtRecurringFrequency.MONTHLY, "Mensual"],
+  ]
+);
+type RecurringBadgeProps = {
+  recurringFrequency: DebtRecurringFrequency | null;
+  duration: number | null;
+  className?: string;
+};
+const RecurringFrequencyBadge: React.FC<RecurringBadgeProps> = ({
+  recurringFrequency,
+  duration,
+  className,
+}) => {
+  const isRecurrent = recurringFrequency !== null && duration !== null;
+  if (!isRecurrent) return null;
+
+  return (
+    <Badge variant="outline" className={cn(className)}>
+      <RotateCw className="mr-1.5 h-3.5 w-3.5" />
+      {recurringFrequencyLabels.get(recurringFrequency)!} ({duration})
+    </Badge>
+  );
+};
+
+type PayUntilRecurrenceBadgeProps = {
+  recurringFrequency: DebtRecurringFrequency | null;
+  duration: number | null;
+  createdAt: Date;
+};
+const PayUntilRecurrenceBadge: React.FC<PayUntilRecurrenceBadgeProps> = ({
+  recurringFrequency,
+  duration,
+  createdAt,
+}) => {
+  const isRecurrent = recurringFrequency !== null && duration !== null;
+  if (!isRecurrent) return null;
+
+  const cycles: DateTime[] = getRecurrentCycleDates({
+    recurringFrequency,
+    duration,
+    createdAt,
+  });
+  const currentCycle = cycles.find((cycle) => cycle > DateTime.now());
+  if (!currentCycle) return null;
+
+  return (
+    <Badge variant="outline">
+      <Clock className="mr-1.5 h-3.5 w-3.5" />
+      Paga antes del {currentCycle.toLocaleString(DateTime.DATE_MED)}
     </Badge>
   );
 };
@@ -253,6 +318,8 @@ const DebtCard = Object.assign(Root, {
   BadgeContainer,
   AmountBadge,
   DueDateBadge,
+  RecurringFrequencyBadge,
+  PayUntilRecurrenceBadge,
   Description,
   Footer,
   CreatedAtBadge,

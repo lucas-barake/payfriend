@@ -6,22 +6,25 @@ import AddPaymentDialog from "$/pages/dashboard/(page-lib)/components/debts-as-b
 import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/get-debts/debts-as-borrower/types";
 import ViewOwnPaymentsDialog from "$/pages/dashboard/(page-lib)/components/debts-as-borrower-tab/debt-as-borrower-card/borrower-actions-menu/view-own-payments-dialog";
 import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
-import { Dialog } from "$/components/ui/dialog";
-import { getRecurrentCycleDates } from "$/pages/dashboard/(page-lib)/utils/get-recurrent-cycle-dates";
-import { Card } from "$/components/ui/card";
+import RecurringCyclesDialog from "$/pages/dashboard/(page-lib)/components/recurring-cycles-dialog";
 
 type Props = {
   debt: DebtsAsBorrowerResult["debts"][number];
   queryVariables: DebtsAsBorrowerInput;
+  isConcluded: boolean;
 };
 
-const BorrowerActionsMenu: React.FC<Props> = ({ debt, queryVariables }) => {
+const BorrowerActionsMenu: React.FC<Props> = ({
+  debt,
+  queryVariables,
+  isConcluded,
+}) => {
   const isRecurrent =
     debt.recurringFrequency !== null && debt.duration !== null;
   const [openAddPaymentDialog, setOpenAddPaymentDialog] = React.useState(false);
   const [openViewOwnPaymentsDialog, setOpenViewOwnPaymentsDialog] =
     React.useState(false);
-  const [openViewRecurrentInfoDialog, setOpenViewRecurrentInfoDialog] =
+  const [openRecurringCyclesDialog, setOpenRecurringCyclesDialog] =
     React.useState(false);
 
   return (
@@ -41,31 +44,15 @@ const BorrowerActionsMenu: React.FC<Props> = ({ debt, queryVariables }) => {
       />
 
       {isRecurrent && (
-        <Dialog
-          open={openViewRecurrentInfoDialog}
-          onOpenChange={setOpenViewRecurrentInfoDialog}
-        >
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.Title>Detalles de Recurrencia</Dialog.Title>
-            </Dialog.Header>
-
-            <div className="flex flex-col gap-1.5">
-              {getRecurrentCycleDates({
-                recurringFrequency: debt.recurringFrequency!,
-                duration: debt.duration!,
-                createdAt: debt.createdAt,
-              }).map((cycle, index) => {
-                return (
-                  <Card key={cycle.toUTC().toString()} className="p-2 text-sm">
-                    <span className="font-semibold">Periodo {index + 1}:</span>{" "}
-                    {cycle.toFormat("DDDD")}
-                  </Card>
-                );
-              })}
-            </div>
-          </Dialog.Content>
-        </Dialog>
+        <RecurringCyclesDialog
+          open={openRecurringCyclesDialog}
+          onOpenChange={setOpenRecurringCyclesDialog}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- isRecurrent is true
+          recurringFrequency={debt.recurringFrequency!}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- isRecurrent is true
+          duration={debt.duration!}
+          createdAt={debt.createdAt}
+        />
       )}
 
       <DropdownMenu>
@@ -85,6 +72,7 @@ const BorrowerActionsMenu: React.FC<Props> = ({ debt, queryVariables }) => {
             onClick={() => {
               setOpenAddPaymentDialog(true);
             }}
+            disabled={isConcluded}
           >
             <DropdownMenu.Button>
               <PlusIcon className="h-4 w-4" />
@@ -108,7 +96,7 @@ const BorrowerActionsMenu: React.FC<Props> = ({ debt, queryVariables }) => {
             <DropdownMenu.Item
               className="cursor-pointer"
               onClick={() => {
-                setOpenViewRecurrentInfoDialog(true);
+                setOpenRecurringCyclesDialog(true);
               }}
             >
               <DropdownMenu.Button>

@@ -6,22 +6,23 @@ import { TimeInMs } from "$/lib/enums/time";
 import { Loader } from "$/components/ui/loader";
 import { ScrollArea } from "$/components/ui/scroll-area";
 import PaymentRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/payments-dialog/payment-row";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  debtId: string;
+  debt: DebtsAsLenderResult["debts"][number];
   queryVariables: DebtsAsLenderInput;
 };
 
 const PaymentsDialog: React.FC<Props> = ({
   open,
   onOpenChange,
-  debtId,
+  debt,
   queryVariables,
 }) => {
   const query = api.debts.getPaymentsAsLender.useQuery(
-    { debtId },
+    { debtId: debt.id },
     {
       enabled: open,
       staleTime: TimeInMs.FiveSeconds,
@@ -54,7 +55,7 @@ const PaymentsDialog: React.FC<Props> = ({
             {payments.map((payment) => (
               <PaymentRow
                 payment={payment}
-                debtId={debtId}
+                debt={debt}
                 queryVariables={queryVariables}
                 key={payment.id}
               />

@@ -12,6 +12,7 @@ export const getUserDebtsSelect = {
   amount: true,
   archived: true,
   dueDate: true,
+  currency: true,
   recurringFrequency: true,
   duration: true,
   lender: {

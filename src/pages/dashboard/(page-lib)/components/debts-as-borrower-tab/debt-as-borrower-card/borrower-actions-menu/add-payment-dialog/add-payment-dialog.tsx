@@ -155,8 +155,8 @@ const AddPaymentDialog: React.FC<Props> = ({
             Vas a pagar{" "}
             <span className="font-bold">
               {isFullPayment
-                ? formatCurrency(borrowerBalance)
-                : formatCurrency(form.watch("amount") as number)}
+                ? formatCurrency(borrowerBalance, debt.currency)
+                : formatCurrency(form.watch("amount") as number, debt.currency)}
             </span>{" "}
             de{" "}
             <span className="font-bold">{formatCurrency(borrowerBalance)}</span>{" "}

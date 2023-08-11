@@ -13,6 +13,9 @@ export const debtInvitesQueriesRouter = createTRPCRouter({
             name: true,
             description: true,
             amount: true,
+            currency: true,
+            recurringFrequency: true,
+            duration: true,
             lender: {
               select: {
                 id: true,

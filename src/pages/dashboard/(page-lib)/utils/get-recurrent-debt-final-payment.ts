@@ -13,10 +13,10 @@ export function getRecurrentDebtFinalPayment(args: Args): DateTime {
       month: args.duration,
     }),
     ...(args.recurringFrequency === "WEEKLY" && {
-      month: args.duration / 4,
+      day: args.duration * 7,
     }),
     ...(args.recurringFrequency === "BIWEEKLY" && {
-      month: args.duration / 2,
+      day: args.duration * 14,
     }),
   });
 }

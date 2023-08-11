@@ -24,9 +24,7 @@ export async function processDueDateDebtsCronJob(
           },
         },
         archived: {
-          not: {
-            equals: null,
-          },
+          equals: null,
         },
       },
       select: {
