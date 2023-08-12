@@ -59,7 +59,3 @@ export const CurrencyInput: React.FC<Props> = ({
     />
   );
 };
-
-// export const CurrencyInput = dynamic(() => Promise.resolve(Base), {
-//   ssr: false,
-// });
