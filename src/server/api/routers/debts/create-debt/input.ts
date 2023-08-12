@@ -2,7 +2,19 @@ import { z } from "zod";
 import { type DebtRecurringFrequency } from "@prisma/client";
 import { DateTime } from "luxon";
 
-export const CURRENCIES = ["COP", "USD", "MXN", "EUR", "UYU", "ARS"] as const;
+export const CURRENCIES = [
+  "COP",
+  "USD",
+  "MXN",
+  "EUR",
+  "UYU",
+  "ARS",
+  "CLP",
+  "BRL",
+  "PYG",
+  "PEN",
+  "GBP",
+] as const;
 export type Currency = typeof CURRENCIES[number] | string;
 export const MAX_BORROWERS = 4;
 export const MAX_WEEKLY_DURATION = 8;
