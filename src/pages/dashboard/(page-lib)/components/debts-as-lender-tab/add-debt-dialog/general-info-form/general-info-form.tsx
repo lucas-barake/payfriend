@@ -17,9 +17,9 @@ import { ArrowRight, EyeIcon } from "lucide-react";
 import { type TabSetters } from "$/hooks/use-tabs/use-tabs";
 import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { DatePicker } from "$/components/ui/date-picker";
-import { formatCurrency } from "$/lib/utils/format-currency";
 import { DateTime } from "luxon";
 import RecurringCyclesDialog from "$/pages/dashboard/(page-lib)/components/recurring-cycles-dialog";
+import { CurrencyInput } from "$/components/ui/currency-input";
 
 function roundToTwoDecimals(num: number): number {
   return Math.round((num + Number.EPSILON) * 100) / 100;
@@ -127,14 +127,18 @@ const GeneralInfoForm: React.FC<Props> = ({
           </div>
 
           <div className="flex gap-1">
-            <Form.Input
-              id="amount"
-              type="number"
-              {...form.register("amount", { valueAsNumber: true })}
-              required
-              error={form.formState.errors.amount !== undefined}
-              min={0}
-              step={0.01}
+            <Controller
+              name="amount"
+              control={form.control}
+              render={({ field }) => (
+                <CurrencyInput
+                  currency={form.watch("currency")}
+                  value={field.value}
+                  onChange={(args) => {
+                    field.onChange(args.value);
+                  }}
+                />
+              )}
             />
 
             <Controller
@@ -160,13 +164,6 @@ const GeneralInfoForm: React.FC<Props> = ({
               )}
             />
           </div>
-
-          {form.watch("amount") !== undefined &&
-            !isNaN(form.watch("amount")) && (
-              <span className="text-sm text-muted-foreground">
-                {formatCurrency(form.watch("amount"), form.watch("currency"))}
-              </span>
-            )}
 
           <Form.FieldError>
             {form.formState.errors.amount?.message}

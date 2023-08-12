@@ -79,6 +79,7 @@
     "react-email": "^1.9.4",
     "react-hook-form": "^7.43.7",
     "react-hot-toast": "^2.4.0",
+    "react-intl-currency-input": "^0.3.3",
     "react-otp-input": "^3.0.0",
     "react-timer-hook": "^3.0.7",
     "react-virtuoso": "^4.3.5",
