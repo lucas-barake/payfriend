@@ -1,8 +1,15 @@
 import React from "react";
 import { type InputProps, inputVariants } from "$/components/ui/form/input";
-import IntlCurrencyInput from "react-intl-currency-input";
 import { type Currency } from "$/server/api/routers/debts/create-debt/input";
 import dynamic from "next/dynamic";
+
+const IntlCurrencyInput = dynamic(
+  // @ts-expect-error - No idea why this is happening
+  () => import("react-intl-currency-input").then((mod) => mod.default),
+  {
+    ssr: false,
+  }
+);
 
 export type CurrencyInputOnChangeArgs = {
   event: React.ChangeEvent<HTMLInputElement>;
@@ -14,7 +21,7 @@ type Props = Omit<InputProps, "onChange"> & {
   onChange: (args: CurrencyInputOnChangeArgs) => void;
 };
 
-export const Base: React.FC<Props> = ({
+export const CurrencyInput: React.FC<Props> = ({
   error,
   currency,
   className,
@@ -28,7 +35,7 @@ export const Base: React.FC<Props> = ({
       className={inputVariants({ error, className })}
       currency={currency}
       config={{
-        // @ts-expect-error - The type definitions for react-intl-currency-input are wrong
+        // @ts-expect-error - Locale is typed as string, but it's actually the correct union type
         locale,
         formats: {
           number: {
@@ -53,6 +60,6 @@ export const Base: React.FC<Props> = ({
   );
 };
 
-export const CurrencyInput = dynamic(() => Promise.resolve(Base), {
-  ssr: false,
-});
+// export const CurrencyInput = dynamic(() => Promise.resolve(Base), {
+//   ssr: false,
+// });
