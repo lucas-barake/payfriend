@@ -48,7 +48,13 @@ const PaymentsDialog: React.FC<Props> = ({
   );
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setSelectedBorrowerId(null);
+        onOpenChange(open);
+      }}
+    >
       <Dialog.Content>
         <Dialog.Header>
           <Dialog.Title>Pagos</Dialog.Title>
