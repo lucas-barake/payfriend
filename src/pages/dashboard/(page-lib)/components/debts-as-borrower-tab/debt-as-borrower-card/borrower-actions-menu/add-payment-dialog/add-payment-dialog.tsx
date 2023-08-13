@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
 import { PaymentStatus } from "@prisma/client";
+import { CurrencyInput } from "$/components/ui/currency-input";
 
 type Props = {
   open: boolean;
@@ -123,10 +124,10 @@ const AddPaymentDialog: React.FC<Props> = ({
                   id="fullPayment"
                   checked={field.value}
                   onCheckedChange={(checked) => {
+                    const isFullPayment = !checked;
+                    if (isFullPayment) return;
                     field.onChange(checked);
-                    if (checked) {
-                      form.setValue("amount", null);
-                    }
+                    form.setValue("amount", null);
                   }}
                 />
               )}
@@ -134,18 +135,41 @@ const AddPaymentDialog: React.FC<Props> = ({
             <Form.Label htmlFor="fullPayment">Pago Total</Form.Label>
           </Form.Group>
 
+          <Form.Group className="flex-row items-center">
+            <Controller
+              name="fullPayment"
+              control={form.control}
+              render={({ field }) => (
+                <Form.Checkbox
+                  id="partialPayment"
+                  checked={!field.value}
+                  onCheckedChange={(checked) => {
+                    const isFullPayment = !checked;
+                    if (isFullPayment) return;
+                    field.onChange(!checked);
+                  }}
+                />
+              )}
+            />
+            <Form.Label htmlFor="partialPayment">Pago Parcial</Form.Label>
+          </Form.Group>
+
           {!isFullPayment && (
             <Form.Group>
               <Form.Label>Cantidad</Form.Label>
-              <Form.Input
-                type="number"
-                placeholder={`Máximo ${formatCurrency(
-                  borrowerBalance,
-                  debt.currency
-                )}`}
-                {...form.register("amount", {
-                  valueAsNumber: true,
-                })}
+
+              <Controller
+                name="amount"
+                control={form.control}
+                render={({ field }) => (
+                  <CurrencyInput
+                    currency={debt.currency}
+                    value={field.value ?? 0}
+                    onChange={(args) => {
+                      field.onChange(args.value);
+                    }}
+                  />
+                )}
               />
 
               <Form.FieldError>

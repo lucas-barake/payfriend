@@ -59,7 +59,7 @@ const DebtsAsBorrowerTab: React.FC = () => {
       <DebtsGrid>
         {query.isLoading ? (
           <>
-            {Array.from({ length: 3 }).map((_, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <DebtCard.Skeleton key={index} />
             ))}
           </>

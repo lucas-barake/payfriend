@@ -2,16 +2,16 @@ import * as React from "react";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "$/lib/utils/cn";
 import { Button } from "$/components/ui/button";
-import { Calendar } from "$/components/ui/calendar";
+import { Calendar, type CalendarProps } from "$/components/ui/calendar";
 import { Popover } from "$/components/ui/popover";
 import { DateTime } from "luxon";
 
 type Props = {
   value: string | undefined;
   onChange: (date: Date | undefined) => void;
-};
+} & CalendarProps;
 
-export const DatePicker: React.FC<Props> = ({ value, onChange }) => {
+export const DatePicker: React.FC<Props> = ({ value, onChange, ...props }) => {
   return (
     <Popover>
       <Popover.Trigger asChild>
@@ -35,6 +35,7 @@ export const DatePicker: React.FC<Props> = ({ value, onChange }) => {
 
       <Popover.Content className="w-auto p-0">
         <Calendar
+          {...props}
           mode="single"
           selected={value ? new Date(value) : undefined}
           onSelect={onChange}

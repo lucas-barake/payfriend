@@ -59,13 +59,9 @@ const DebtAsBorrowerCard: React.FC<Props> = ({ debt, queryVariables }) => {
       </DebtCard.Header>
 
       <DebtCard.BadgeContainer>
-        <DebtCard.AmountBadge amount={debt.amount} currency={debt.currency} />
-
-        <DebtCard.DueDateBadge
-          dueDate={debt.dueDate}
-          recurringFrequency={debt.recurringFrequency}
-          createdAt={debt.createdAt}
-          duration={debt.duration}
+        <DebtCard.AmountBadge
+          amount={borrower.balance}
+          currency={debt.currency}
         />
 
         <DebtCard.PayUntilRecurrenceBadge
@@ -83,7 +79,16 @@ const DebtAsBorrowerCard: React.FC<Props> = ({ debt, queryVariables }) => {
       <DebtCard.Description>{debt.description}</DebtCard.Description>
 
       <DebtCard.Footer>
-        <DebtCard.CreatedAtBadge createdAt={debt.createdAt} />
+        <div className="flex flex-col gap-1.5">
+          <DebtCard.CreatedAtBadge createdAt={debt.createdAt} />
+
+          <DebtCard.DueDateBadge
+            dueDate={debt.dueDate}
+            recurringFrequency={debt.recurringFrequency}
+            createdAt={debt.createdAt}
+            duration={debt.duration}
+          />
+        </div>
 
         <BorrowerActionsMenu
           debt={debt}

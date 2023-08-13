@@ -63,7 +63,7 @@ const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
   return (
     <Card className="mt-2 flex flex-col px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col">
           {payment.borrower.user.name}
 
           <span className="text-sm text-muted-foreground">
@@ -109,7 +109,6 @@ const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
             <Separator />
 
             <Button
-              variant="destructive"
               className="mt-2 self-center text-sm"
               size="sm"
               loading={confirmPaymentMutation.isLoading}

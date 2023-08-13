@@ -5,6 +5,8 @@ import { Card } from "$/components/ui/card";
 import { type DebtRecurringFrequency } from "@prisma/client";
 import { cn } from "$/lib/utils/cn";
 import { CheckIcon } from "lucide-react";
+import { getRecurrentDebtFinalPayment } from "$/pages/dashboard/(page-lib)/utils/get-recurrent-debt-final-payment";
+import { Separator } from "$/components/ui/separator";
 
 type Props = {
   open: boolean;
@@ -54,6 +56,17 @@ const RecurringCyclesDialog: React.FC<Props> = ({
               </Card>
             );
           })}
+
+          <Separator className="my-2" />
+
+          <Card className="flex items-center gap-1 bg-destructive px-3 py-2 text-sm text-destructive-foreground">
+            <span className="font-semibold">Finaliza:</span>{" "}
+            {getRecurrentDebtFinalPayment({
+              recurringFrequency,
+              duration,
+              createdAt,
+            }).toFormat("DDDD")}
+          </Card>
         </div>
       </Dialog.Content>
     </Dialog>

@@ -3,10 +3,7 @@ import { Popover } from "$/components/ui/popover";
 import { Button } from "$/components/ui/button";
 import * as LucideIcons from "lucide-react";
 import { Avatar } from "$/components/ui/avatar";
-import { Separator } from "$/components/ui/separator";
 import { type GetDebtBorrowersAndPendingBorrowersResult } from "$/server/api/routers/debts/get-debts/get-debt-borrowers-and-pending-borrowers/types";
-import { formatCurrency } from "$/lib/utils/format-currency";
-import { cn } from "$/lib/utils/cn";
 import { type Currency } from "$/server/api/routers/debts/create-debt/input";
 
 type Props = {
@@ -14,7 +11,7 @@ type Props = {
   currency: Currency;
 };
 
-const BorrowerRow: React.FC<Props> = ({ borrower, currency }) => {
+const BorrowerRow: React.FC<Props> = ({ borrower }) => {
   return (
     <div className="flex items-center justify-between" key={borrower.user.id}>
       <div className="flex items-center gap-3">
@@ -42,22 +39,6 @@ const BorrowerRow: React.FC<Props> = ({ borrower, currency }) => {
               <span>{borrower.user.name ?? "Sin nombre"}</span>
               <span className="break-all opacity-50">
                 {borrower.user.email}
-              </span>
-            </div>
-
-            <Separator />
-
-            <div className="flex flex-col gap-1.5">
-              Saldo pendiente:
-              <span
-                className={cn(
-                  borrower.balance === 0
-                    ? "text-success-text"
-                    : "text-warning-text",
-                  "break-all"
-                )}
-              >
-                {formatCurrency(borrower.balance, currency)}
               </span>
             </div>
           </Popover.Content>

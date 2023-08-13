@@ -146,6 +146,7 @@ const AmountBadge: React.FC<AmountBadgeProps> = ({
   currency,
   ...props
 }) => {
+  console.log({ amount, currency });
   return (
     <Badge variant="success" {...props}>
       {formatCurrency(amount, currency)}

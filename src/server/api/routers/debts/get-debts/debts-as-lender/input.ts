@@ -19,12 +19,12 @@ export const statusOptions = [
     label: "Activas",
   },
   {
-    value: "archived",
-    label: "Concluidas",
-  },
-  {
     value: "pending-confirmation",
     label: "Pago por confirmar",
+  },
+  {
+    value: "archived",
+    label: "Concluidas",
   },
   {
     value: "all",

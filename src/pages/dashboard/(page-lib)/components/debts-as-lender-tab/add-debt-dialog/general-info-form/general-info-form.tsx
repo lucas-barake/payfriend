@@ -13,7 +13,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";
-import { ArrowRight, EyeIcon } from "lucide-react";
+import { ArrowRight, DivideIcon, EyeIcon } from "lucide-react";
 import { type TabSetters } from "$/hooks/use-tabs/use-tabs";
 import { type addDebtTabs } from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog/(component-lib)/add-debt-tabs";
 import { DatePicker } from "$/components/ui/date-picker";
@@ -78,7 +78,7 @@ const GeneralInfoForm: React.FC<Props> = ({
           onOpenChange={setOpenCyclesInfo}
           recurringFrequency={form.watch("recurrency.data.frequency")!}
           duration={form.watch("recurrency.data.duration")!}
-          createdAt={DateTime.now().toJSDate()}
+          createdAt={DateTime.now().plus({ minute: 1 }).toJSDate()}
         />
       )}
 
@@ -109,7 +109,7 @@ const GeneralInfoForm: React.FC<Props> = ({
             {isRecurrent && (
               <Button
                 className="self-start text-sm"
-                variant="outline"
+                variant="success"
                 onClick={() => {
                   form.setValue(
                     "amount",
@@ -121,6 +121,7 @@ const GeneralInfoForm: React.FC<Props> = ({
                 }}
                 size="sm"
               >
+                <DivideIcon className="mr-1.5 h-4 w-4" />
                 Dividir en periodos
               </Button>
             )}
@@ -170,15 +171,6 @@ const GeneralInfoForm: React.FC<Props> = ({
           </Form.FieldError>
         </Form.Group>
 
-        <Form.Group>
-          <Form.Label htmlFor="description">Descripción</Form.Label>
-          <Form.TextArea id="description" {...form.register("description")} />
-
-          <Form.FieldError>
-            {form.formState.errors.description?.message}
-          </Form.FieldError>
-        </Form.Group>
-
         {!isRecurrent && (
           <Form.Group>
             <Form.Label htmlFor="dueDate">Fecha de vencimiento</Form.Label>
@@ -196,6 +188,9 @@ const GeneralInfoForm: React.FC<Props> = ({
                     }
                     field.onChange(DateTime.fromJSDate(date).toUTC().toISO());
                   }}
+                  disabled={{
+                    before: DateTime.now().plus({ day: 1 }).toJSDate(),
+                  }}
                 />
               )}
             />
@@ -205,6 +200,15 @@ const GeneralInfoForm: React.FC<Props> = ({
             </Form.FieldError>
           </Form.Group>
         )}
+
+        <Form.Group>
+          <Form.Label htmlFor="description">Descripción</Form.Label>
+          <Form.TextArea id="description" {...form.register("description")} />
+
+          <Form.FieldError>
+            {form.formState.errors.description?.message}
+          </Form.FieldError>
+        </Form.Group>
 
         <Form.Group className="flex-row items-center">
           <Controller

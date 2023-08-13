@@ -56,6 +56,7 @@ export const CurrencyInput: React.FC<Props> = ({
         onChange({ event, value, maskedValue });
       }}
       {...props}
+      type="tel"
     />
   );
 };
