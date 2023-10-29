@@ -22,6 +22,7 @@ export const getUniquePartners = TRPCProcedures.protected
             select: {
               email: true,
               image: true,
+              name: true,
             },
           },
         },
@@ -31,6 +32,7 @@ export const getUniquePartners = TRPCProcedures.protected
       return borrowers.map((borrower) => ({
         email: borrower.user.email,
         image: borrower.user.image,
+        name: borrower.user.name,
       }));
     } else {
       const lenders = await ctx.prisma.debt.findMany({
@@ -46,6 +48,7 @@ export const getUniquePartners = TRPCProcedures.protected
             select: {
               email: true,
               image: true,
+              name: true,
             },
           },
         },
@@ -55,6 +58,7 @@ export const getUniquePartners = TRPCProcedures.protected
       return lenders.map((debt) => ({
         email: debt.lender.email,
         image: debt.lender.image,
+        name: debt.lender.name,
       }));
     }
   });

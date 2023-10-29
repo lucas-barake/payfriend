@@ -33,14 +33,18 @@ const PartnersFilterDialog: React.FC<Props> = ({
     }
   );
   const members = query.data ?? [];
-  const filteredMembers = members.filter((member) =>
-    member.email?.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredMembers = members.filter((member) => {
+    const searchTerm = filter.toLowerCase();
+    const emailMatch =
+      member.email?.toLowerCase().includes(searchTerm) ?? false;
+    const nameMatch = member.name?.toLowerCase().includes(searchTerm) ?? false;
+    return emailMatch || nameMatch;
+  });
 
   return (
     <Dialog>
       <Dialog.Trigger asChild>
-        <Button variant="outline">
+        <Button variant={selectedPartnerEmail ? "success" : "outline"}>
           {selectedPartnerEmail ? (
             <SearchCheckIcon className="h-4 w-4 sm:mr-2" />
           ) : (
@@ -107,7 +111,12 @@ const PartnersFilterDialog: React.FC<Props> = ({
                       </Avatar.Fallback>
                     </Avatar>
 
-                    <span>{member.email}</span>
+                    <p className="break-all">
+                      {member.name}{" "}
+                      <span className="text-xs text-muted-foreground">
+                        {member.email}
+                      </span>
+                    </p>
                   </div>
 
                   <span
@@ -115,7 +124,7 @@ const PartnersFilterDialog: React.FC<Props> = ({
                       variant:
                         selectedPartnerEmail === member.email
                           ? "destructive"
-                          : "outline",
+                          : "default",
                       size: "xs",
                       className: "flex items-center gap-1 rounded-sm",
                     })}
@@ -128,6 +137,14 @@ const PartnersFilterDialog: React.FC<Props> = ({
             ))}
           </ul>
         )}
+
+        <Dialog.Footer>
+          <Dialog.Trigger asChild>
+            <Button variant="secondary" className="w-full md:w-auto">
+              Cerrar
+            </Button>
+          </Dialog.Trigger>
+        </Dialog.Footer>
       </Dialog.Content>
     </Dialog>
   );
