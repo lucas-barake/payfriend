@@ -23,6 +23,13 @@ const RecurringCyclesDialog: React.FC<Props> = ({
   duration,
   createdAt,
 }) => {
+  const finalPaymentDate = getRecurrentDebtFinalPayment({
+    recurringFrequency,
+    duration,
+    createdAt,
+  });
+  const isFinalPaymentInPast = Date.now() > finalPaymentDate.toMillis();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <Dialog.Content>
@@ -60,12 +67,10 @@ const RecurringCyclesDialog: React.FC<Props> = ({
           <Separator className="my-2" />
 
           <Card className="flex items-center gap-1 bg-destructive px-3 py-2 text-sm text-destructive-foreground">
-            <span className="font-semibold">Finaliza:</span>{" "}
-            {getRecurrentDebtFinalPayment({
-              recurringFrequency,
-              duration,
-              createdAt,
-            }).toFormat("DDDD")}
+            <span className="font-semibold">
+              {isFinalPaymentInPast ? "Finalizado" : "Finaliza"}
+            </span>{" "}
+            {finalPaymentDate.toFormat("DDDD")}
           </Card>
         </div>
       </Dialog.Content>
