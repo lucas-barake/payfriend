@@ -9,7 +9,8 @@ import PaymentRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-
 import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 import BorrowerRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/payments-dialog/borrower-row";
 import { Button } from "$/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, InfoIcon } from "lucide-react";
+import { PaymentStatus } from "@prisma/client";
 
 type Props = {
   open: boolean;
@@ -40,10 +41,22 @@ const PaymentsDialog: React.FC<Props> = ({
     }
   );
   const payments = query.data?.payments ?? [];
-  const sortedPayments = payments.sort((a, b) => {
+  const descPayments = payments.sort((a, b) => {
     return b.createdAt.getTime() - a.createdAt.getTime();
   });
-  const filteredPayments = sortedPayments.filter(
+  const paymentsOrderedByPending = descPayments.sort((a, b) => {
+    if (a.status === b.status) {
+      return 0;
+    }
+    if (a.status === PaymentStatus.PENDING_CONFIRMATION) {
+      return -1;
+    }
+    if (b.status === PaymentStatus.PENDING_CONFIRMATION) {
+      return 1;
+    }
+    return 0;
+  });
+  const filteredPayments = paymentsOrderedByPending.filter(
     (payment) => payment.borrower.user.id === selectedBorrowerId
   );
 
@@ -64,6 +77,13 @@ const PaymentsDialog: React.FC<Props> = ({
             podrás confirmar los pagos que te hagan.
           </Dialog.Description>
         </Dialog.Header>
+
+        {borrowers.length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-2">
+            <InfoIcon className="h-8 w-8 text-primary" />
+            <p className="text-center">No hay deudores para mostrar.</p>
+          </div>
+        )}
 
         {!viewingBorrower && (
           <div className="flex flex-col gap-1.5">

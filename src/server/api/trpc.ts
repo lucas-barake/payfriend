@@ -24,9 +24,9 @@ import { prisma } from "$/server/db";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import mercadopago from "$/server/api/routers/subscription-plans/(lib)/mercadopago";
 import { redis } from "$/server/redis";
+import { rateLimit } from "$/server/api/utils/rate-limit/rate-limit";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -112,43 +112,6 @@ export const createTRPCRouter = t.router;
 export const mergeTRPCRouters = t.mergeRouters;
 export const createTRPCMiddleware = t.middleware;
 
-type RateLimitOptions = Record<
-  string,
-  {
-    maxRequests: number;
-    windowInSeconds: number;
-  }
->;
-const rateLimitOptions = {
-  limited: {
-    maxRequests: 50,
-    windowInSeconds: 600, // 10 minutes
-  },
-  critical: {
-    maxRequests: 25,
-    windowInSeconds: 600, // 10 minutes
-  },
-} satisfies RateLimitOptions;
-
-async function rateLimit(
-  ctx: {
-    redis: InnerTRPCContext["redis"];
-    session: NonNullable<InnerTRPCContext["session"]>;
-  },
-  type: keyof typeof rateLimitOptions
-): Promise<void> {
-  const key = `rate-limit:${type}:${ctx.session.user.id}`;
-  const current = await ctx.redis.incr(key);
-
-  if (current === 1) {
-    await ctx.redis.expire(key, rateLimitOptions[type].windowInSeconds);
-  }
-
-  if (current > rateLimitOptions[type].maxRequests) {
-    throw CUSTOM_EXCEPTIONS.TOO_MANY_REQUESTS();
-  }
-}
-
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user || !ctx.session.user.email) {
@@ -202,7 +165,9 @@ export const TRPCProcedures = {
   protectedLimited: t.procedure
     .use(enforceUserIsAuthed)
     .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, "limited");
+      await rateLimit(ctx, {
+        type: "limited",
+      });
       return next({
         ctx,
       });
@@ -210,7 +175,9 @@ export const TRPCProcedures = {
   protectedCritical: t.procedure
     .use(enforceUserIsAuthed)
     .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, "critical");
+      await rateLimit(ctx, {
+        type: "critical",
+      });
       return next({
         ctx,
       });
@@ -220,7 +187,9 @@ export const TRPCProcedures = {
   verifiedLimited: t.procedure
     .use(enforceUserIsVerified)
     .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, "limited");
+      await rateLimit(ctx, {
+        type: "limited",
+      });
       return next({
         ctx,
       });
@@ -228,7 +197,9 @@ export const TRPCProcedures = {
   verifiedCritical: t.procedure
     .use(enforceUserIsVerified)
     .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, "critical");
+      await rateLimit(ctx, {
+        type: "critical",
+      });
       return next({
         ctx,
       });

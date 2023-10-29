@@ -3,12 +3,13 @@ import { Controller, useForm } from "react-hook-form";
 import {
   type CreateDebtInput,
   CURRENCIES,
+  createDebtTypeOptions,
   generalInfoInput,
   type GeneralInfoInput,
-  MAX_BIWEEKLY_DURATION,
-  MAX_MONTHLY_DURATION,
-  MAX_WEEKLY_DURATION,
-  recurrentOptions,
+  DEBT_MAX_BIWEEKLY_DURATION,
+  DEBT_MAX_MONTHLY_DURATION,
+  DEBT_MAX_WEEKLY_DURATION,
+  createDebtRecurrentOptions,
 } from "$/server/api/routers/debts/create-debt/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
@@ -44,7 +45,7 @@ const GeneralInfoForm: React.FC<Props> = ({
     reValidateMode: "onChange",
     resolver: zodResolver(generalInfoInput),
   });
-  const isRecurrent = form.watch("recurrency.recurrent");
+  const isRecurrent = form.watch("type") === "RECURRENT";
 
   function handleSubmit(data: GeneralInfoInput): void {
     setFormData((prev) => ({
@@ -55,16 +56,9 @@ const GeneralInfoForm: React.FC<Props> = ({
         description: data.description,
         amount: data.amount,
         currency: data.currency,
-        recurrency: isRecurrent
-          ? data.recurrency
-          : {
-              recurrent: false,
-              data: {
-                frequency: undefined,
-                duration: undefined,
-              },
-            },
+        recurrency: isRecurrent ? data.recurrency : null,
         dueDate: isRecurrent ? null : data.dueDate,
+        type: data.type,
       },
     }));
     tabSetters.next();
@@ -76,8 +70,8 @@ const GeneralInfoForm: React.FC<Props> = ({
         <RecurringCyclesDialog
           open={openCyclesInfo}
           onOpenChange={setOpenCyclesInfo}
-          recurringFrequency={form.watch("recurrency.data.frequency")!}
-          duration={form.watch("recurrency.data.duration")!}
+          recurringFrequency={form.watch("recurrency.frequency")!}
+          duration={form.watch("recurrency.duration")!}
           createdAt={DateTime.now().plus({ minute: 1 }).toJSDate()}
         />
       )}
@@ -101,6 +95,35 @@ const GeneralInfoForm: React.FC<Props> = ({
         </Form.Group>
 
         <Form.Group>
+          <Form.Label htmlFor="type" required>
+            Tipo
+          </Form.Label>
+
+          <Controller
+            name="type"
+            control={form.control}
+            render={({ field }) => (
+              <Form.Select
+                defaultValue={field.value}
+                onValueChange={field.onChange}
+              >
+                <Form.Select.Trigger className="h-full">
+                  <Form.Select.Value placeholder="Seleccione una opción" />
+                </Form.Select.Trigger>
+
+                <Form.Select.Content align="end">
+                  {createDebtTypeOptions.map((option) => (
+                    <Form.Select.Item key={option.value} value={option.value}>
+                      {option.label}
+                    </Form.Select.Item>
+                  ))}
+                </Form.Select.Content>
+              </Form.Select>
+            )}
+          />
+        </Form.Group>
+
+        <Form.Group>
           <div className="flex items-center gap-3">
             <Form.Label htmlFor="amount" required>
               Cantidad
@@ -114,8 +137,7 @@ const GeneralInfoForm: React.FC<Props> = ({
                   form.setValue(
                     "amount",
                     roundToTwoDecimals(
-                      form.watch("amount") /
-                        form.watch("recurrency.data.duration")!
+                      form.watch("amount") / form.watch("recurrency.duration")!
                     )
                   );
                 }}
@@ -210,31 +232,6 @@ const GeneralInfoForm: React.FC<Props> = ({
           </Form.FieldError>
         </Form.Group>
 
-        <Form.Group className="flex-row items-center">
-          <Controller
-            name="recurrency.recurrent"
-            control={form.control}
-            render={({ field }) => (
-              <Form.Checkbox
-                id="recurrent"
-                checked={field.value}
-                onCheckedChange={(checked) => {
-                  if (!checked) {
-                    form.setValue("recurrency.data.frequency", undefined);
-                    form.setValue("recurrency.data.duration", undefined);
-                    form.setValue("recurrency.recurrent", false);
-                  } else {
-                    form.setValue("recurrency.data.frequency", "MONTHLY");
-                    form.setValue("recurrency.data.duration", 2);
-                    form.setValue("recurrency.recurrent", true);
-                  }
-                }}
-              />
-            )}
-          />
-          <Form.Label htmlFor="recurrent">Recurrente</Form.Label>
-        </Form.Group>
-
         {isRecurrent && (
           <>
             <Form.Group>
@@ -243,14 +240,14 @@ const GeneralInfoForm: React.FC<Props> = ({
               </Form.Label>
 
               <Controller
-                name="recurrency.data.frequency"
+                name="recurrency.frequency"
                 control={form.control}
                 render={({ field }) => (
                   <Form.Select
                     defaultValue={field.value}
                     onValueChange={(value) => {
                       field.onChange(value);
-                      form.setValue("recurrency.data.duration", 2);
+                      form.setValue("recurrency.duration", 2);
                     }}
                   >
                     <Form.Select.Trigger>
@@ -258,7 +255,7 @@ const GeneralInfoForm: React.FC<Props> = ({
                     </Form.Select.Trigger>
 
                     <Form.Select.Content>
-                      {recurrentOptions.map((option) => (
+                      {createDebtRecurrentOptions.map((option) => (
                         <Form.Select.Item
                           key={option.value}
                           value={option.value}
@@ -272,7 +269,7 @@ const GeneralInfoForm: React.FC<Props> = ({
               />
 
               <Form.FieldError>
-                {form.formState.errors.recurrency?.data?.frequency?.message}
+                {form.formState.errors.recurrency?.frequency?.message}
               </Form.FieldError>
             </Form.Group>
 
@@ -282,10 +279,10 @@ const GeneralInfoForm: React.FC<Props> = ({
               </Form.Label>
 
               <Controller
-                name="recurrency.data.duration"
+                name="recurrency.duration"
                 control={form.control}
                 render={({ field }) => {
-                  const frequency = form.watch("recurrency.data.frequency");
+                  const frequency = form.watch("recurrency.frequency");
                   const startValue = 2;
 
                   return (
@@ -300,7 +297,7 @@ const GeneralInfoForm: React.FC<Props> = ({
                       <Form.Select.Content>
                         {frequency === "WEEKLY" &&
                           Array.from({
-                            length: MAX_WEEKLY_DURATION - startValue + 1,
+                            length: DEBT_MAX_WEEKLY_DURATION - startValue + 1,
                           }).map((_, index) => (
                             <Form.Select.Item
                               key={index}
@@ -312,7 +309,7 @@ const GeneralInfoForm: React.FC<Props> = ({
 
                         {frequency === "BIWEEKLY" &&
                           Array.from({
-                            length: MAX_BIWEEKLY_DURATION - startValue + 1,
+                            length: DEBT_MAX_BIWEEKLY_DURATION - startValue + 1,
                           }).map((_, index) => (
                             <Form.Select.Item
                               key={index}
@@ -324,7 +321,7 @@ const GeneralInfoForm: React.FC<Props> = ({
 
                         {frequency === "MONTHLY" &&
                           Array.from({
-                            length: MAX_MONTHLY_DURATION - startValue + 1,
+                            length: DEBT_MAX_MONTHLY_DURATION - startValue + 1,
                           }).map((_, index) => (
                             <Form.Select.Item
                               key={index}
@@ -340,7 +337,7 @@ const GeneralInfoForm: React.FC<Props> = ({
               />
 
               <Form.FieldError>
-                {form.formState.errors.recurrency?.data?.duration?.message}
+                {form.formState.errors.recurrency?.duration?.message}
               </Form.FieldError>
             </Form.Group>
           </>

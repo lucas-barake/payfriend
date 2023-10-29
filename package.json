@@ -58,7 +58,6 @@
     "class-variance-authority": "^0.5.3",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
-    "cron": "^2.4.0",
     "date-fns": "^2.30.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "framer-motion": "^10.10.0",

@@ -4,7 +4,7 @@ import {
   createDebtInput,
   type CreateDebtInput,
   defaultCreateDebtInput,
-  MAX_BORROWERS,
+  DEBT_MAX_BORROWERS,
 } from "$/server/api/routers/debts/create-debt/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
@@ -156,7 +156,7 @@ const MembersForm: React.FC<Props> = ({
         <Form.FieldDescription
           hide={form.formState.errors.borrowerEmail !== undefined}
         >
-          Máximo {MAX_BORROWERS} correos
+          Máximo {DEBT_MAX_BORROWERS} correos
         </Form.FieldDescription>
 
         <Form.FieldError>

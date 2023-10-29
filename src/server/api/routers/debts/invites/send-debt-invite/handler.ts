@@ -5,7 +5,7 @@ import { Prisma } from "@prisma/client";
 import { checkAndMarkEmailSent } from "$/server/api/routers/debts/(lib)/utils/check-and-mark-email-sent";
 import { sendInvitationEmail } from "$/server/api/routers/debts/(lib)/utils/send-invitation-email";
 import { addRecentEmail } from "$/server/api/routers/debts/(lib)/utils/stored-recent-emails";
-import { MAX_BORROWERS } from "$/server/api/routers/debts/create-debt/input";
+import { DEBT_MAX_BORROWERS } from "$/server/api/routers/debts/create-debt/input";
 
 export const sendDebtInvite = TRPCProcedures.protectedLimited
   .input(sendDebtInviteInput)
@@ -53,7 +53,7 @@ export const sendDebtInvite = TRPCProcedures.protectedLimited
 
     const totalCount = debt.borrowers.length + debt.pendingInvites.length;
 
-    if (totalCount >= MAX_BORROWERS) {
+    if (totalCount >= DEBT_MAX_BORROWERS) {
       throw CUSTOM_EXCEPTIONS.BAD_REQUEST(
         "El grupo ya tiene el máximo de usuarios"
       );

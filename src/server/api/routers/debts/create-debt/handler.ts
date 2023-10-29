@@ -45,8 +45,8 @@ export const createDebt = TRPCProcedures.protectedLimited
           },
           amount: input.generalInfo.amount,
           dueDate: input.generalInfo.dueDate,
-          recurringFrequency: input.generalInfo.recurrency.data.frequency,
-          duration: input.generalInfo.recurrency.data.duration,
+          recurringFrequency: input.generalInfo.recurrency?.frequency,
+          duration: input.generalInfo.recurrency?.duration,
         },
         select: getUserDebtsSelect,
       });

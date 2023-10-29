@@ -16,12 +16,12 @@ export const CURRENCIES = [
   "GBP",
 ] as const;
 export type Currency = typeof CURRENCIES[number] | string;
-export const MAX_BORROWERS = 4;
-export const MAX_WEEKLY_DURATION = 8;
-export const MAX_BIWEEKLY_DURATION = 6;
-export const MAX_MONTHLY_DURATION = 12;
+export const DEBT_MAX_BORROWERS = 4;
+export const DEBT_MAX_WEEKLY_DURATION = 8;
+export const DEBT_MAX_BIWEEKLY_DURATION = 6;
+export const DEBT_MAX_MONTHLY_DURATION = 12;
 
-export const recurrentOptions = [
+export const createDebtRecurrentOptions = [
   {
     label: "Semanal",
     value: "WEEKLY",
@@ -37,6 +37,20 @@ export const recurrentOptions = [
 ] satisfies Array<{
   label: string;
   value: DebtRecurringFrequency;
+}>;
+
+export const createDebtTypeOptions = [
+  {
+    label: "Única",
+    value: "SINGLE",
+  },
+  {
+    label: "Recurrente",
+    value: "RECURRENT",
+  },
+] satisfies Array<{
+  label: string;
+  value: "SINGLE" | "RECURRENT";
 }>;
 
 export const generalInfoInput = z
@@ -83,69 +97,69 @@ export const generalInfoInput = z
         return dueDate > now;
       }, "La fecha de vencimiento debe ser mayor a hoy")
       .nullable(),
-    recurrency: z.discriminatedUnion("recurrent", [
-      z.object({
-        recurrent: z.literal(true),
-        data: z
-          .object({
-            frequency: z.enum(["WEEKLY", "BIWEEKLY", "MONTHLY"], {
-              invalid_type_error:
-                "Debes seleccionar una frecuencia de recurrencia",
-              required_error: "Debes seleccionar una frecuencia de recurrencia",
-            }),
-            duration: z
-              .number({
-                coerce: true,
-                invalid_type_error: "Debes seleccionar una duración",
-                required_error: "Debes seleccionar una duración",
-              })
-              .gte(2, {
-                message: "La duración debe ser mayor a 1",
-              }),
-          })
-          .superRefine((arg, ctx) => {
-            if (arg.frequency === "WEEKLY") {
-              if (arg.duration > MAX_WEEKLY_DURATION) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: `WEEKLY - La duración debe ser menor a ${MAX_WEEKLY_DURATION}`,
-                  path: ["recurrency", "duration"],
-                });
-              }
-            }
-
-            if (arg.frequency === "BIWEEKLY") {
-              if (arg.duration > MAX_BIWEEKLY_DURATION) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: `BIWEEKLY - La duración debe ser menor a ${MAX_BIWEEKLY_DURATION}`,
-                  path: ["recurrency", "duration"],
-                });
-              }
-            }
-
-            if (arg.frequency === "MONTHLY") {
-              if (arg.duration > MAX_MONTHLY_DURATION) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: `MONTHLY - La duración debe ser menor a ${MAX_MONTHLY_DURATION}`,
-                  path: ["recurrency", "duration"],
-                });
-              }
-            }
-          }),
-      }),
-      z.object({
-        recurrent: z.literal(false),
-        data: z.object({
-          frequency: z.undefined(),
-          duration: z.undefined(),
+    type: z.enum(
+      createDebtTypeOptions.map((option) => option.value) as [
+        string,
+        ...string[]
+      ]
+    ),
+    recurrency: z
+      .object({
+        frequency: z.enum(["WEEKLY", "BIWEEKLY", "MONTHLY"], {
+          invalid_type_error: "Debes seleccionar una frecuencia de recurrencia",
+          required_error: "Debes seleccionar una frecuencia de recurrencia",
         }),
-      }),
-    ]),
+        duration: z
+          .number({
+            coerce: true,
+            invalid_type_error: "Debes seleccionar una duración",
+            required_error: "Debes seleccionar una duración",
+          })
+          .gte(2, {
+            message: "La duración debe ser mayor a 1",
+          }),
+      })
+      .superRefine((arg, ctx) => {
+        if (arg.frequency === "WEEKLY") {
+          if (arg.duration > DEBT_MAX_WEEKLY_DURATION) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `WEEKLY - La duración debe ser menor a ${DEBT_MAX_WEEKLY_DURATION}`,
+              path: ["recurrency", "duration"],
+            });
+          }
+        }
+
+        if (arg.frequency === "BIWEEKLY") {
+          if (arg.duration > DEBT_MAX_BIWEEKLY_DURATION) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `BIWEEKLY - La duración debe ser menor a ${DEBT_MAX_BIWEEKLY_DURATION}`,
+              path: ["recurrency", "duration"],
+            });
+          }
+        }
+
+        if (arg.frequency === "MONTHLY") {
+          if (arg.duration > DEBT_MAX_MONTHLY_DURATION) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `MONTHLY - La duración debe ser menor a ${DEBT_MAX_MONTHLY_DURATION}`,
+              path: ["recurrency", "duration"],
+            });
+          }
+        }
+      })
+      .nullable(),
   })
-  .transform((value) => {
-    return value.recurrency.recurrent ? { ...value, dueDate: null } : value;
+  .superRefine((arg, ctx) => {
+    if (arg.type === "RECURRENT" && arg.recurrency === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Debes agregar una recurrencia",
+        path: ["recurrency"],
+      });
+    }
   });
 export type GeneralInfoInput = z.infer<typeof generalInfoInput>;
 
@@ -156,8 +170,8 @@ export const createDebtInput = z.object({
     .min(1, {
       message: "Debes agregar al menos un correo",
     })
-    .max(MAX_BORROWERS, {
-      message: `No puedes agregar más de ${MAX_BORROWERS} correos`,
+    .max(DEBT_MAX_BORROWERS, {
+      message: `No puedes agregar más de ${DEBT_MAX_BORROWERS} correos`,
     })
     .refine((emails) => {
       const uniqueEmails = new Set(emails);
@@ -174,12 +188,7 @@ export const defaultCreateDebtInput = {
     name: "",
     description: null,
     dueDate: null,
-    recurrency: {
-      recurrent: false,
-      data: {
-        duration: undefined,
-        frequency: undefined,
-      },
-    },
+    recurrency: null,
+    type: "SINGLE",
   },
 } satisfies CreateDebtInput;

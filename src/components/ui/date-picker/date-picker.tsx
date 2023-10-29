@@ -12,8 +12,10 @@ type Props = {
 } & CalendarProps;
 
 export const DatePicker: React.FC<Props> = ({ value, onChange, ...props }) => {
+  const [open, setOpen] = React.useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <Button
           variant={"outline"}
@@ -38,7 +40,10 @@ export const DatePicker: React.FC<Props> = ({ value, onChange, ...props }) => {
           {...props}
           mode="single"
           selected={value ? new Date(value) : undefined}
-          onSelect={onChange}
+          onSelect={(date) => {
+            onChange(date);
+            setOpen(false);
+          }}
           initialFocus
         />
       </Popover.Content>

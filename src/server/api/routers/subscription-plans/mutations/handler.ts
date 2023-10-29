@@ -3,19 +3,34 @@ import { env } from "$/env.mjs";
 import { generateLinkInput } from "$/server/api/routers/subscription-plans/mutations/input";
 import { z } from "zod";
 import {
-  type UpdateSubscriptionResponse,
   type CreateSubscriptionRequestBody,
   type CreateSubscriptionResponse,
   type UpdateSubscriptionRequestBody,
+  type UpdateSubscriptionResponse,
 } from "$/server/api/routers/subscription-plans/(lib)/types/subscriptions";
 import { Pages } from "$/lib/enums/pages";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { logger } from "$/server/logger";
 import cuid2 from "@paralleldrive/cuid2";
 import { DateTime } from "luxon";
+import { rateLimit } from "$/server/api/utils/rate-limit";
 
 export const subscriptionsMutations = createTRPCRouter({
   generateLink: TRPCProcedures.protected
+    .use(async ({ ctx, next }) => {
+      await rateLimit(ctx, {
+        type: "custom",
+        config: {
+          maxRequests: 7,
+          windowType: "weeks",
+          window: 1,
+        },
+      });
+
+      return next({
+        ctx,
+      });
+    })
     .input(generateLinkInput)
     .mutation(async ({ ctx, input }) => {
       const activeSubscription =
