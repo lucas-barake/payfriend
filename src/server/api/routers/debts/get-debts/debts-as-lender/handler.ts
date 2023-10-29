@@ -9,6 +9,15 @@ export const getOwnedDebts = TRPCProcedures.protected
   .input(debtsAsLenderInput)
   .query(async ({ ctx, input }) => {
     const where = {
+      ...(input.partnerEmail && {
+        borrowers: {
+          some: {
+            user: {
+              email: input.partnerEmail,
+            },
+          },
+        },
+      }),
       ...(input.status === "active" && {
         archived: {
           equals: null,

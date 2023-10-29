@@ -169,6 +169,8 @@ model User {
   activeSubscription   ActiveSubscription?
   subscriptionHistory  SubscriptionHistory[]
   subscriptionInvoices SubscriptionInvoice[]
+
+  @@index([email])
 }
 
 model VerificationToken {

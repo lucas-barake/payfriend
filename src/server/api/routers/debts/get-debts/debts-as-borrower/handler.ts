@@ -16,6 +16,11 @@ export const getSharedDebts = TRPCProcedures.protected
           },
         },
       }),
+      ...(input.partnerEmail && {
+        lender: {
+          email: input.partnerEmail,
+        },
+      }),
       borrowers: {
         some: {
           userId: ctx.session.user.id,

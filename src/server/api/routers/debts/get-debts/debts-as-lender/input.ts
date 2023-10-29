@@ -10,6 +10,7 @@ export const debtsAsLenderInput = z.object({
     z.literal("pending-confirmation"),
   ]),
   sort: z.union([z.literal("asc"), z.literal("desc")]),
+  partnerEmail: z.string().email().nullable(),
 });
 export type DebtsAsLenderInput = z.infer<typeof debtsAsLenderInput>;
 

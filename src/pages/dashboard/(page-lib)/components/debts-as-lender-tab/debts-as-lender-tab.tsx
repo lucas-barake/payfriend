@@ -10,6 +10,7 @@ import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/de
 import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/get-debts/(lib)/constants";
 import DebtAsLenderCard from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card";
 import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
+import PartnersFilterDialog from "src/pages/dashboard/(page-lib)/components/partners-filter-dialog";
 
 const DebtsAsLenderTab: React.FC = () => {
   const [queryVariables, setQueryVariables] =
@@ -17,6 +18,7 @@ const DebtsAsLenderTab: React.FC = () => {
       skip: 0,
       sort: "desc",
       status: "active",
+      partnerEmail: null,
     });
 
   const query = api.debts.getOwnedDebts.useQuery(queryVariables, {
@@ -27,11 +29,23 @@ const DebtsAsLenderTab: React.FC = () => {
   const debts = query.data?.debts ?? [];
 
   return (
-    <>
+    <React.Fragment>
       <div className="flex items-center justify-between">
         <AddDebtDialog queryVariables={queryVariables} />
 
         <div className="flex items-center gap-2">
+          <PartnersFilterDialog
+            type="lender"
+            selectedPartnerEmail={queryVariables.partnerEmail}
+            selectPartnerEmail={(partnerEmail) => {
+              setQueryVariables({
+                ...queryVariables,
+                partnerEmail,
+                skip: 0,
+              });
+            }}
+          />
+
           <SortMenu
             selectedSort={queryVariables.sort}
             setSelectedSort={(sort) => {
@@ -63,13 +77,13 @@ const DebtsAsLenderTab: React.FC = () => {
 
       <DebtsGrid>
         {query.isLoading ? (
-          <>
+          <React.Fragment>
             {Array.from({ length: 8 }).map((_, index) => (
               <DebtCard.Skeleton key={index} />
             ))}
-          </>
+          </React.Fragment>
         ) : (
-          <>
+          <React.Fragment>
             {debts.map((debt) => (
               <DebtAsLenderCard
                 key={debt.id}
@@ -77,7 +91,7 @@ const DebtsAsLenderTab: React.FC = () => {
                 queryVariables={queryVariables}
               />
             ))}
-          </>
+          </React.Fragment>
         )}
       </DebtsGrid>
 
@@ -91,7 +105,7 @@ const DebtsAsLenderTab: React.FC = () => {
         }}
         count={query.data?.count ?? 0}
       />
-    </>
+    </React.Fragment>
   );
 };
 

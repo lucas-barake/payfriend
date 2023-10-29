@@ -9,6 +9,7 @@ export const debtsAsBorrowerInput = z.object({
     z.literal("all"),
   ]),
   sort: z.union([z.literal("asc"), z.literal("desc")]),
+  partnerEmail: z.string().email().nullable(),
 });
 export type DebtsAsBorrowerInput = z.infer<typeof debtsAsBorrowerInput>;
 

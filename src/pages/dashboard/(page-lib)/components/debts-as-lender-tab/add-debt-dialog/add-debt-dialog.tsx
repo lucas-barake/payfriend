@@ -33,7 +33,7 @@ const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
   const freePlanLimit = useFreePlanLimit();
 
   return (
-    <>
+    <React.Fragment>
       <SubscriptionsDialog
         open={openSubscriptionsDialog}
         onOpenChange={setOpenSubscriptionsDialog}
@@ -75,16 +75,16 @@ const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
 
             <Dialog.Description>
               {selectedTab === "general-info-form" ? (
-                <>
+                <React.Fragment>
                   ⚠️ Una vez hayas creada la deuda, no podrás cambiar esta
                   información.
-                </>
+                </React.Fragment>
               ) : (
-                <>
+                <React.Fragment>
                   ⚠️ Podrás agregar más deudores luego de crear la deuda, pero
                   no podrás eliminar a los deudores una vez hayan aceptado la
                   invitación.
-                </>
+                </React.Fragment>
               )}
             </Dialog.Description>
           </Dialog.Header>
@@ -115,7 +115,7 @@ const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
           </Tabs>
         </Dialog.Content>
       </Dialog>
-    </>
+    </React.Fragment>
   );
 };
 
