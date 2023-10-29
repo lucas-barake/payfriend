@@ -32,8 +32,8 @@ const PartnersFilterDialog: React.FC<Props> = ({
       refetchOnMount: true,
     }
   );
-  const members = query.data ?? [];
-  const filteredMembers = members.filter((member) => {
+  const partners = query.data ?? [];
+  const filteredPartners = partners.filter((member) => {
     const searchTerm = filter.toLowerCase();
     const emailMatch =
       member.email?.toLowerCase().includes(searchTerm) ?? false;
@@ -87,7 +87,7 @@ const PartnersFilterDialog: React.FC<Props> = ({
           </div>
         ) : (
           <ul className="flex max-h-52 flex-col gap-2 overflow-y-auto">
-            {filteredMembers.map((member) => (
+            {filteredPartners.map((member) => (
               <li key={member.email}>
                 <Button
                   variant="outline"
