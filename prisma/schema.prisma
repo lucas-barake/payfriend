@@ -175,7 +175,7 @@ model User {
   phoneNumber          String?               @unique
   phoneVerified        DateTime?             @db.Timestamptz(6)
   image                String?
-  currency             String?
+  preferences          Json?
   accounts             Account[]
   sessions             Session[]
   debtsAsLender        Debt[]

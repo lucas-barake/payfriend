@@ -82,28 +82,21 @@ const LenderActionsMenu: React.FC<Props> = ({
             onClick={() => {
               setOpenPaymentsDialog(true);
             }}
-            className="cursor-pointer"
+            className="flex w-full cursor-pointer items-center gap-1.5"
             highlight={hasPendingConfirmations}
           >
-            <button
-              type="button"
-              className="relative flex w-full items-center gap-1.5"
-            >
-              <LucideIcons.UserCheck className="h-4 w-4" />
-              Ver Pagos
-            </button>
+            <LucideIcons.UserCheck className="h-4 w-4" />
+            Ver Pagos
           </DropdownMenu.Item>
 
           <DropdownMenu.Item
-            className="cursor-pointer"
+            className="flex w-full cursor-pointer items-center gap-1.5"
             onClick={() => {
               setOpenBorrowersDialog(true);
             }}
           >
-            <button type="button" className="flex w-full items-center gap-1.5">
-              <LucideIcons.Users className="h-4 w-4" />
-              <span>Deudores</span>
-            </button>
+            <LucideIcons.Users className="h-4 w-4" />
+            Deudores
           </DropdownMenu.Item>
 
           {isRecurrent && (
@@ -124,13 +117,12 @@ const LenderActionsMenu: React.FC<Props> = ({
             onClick={() => {
               setOpenArchiveDialog(true);
             }}
-            className="cursor-pointer"
+            className="flex w-full cursor-pointer items-center gap-1.5"
             disabled={debt.archived !== null}
+            destructive
           >
-            <button type="button" className="flex w-full items-center gap-1.5">
-              <LucideIcons.BadgeCheck className="h-4 w-4" />
-              <span>Finalizar</span>
-            </button>
+            <LucideIcons.BadgeCheck className="h-4 w-4" />
+            Concluir
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>

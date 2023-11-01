@@ -60,7 +60,7 @@ const AddDebtDialog: React.FC<Props> = ({ queryVariables }) => {
             tabSetters.set(addDebtTabs[0]);
           }}
         >
-          <Plus className="h-5 w-5" />
+          <Plus className="h-4 w-4" />
           <span className="hidden sm:inline-flex">Agregar</span>
           Deuda
         </Button>

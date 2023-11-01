@@ -12,7 +12,7 @@ import DebtCard from "$/pages/dashboard/(page-lib)/components/debt-card";
 import ExpenseCard from "$/pages/dashboard/(page-lib)/components/expenses-tab/expense-card";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
 import AddEditExpenseDialog from "$/pages/dashboard/(page-lib)/components/expenses-tab/add-edit-expense-dialog/add-edit-expense-dialog";
-import { PlusIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "$/components/ui/button";
 
 const ExpensesTab: React.FC = () => {
@@ -45,9 +45,11 @@ const ExpensesTab: React.FC = () => {
           onClick={() => {
             setOpenAdd(true);
           }}
+          className="flex items-center gap-1"
         >
-          <PlusIcon className="h-4 w-4 sm:mr-2" />
-          <span className="sr-only sm:not-sr-only">Agregar Gasto</span>
+          <Plus className="h-4 w-4" />
+          <span className="hidden sm:inline-flex">Agregar</span>
+          Gasto
         </Button>
 
         <div className="flex items-center gap-2">
