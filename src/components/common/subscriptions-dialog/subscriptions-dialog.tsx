@@ -45,7 +45,7 @@ export const SubscriptionsDialog: React.FC<Props> = ({
     });
 
   return (
-    <>
+    <React.Fragment>
       <Dialog
         open={openCancelSubscriptionDialog}
         onOpenChange={setOpenCancelSubscriptionDialog}
@@ -209,6 +209,6 @@ export const SubscriptionsDialog: React.FC<Props> = ({
           </Card>
         </Dialog.Content>
       </Dialog>
-    </>
+    </React.Fragment>
   );
 };

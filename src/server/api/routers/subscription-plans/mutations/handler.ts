@@ -13,24 +13,14 @@ import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
 import { logger } from "$/server/logger";
 import cuid2 from "@paralleldrive/cuid2";
 import { DateTime } from "luxon";
-import { rateLimit } from "$/server/api/utils/rate-limit";
 
 export const subscriptionsMutations = createTRPCRouter({
-  generateLink: TRPCProcedures.protected
-    .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, {
-        type: "custom",
-        config: {
-          maxRequests: 7,
-          windowType: "weeks",
-          window: 1,
-        },
-      });
-
-      return next({
-        ctx,
-      });
-    })
+  generateLink: TRPCProcedures.rateLimited({
+    maxRequests: 10,
+    window: 1,
+    windowType: "minutes",
+    uniqueId: "generate-subscription-link",
+  })
     .input(generateLinkInput)
     .mutation(async ({ ctx, input }) => {
       const activeSubscription =

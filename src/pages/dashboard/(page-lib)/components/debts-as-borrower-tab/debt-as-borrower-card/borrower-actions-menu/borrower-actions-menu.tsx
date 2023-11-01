@@ -3,9 +3,9 @@ import { Button } from "$/components/ui/button";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { EyeIcon, InfoIcon, MoreHorizontal, PlusIcon } from "lucide-react";
 import AddPaymentDialog from "$/pages/dashboard/(page-lib)/components/debts-as-borrower-tab/debt-as-borrower-card/borrower-actions-menu/add-payment-dialog";
-import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/get-debts/debts-as-borrower/types";
+import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/queries/types";
 import ViewOwnPaymentsDialog from "$/pages/dashboard/(page-lib)/components/debts-as-borrower-tab/debt-as-borrower-card/borrower-actions-menu/view-own-payments-dialog";
-import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/input";
 import RecurringCyclesDialog from "$/pages/dashboard/(page-lib)/components/recurring-cycles-dialog";
 
 type Props = {
@@ -28,7 +28,7 @@ const BorrowerActionsMenu: React.FC<Props> = ({
     React.useState(false);
 
   return (
-    <>
+    <React.Fragment>
       <AddPaymentDialog
         open={openAddPaymentDialog}
         onOpenChange={setOpenAddPaymentDialog}
@@ -107,7 +107,7 @@ const BorrowerActionsMenu: React.FC<Props> = ({
           )}
         </DropdownMenu.Content>
       </DropdownMenu>
-    </>
+    </React.Fragment>
   );
 };
 

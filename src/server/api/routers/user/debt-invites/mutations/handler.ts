@@ -4,7 +4,7 @@ import {
   declineGroupInviteInput,
 } from "$/server/api/routers/user/debt-invites/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/(lib)/utils/check-debt-limit-and-incr";
+import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/_lib/utils/check-debt-limit-and-incr";
 
 export const userGroupInvitesMutations = createTRPCRouter({
   acceptDebtInvite: TRPCProcedures.protected

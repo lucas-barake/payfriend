@@ -26,7 +26,8 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import mercadopago from "$/server/api/routers/subscription-plans/(lib)/mercadopago";
 import { redis } from "$/server/redis";
-import { rateLimit } from "$/server/api/utils/rate-limit/rate-limit";
+import { type RateLimitConfig } from "$/server/api/utils/rate-limit/types";
+import { rateLimit } from "$/server/api/utils/rate-limit";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -114,7 +115,7 @@ export const createTRPCMiddleware = t.middleware;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user || !ctx.session.user.email) {
+  if (!ctx.session?.user?.email) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
@@ -133,7 +134,7 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
 });
 
 const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user || !ctx.session.user.email) {
+  if (!ctx.session?.user?.email) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
@@ -160,48 +161,22 @@ const enforceUserIsVerified = t.middleware(async ({ ctx, next }) => {
 
 export const TRPCProcedures = {
   public: t.procedure,
-
   protected: t.procedure.use(enforceUserIsAuthed),
-  protectedLimited: t.procedure
-    .use(enforceUserIsAuthed)
-    .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, {
-        type: "limited",
-      });
-      return next({
-        ctx,
-      });
-    }),
-  protectedCritical: t.procedure
-    .use(enforceUserIsAuthed)
-    .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, {
-        type: "critical",
-      });
-      return next({
-        ctx,
-      });
-    }),
-
   verified: t.procedure.use(enforceUserIsVerified),
-  verifiedLimited: t.procedure
-    .use(enforceUserIsVerified)
-    .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, {
-        type: "limited",
-      });
-      return next({
-        ctx,
-      });
-    }),
-  verifiedCritical: t.procedure
-    .use(enforceUserIsVerified)
-    .use(async ({ ctx, next }) => {
-      await rateLimit(ctx, {
-        type: "critical",
-      });
-      return next({
-        ctx,
-      });
-    }),
+  rateLimited: (config: RateLimitConfig) =>
+    t.procedure.use(
+      enforceUserIsAuthed.unstable_pipe(async ({ ctx, next }) => {
+        await rateLimit(
+          {
+            redis: ctx.redis,
+            session: ctx.session,
+          },
+          config
+        );
+
+        return next({
+          ctx,
+        });
+      })
+    ),
 };

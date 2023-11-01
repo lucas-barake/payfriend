@@ -2,15 +2,15 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   type CreateDebtInput,
-  CURRENCIES,
+  createDebtRecurrentOptions,
   createDebtTypeOptions,
-  generalInfoInput,
-  type GeneralInfoInput,
+  CURRENCIES,
   DEBT_MAX_BIWEEKLY_DURATION,
   DEBT_MAX_MONTHLY_DURATION,
   DEBT_MAX_WEEKLY_DURATION,
-  createDebtRecurrentOptions,
-} from "$/server/api/routers/debts/create-debt/input";
+  generalInfoInput,
+  type GeneralInfoInput,
+} from "$/server/api/routers/debts/mutations/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "$/components/ui/form";
 import { Button } from "$/components/ui/button";
@@ -233,7 +233,7 @@ const GeneralInfoForm: React.FC<Props> = ({
         </Form.Group>
 
         {isRecurrent && (
-          <>
+          <React.Fragment>
             <Form.Group>
               <Form.Label htmlFor="recurrentFrequency" required>
                 Frecuencia
@@ -340,7 +340,7 @@ const GeneralInfoForm: React.FC<Props> = ({
                 {form.formState.errors.recurrency?.duration?.message}
               </Form.FieldError>
             </Form.Group>
-          </>
+          </React.Fragment>
         )}
 
         {isRecurrent && (

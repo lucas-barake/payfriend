@@ -50,6 +50,9 @@ export const env = createEnv({
     NGROK_FORWARDING_URL: z.string().url().optional(),
     /* CRON */
     CRON_JOB_KEY: z.string().min(1),
+    /* Hygraph */
+    HYGRAPH_GRAPHQL_ENDPOINT: z.string().url(),
+    NEXT_PUBLIC_HYGRAPH_GRAPHQL_ENDPOINT: z.string().url(),
   },
   client: {},
   runtimeEnv: {
@@ -83,5 +86,9 @@ export const env = createEnv({
     NGROK_FORWARDING_URL: process.env.NGROK_FORWARDING_URL,
     /* CRON */
     CRON_JOB_KEY: process.env.CRON_JOB_KEY,
+    /* Hygraph */
+    HYGRAPH_GRAPHQL_ENDPOINT: process.env.HYGRAPH_GRAPHQL_ENDPOINT,
+    NEXT_PUBLIC_HYGRAPH_GRAPHQL_ENDPOINT:
+      process.env.NEXT_PUBLIC_HYGRAPH_GRAPHQL_ENDPOINT,
   },
 });

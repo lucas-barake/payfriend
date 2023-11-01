@@ -7,6 +7,8 @@ import { ThemeProvider } from "next-themes";
 import { api } from "$/lib/utils/api";
 import "$/styles/globals.css";
 import { StyledToaster } from "src/components/ui/styled-toaster";
+import { ApolloProvider } from "@apollo/client";
+import { apolloClient } from "$/lib/utils/apollo-client";
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
   P,
@@ -28,10 +30,12 @@ const MyApp = ({
 
   return (
     <SessionProvider session={session as Session | null}>
-      <StyledToaster />
-      <ThemeProvider attribute="class">
-        {getLayout(<Component {...pageProps} />)}
-      </ThemeProvider>
+      <ApolloProvider client={apolloClient}>
+        <StyledToaster />
+        <ThemeProvider attribute="class">
+          {getLayout(<Component {...pageProps} />)}
+        </ThemeProvider>
+      </ApolloProvider>
     </SessionProvider>
   );
 };

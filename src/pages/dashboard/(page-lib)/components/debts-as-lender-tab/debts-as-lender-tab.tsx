@@ -6,19 +6,24 @@ import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls"
 import AddDebtDialog from "src/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog";
 import FiltersMenu from "src/pages/dashboard/(page-lib)/components/filters-menu";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
-import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/get-debts/(lib)/constants";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/(lib)/constants";
 import DebtAsLenderCard from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card";
 import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 import PartnersFilterDialog from "src/pages/dashboard/(page-lib)/components/partners-filter-dialog";
+import { useSessionStorage } from "$/hooks/browser-storage/use-session-storage";
+import { debtsAsLenderInput } from "$/server/api/routers/debts/queries/input";
 
 const DebtsAsLenderTab: React.FC = () => {
-  const [queryVariables, setQueryVariables] =
-    React.useState<DebtsAsLenderInput>({
-      skip: 0,
-      sort: "desc",
-      status: "active",
-      partnerEmail: null,
+  const { state: queryVariables, setState: setQueryVariables } =
+    useSessionStorage({
+      validationSchema: debtsAsLenderInput,
+      defaultValues: {
+        skip: 0,
+        sort: "desc",
+        status: "active",
+        partnerEmail: null,
+      },
+      key: "debts-as-lender-tab-query-variables",
     });
 
   const query = api.debts.getOwnedDebts.useQuery(queryVariables, {

@@ -1,0 +1,8 @@
+projects:
+  Hygraph GraphQL:
+    schema: ./hygraph-schema.graphql
+    include: src/**/hygraph-*.graphql
+    extensions:
+      endpoints:
+        Hygraph GraphQL Endpoint:
+          url: ${HYGRAPH_GRAPHQL_ENDPOINT}

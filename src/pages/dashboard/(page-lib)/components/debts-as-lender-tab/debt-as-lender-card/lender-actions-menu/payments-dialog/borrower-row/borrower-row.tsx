@@ -4,8 +4,8 @@ import DebtCard from "$/pages/dashboard/(page-lib)/components/debt-card";
 import { formatCurrency } from "$/lib/utils/format-currency";
 import { Button } from "$/components/ui/button";
 import { EyeIcon } from "lucide-react";
-import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 import { PaymentStatus } from "@prisma/client";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/types";
 
 type Props = {
   setSelectedBorrowerId: React.Dispatch<React.SetStateAction<string | null>>;

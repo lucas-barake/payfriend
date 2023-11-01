@@ -20,7 +20,7 @@ type Props = {
 
 const PendingInviteRow: React.FC<Props> = ({ invite }) => {
   const router = useRouter();
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const freePlanLimit = useFreePlanLimit();
   const [showSubscribeDialog, setShowSubscribeDialog] = React.useState(false);
   const acceptMutation = api.user.acceptDebtInvite.useMutation({
@@ -28,7 +28,7 @@ const PendingInviteRow: React.FC<Props> = ({ invite }) => {
       const prevData = utils.user.getDebtsInvites.getData() ?? [];
 
       utils.user.getDebtsInvites.setData(undefined, [
-        ...prevData.filter((invite) => invite.debt.id !== res.debtId),
+        ...prevData.filter((inv) => inv.debt.id !== res.debtId),
       ]);
 
       await utils.debts.getSharedDebts.invalidate();
@@ -44,7 +44,7 @@ const PendingInviteRow: React.FC<Props> = ({ invite }) => {
       const prevData = utils.user.getDebtsInvites.getData() ?? [];
 
       utils.user.getDebtsInvites.setData(undefined, [
-        ...prevData.filter((invite) => invite.debt.id !== res.debtId),
+        ...prevData.filter((inv) => inv.debt.id !== res.debtId),
       ]);
 
       return {
@@ -54,7 +54,7 @@ const PendingInviteRow: React.FC<Props> = ({ invite }) => {
   });
 
   return (
-    <>
+    <React.Fragment>
       <SubscriptionsDialog
         open={showSubscribeDialog}
         onOpenChange={setShowSubscribeDialog}
@@ -151,7 +151,7 @@ const PendingInviteRow: React.FC<Props> = ({ invite }) => {
           </button>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 

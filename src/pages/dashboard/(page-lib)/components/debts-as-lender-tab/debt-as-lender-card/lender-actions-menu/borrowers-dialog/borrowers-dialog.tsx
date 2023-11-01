@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import {
   sendDebtInviteInput,
   type SendDebtInviteInput,
-} from "$/server/api/routers/debts/invites/send-debt-invite/input";
+} from "$/server/api/routers/debt-invites/send-debt-invite/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { Separator } from "$/components/ui/separator";
@@ -18,9 +18,11 @@ import * as LucideIcons from "lucide-react";
 import PendingBorrowerRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/borrowers-dialog/pending-borrower-row";
 import RecentEmailsPopover from "$/pages/dashboard/(page-lib)/components/recent-emails-popover";
 import BorrowerRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/borrowers-dialog/borrower-row";
-import { type GetDebtBorrowersAndPendingBorrowersResult } from "$/server/api/routers/debts/get-debts/get-debt-borrowers-and-pending-borrowers/types";
 import { Loader } from "$/components/ui/loader";
-import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
+import {
+  type DebtsAsLenderResult,
+  type GetDebtBorrowersAndPendingBorrowersResult,
+} from "$/server/api/routers/debts/queries/types";
 
 type Props = {
   open: boolean;
@@ -30,7 +32,7 @@ type Props = {
 
 const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debt }) => {
   const isArchived = debt.archived !== null;
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const query = api.debts.getDebtBorrowersAndPendingBorrowers.useQuery(
     {
       debtId: debt.id,
@@ -183,7 +185,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debt }) => {
               <Loader />
             </div>
           ) : (
-            <>
+            <React.Fragment>
               {borrowers.map((borrower) => (
                 <BorrowerRow
                   borrower={borrower}
@@ -200,7 +202,7 @@ const BorrowersDialog: React.FC<Props> = ({ open, onOpenChange, debt }) => {
                     debtId={debt.id}
                   />
                 ))}
-            </>
+            </React.Fragment>
           )}
         </div>
 

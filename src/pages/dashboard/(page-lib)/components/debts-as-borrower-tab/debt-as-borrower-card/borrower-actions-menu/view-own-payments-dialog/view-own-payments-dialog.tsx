@@ -1,12 +1,12 @@
 import React from "react";
-import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/get-debts/debts-as-borrower/types";
+import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/queries/types";
 import { Dialog } from "$/components/ui/dialog";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
 import { ScrollArea } from "$/components/ui/scroll-area";
 import { Loader } from "$/components/ui/loader";
 import PaymentRow from "$/pages/dashboard/(page-lib)/components/debts-as-borrower-tab/debt-as-borrower-card/borrower-actions-menu/view-own-payments-dialog/payment-row";
-import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/input";
 
 type Props = {
   debt: DebtsAsBorrowerResult["debts"][number];

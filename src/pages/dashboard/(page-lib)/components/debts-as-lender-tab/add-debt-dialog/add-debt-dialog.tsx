@@ -13,10 +13,10 @@ import { Tabs } from "$/components/ui/tabs";
 import {
   type CreateDebtInput,
   defaultCreateDebtInput,
-} from "$/server/api/routers/debts/create-debt/input";
+} from "$/server/api/routers/debts/mutations/input";
 import { SubscriptionsDialog } from "$/components/common/subscriptions-dialog";
 import { useFreePlanLimit } from "$/hooks/use-free-plan-limit";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/input";
 
 type Props = {
   queryVariables: DebtsAsLenderInput;

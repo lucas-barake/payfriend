@@ -88,12 +88,24 @@ type DropdownMenuItemDefinition = React.ForwardRefExoticComponent<
     React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
       inset?: boolean;
       highlight?: boolean;
+      selected?: boolean;
+      destructive?: boolean;
     }
   > &
     React.RefAttributes<React.ElementRef<typeof DropdownMenuPrimitive.Item>>
 >;
 const DropdownMenuItem: DropdownMenuItemDefinition = React.forwardRef(
-  ({ className, inset, highlight = false, ...props }, ref) => (
+  (
+    {
+      className,
+      inset,
+      highlight = false,
+      selected = false,
+      destructive = false,
+      ...props
+    },
+    ref
+  ) => (
     <DropdownMenuPrimitive.Item
       ref={ref}
       className={cn(
@@ -101,6 +113,10 @@ const DropdownMenuItem: DropdownMenuItemDefinition = React.forwardRef(
         inset && "pl-8",
         highlight &&
           "animate-pulse-darker bg-highlight text-highlight-foreground focus:animate-none focus:bg-highlight focus:text-highlight-foreground",
+        selected &&
+          "bg-primary/90 font-medium text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+        destructive &&
+          "bg-destructive/80 text-destructive-foreground hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground",
         className
       )}
       {...props}

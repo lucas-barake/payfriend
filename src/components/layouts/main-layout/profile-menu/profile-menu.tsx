@@ -15,7 +15,7 @@ export const ProfileMenu: React.FC = () => {
   const userImage = session.data?.user?.image ?? undefined;
 
   return (
-    <>
+    <React.Fragment>
       <SubscriptionsDialog
         open={showSubscriptionsDialog}
         onOpenChange={setShowSubscriptionsDialog}
@@ -80,6 +80,6 @@ export const ProfileMenu: React.FC = () => {
           </DropdownMenu.Group>
         </DropdownMenu.Content>
       </DropdownMenu>
-    </>
+    </React.Fragment>
   );
 };

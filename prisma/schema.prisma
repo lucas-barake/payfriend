@@ -7,6 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model PersonalExpense {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+  name        String
+  description String?  @db.Text
+  currency    String
+  amount      Float
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([userId, amount])
+}
+
 enum DebtRecurringFrequency {
   WEEKLY
   BIWEEKLY
@@ -169,6 +184,7 @@ model User {
   activeSubscription   ActiveSubscription?
   subscriptionHistory  SubscriptionHistory[]
   subscriptionInvoices SubscriptionInvoice[]
+  personalExpenses     PersonalExpense[]
 
   @@index([email])
 }

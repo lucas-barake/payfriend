@@ -1,5 +1,5 @@
 import React from "react";
-import { type GetPaymentsAsBorrowerResult } from "$/server/api/routers/debts/payments/get-payments-as-borrower/types";
+import { type GetPaymentsAsBorrowerResult } from "$/server/api/routers/debt-payments/get-payments-as-borrower/types";
 import { api } from "$/lib/utils/api";
 import { formatCurrency } from "$/lib/utils/format-currency";
 import { DateTime } from "luxon";
@@ -9,8 +9,8 @@ import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { Trash } from "lucide-react";
 import { Card } from "$/components/ui/card";
-import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
-import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/get-debts/debts-as-borrower/types";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/input";
+import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/queries/types";
 import { useSession } from "next-auth/react";
 import { paymentStatusMap } from "$/pages/dashboard/(page-lib)/lib/payment-status-map";
 import { paymentStatusVariantsMap } from "$/pages/dashboard/(page-lib)/lib/payment-status-variants-map";
@@ -22,7 +22,7 @@ type Props = {
 };
 
 const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const removePaymentMutation = api.debts.removePayment.useMutation();
   const session = useSession();
 

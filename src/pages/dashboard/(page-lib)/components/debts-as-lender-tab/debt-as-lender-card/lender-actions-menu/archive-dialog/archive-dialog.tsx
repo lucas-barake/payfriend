@@ -5,7 +5,7 @@ import { handleMutationError } from "$/lib/utils/handle-mutation-error";
 import { Dialog } from "$/components/ui/dialog";
 import { AlertTriangle, BadgeCheck } from "lucide-react";
 import { Button } from "$/components/ui/button";
-import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/types";
 
 type Props = {
   debt: DebtsAsLenderResult["debts"][number];
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const ArchiveDialog: React.FC<Props> = ({ debt, open, onOpenChange }) => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const archiveMutation = api.debts.archiveDebt.useMutation();
 
   async function handleArchive(): Promise<void> {

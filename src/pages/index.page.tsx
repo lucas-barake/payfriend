@@ -6,6 +6,7 @@ import { Button } from "$/components/ui/button";
 import { Pages } from "$/lib/enums/pages";
 import { type NextPageWithLayout } from "$/pages/_app.page";
 import { CustomHead } from "$/components/layouts/custom-head";
+import React from "react";
 
 const Home: NextPageWithLayout = () => {
   const session = useSession();
@@ -52,10 +53,10 @@ const Home: NextPageWithLayout = () => {
 
 Home.getLayout = (page) => {
   return (
-    <>
+    <React.Fragment>
       <CustomHead />
       {page}
-    </>
+    </React.Fragment>
   );
 };
 

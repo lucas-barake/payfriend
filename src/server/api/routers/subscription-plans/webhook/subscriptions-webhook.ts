@@ -88,8 +88,8 @@ export async function subscriptionsWebhook(
             break;
 
           case "authorized":
-            await prisma.$transaction(async (prisma) => {
-              await prisma.activeSubscription.upsert({
+            await prisma.$transaction(async (transactionPrisma) => {
+              await transactionPrisma.activeSubscription.upsert({
                 where: {
                   userId,
                 },
@@ -130,7 +130,7 @@ export async function subscriptionsWebhook(
                 },
               });
 
-              await prisma.subscriptionHistory.upsert({
+              await transactionPrisma.subscriptionHistory.upsert({
                 where: {
                   id: json.id,
                 },
@@ -160,8 +160,8 @@ export async function subscriptionsWebhook(
             logger.info(`Authorized subscription ${json.id}`);
             break;
           case "cancelled":
-            await prisma.$transaction(async (prisma) => {
-              await prisma.activeSubscription.update({
+            await prisma.$transaction(async (transactionPrisma) => {
+              await transactionPrisma.activeSubscription.update({
                 where: {
                   userId,
                 },
@@ -170,7 +170,7 @@ export async function subscriptionsWebhook(
                 },
               });
 
-              await prisma.subscriptionHistory.update({
+              await transactionPrisma.subscriptionHistory.update({
                 where: {
                   id: json.id,
                 },

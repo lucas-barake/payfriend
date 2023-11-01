@@ -40,7 +40,7 @@ export const InvitationEmail: React.FC<Readonly<InvitationEmailProps>> = (
       <Preview>{previewText}</Preview>
 
       <Tailwind>
-        <Body className="mx-auto my-auto bg-white font-sans">
+        <Body className="m-auto bg-white font-sans">
           <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
               Únete a <strong>{props.debtName ?? "una deuda"}</strong> en{" "}
@@ -66,14 +66,14 @@ export const InvitationEmail: React.FC<Readonly<InvitationEmailProps>> = (
               {props.debtName === null ? (
                 "una deuda"
               ) : (
-                <>
+                <React.Fragment>
                   la deuda <strong>{props.debtName}</strong>
-                </>
+                </React.Fragment>
               )}{" "}
               en <strong>{APP_NAME}</strong>.
             </Text>
 
-            <Section className="mb-[32px] mt-[32px] text-center">
+            <Section className="my-[32px] text-center">
               <Button
                 pX={20}
                 pY={12}

@@ -1,3 +1,4 @@
 *.prisma
 *.json
 *.md
+src/generated

@@ -4,7 +4,12 @@ import { PHONE_CODE_KEY } from "$/server/api/routers/user/phone/otp/(lib)/phone-
 import { DateTime } from "luxon";
 import { verifyPhoneInput } from "$/server/api/routers/user/phone/otp/verify-phone/input";
 
-export const verifyPhone = TRPCProcedures.protectedCritical
+export const verifyPhone = TRPCProcedures.rateLimited({
+  maxRequests: 3,
+  window: 1,
+  windowType: "minutes",
+  uniqueId: "verify-phone",
+})
   .input(verifyPhoneInput)
   .mutation(async ({ input, ctx }) => {
     if (ctx.session.user.phoneVerified !== null) {

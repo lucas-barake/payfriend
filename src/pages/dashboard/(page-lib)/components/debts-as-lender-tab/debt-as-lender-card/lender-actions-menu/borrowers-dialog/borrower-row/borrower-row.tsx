@@ -3,8 +3,8 @@ import { Popover } from "$/components/ui/popover";
 import { Button } from "$/components/ui/button";
 import * as LucideIcons from "lucide-react";
 import { Avatar } from "$/components/ui/avatar";
-import { type GetDebtBorrowersAndPendingBorrowersResult } from "$/server/api/routers/debts/get-debts/get-debt-borrowers-and-pending-borrowers/types";
-import { type Currency } from "$/server/api/routers/debts/create-debt/input";
+import { type Currency } from "$/server/api/routers/debts/mutations/input";
+import { type GetDebtBorrowersAndPendingBorrowersResult } from "$/server/api/routers/debts/queries/types";
 
 type Props = {
   borrower: GetDebtBorrowersAndPendingBorrowersResult["borrowers"][number];

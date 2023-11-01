@@ -7,8 +7,9 @@ import { type TabList, useTabs } from "$/hooks/use-tabs/use-tabs";
 import { createManyUnion } from "$/lib/utils/zod/create-union-schema";
 import DebtsAsLenderTab from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab";
 import { cn } from "$/lib/utils/cn";
+import ExpensesTab from "$/pages/dashboard/(page-lib)/components/expenses-tab";
 
-const tabs = ["yours", "shared"] as const satisfies TabList;
+const tabs = ["yours", "shared", "my-expenses"] as const satisfies TabList;
 const tabIdsSchema = createManyUnion(
   tabs as typeof tabs & [string, string, ...string[]]
 );
@@ -27,7 +28,7 @@ const Dashboard: NextPageWithLayout = () => {
     <Tabs
       value={selectedTab}
       onValueChange={(id) => {
-        const tab = tabs.find((tab) => tab === id) ?? tabs[0];
+        const tab = tabs.find((tabId) => tabId === id) ?? tabs[0];
         tabSetters.set(tab);
         void router.push({
           pathname: "/dashboard",
@@ -42,6 +43,7 @@ const Dashboard: NextPageWithLayout = () => {
           <Tabs.List>
             <Tabs.Trigger value={tabs[0]}>Prestador</Tabs.Trigger>
             <Tabs.Trigger value={tabs[1]}>Deudor</Tabs.Trigger>
+            <Tabs.Trigger value={tabs[2]}>Mis Gastos</Tabs.Trigger>
           </Tabs.List>
         </div>
       </div>
@@ -62,6 +64,15 @@ const Dashboard: NextPageWithLayout = () => {
         })}
       >
         <DebtsAsBorrowerTab />
+      </Tabs.Content>
+
+      <Tabs.Content
+        value={tabs[2]}
+        className={cn("flex flex-col justify-between gap-4", {
+          hidden: selectedTab !== tabs[2],
+        })}
+      >
+        <ExpensesTab />
       </Tabs.Content>
     </Tabs>
   );

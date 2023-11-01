@@ -3,13 +3,11 @@ import * as LucideIcons from "lucide-react";
 import { Button } from "$/components/ui/button";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import {
+  borrowerStatusOptions,
+  type DebtsAsBorrowerInput,
   type DebtsAsLenderInput,
   statusOptions,
-} from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
-import {
-  type DebtsAsBorrowerInput,
-  borrowerStatusOptions,
-} from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
+} from "$/server/api/routers/debts/queries/input";
 
 type LenderProps = {
   selectedStatus: DebtsAsLenderInput["status"];

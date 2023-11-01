@@ -38,7 +38,7 @@ export const sendPhoneOtp = TRPCProcedures.protected
       )
       .exec()
       .then((results) => {
-        if (results && results[0] && results[0][0] === null) {
+        if (results?.[0] && results[0][0] === null) {
           // Code saved successfully, proceed with sending the message
           return ctx.twilio.messages.create({
             body: `Your ${APP_NAME} code is ${fourDigitGeneratedOTP}`,

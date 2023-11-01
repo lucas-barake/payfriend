@@ -92,11 +92,11 @@ export async function processRecurrentDebtsCronJob(
 
       // reset all borrowers' balances to the debt amount. If they have a due amount that is not paid (so the balance is not 0), then create a new payment with the same amount and status as PaymentStatus.MISSED and set the balance to the debt amount + the amount of the missed payment.
       for (const borrower of debt.borrowers) {
-        await prisma.$transaction(async (prisma) => {
+        await prisma.$transaction(async (transactionPrisma) => {
           const balance = borrower.balance;
           const hasDueAmount = balance !== 0;
           if (hasDueAmount) {
-            await prisma.payment.create({
+            await transactionPrisma.payment.create({
               data: {
                 amount: balance,
                 borrowerId: borrower.userId,
@@ -115,7 +115,7 @@ export async function processRecurrentDebtsCronJob(
             );
 
             for (const payment of pendingPayments) {
-              await prisma.payment.update({
+              await transactionPrisma.payment.update({
                 where: {
                   id: payment.id,
                 },
@@ -131,7 +131,7 @@ export async function processRecurrentDebtsCronJob(
               0
             );
 
-            await prisma.borrower.update({
+            await transactionPrisma.borrower.update({
               where: {
                 userId_debtId: {
                   debtId: debt.id,
@@ -147,7 +147,7 @@ export async function processRecurrentDebtsCronJob(
               `Updated borrower ${borrower.userId} balance for debt ${debt.id}`
             );
 
-            await prisma.debt.update({
+            await transactionPrisma.debt.update({
               where: {
                 id: debt.id,
               },
@@ -159,7 +159,7 @@ export async function processRecurrentDebtsCronJob(
             return;
           }
 
-          await prisma.borrower.update({
+          await transactionPrisma.borrower.update({
             where: {
               userId_debtId: {
                 debtId: debt.id,

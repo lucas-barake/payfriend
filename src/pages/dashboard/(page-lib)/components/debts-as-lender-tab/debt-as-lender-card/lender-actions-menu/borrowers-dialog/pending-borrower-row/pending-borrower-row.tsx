@@ -18,7 +18,7 @@ type Props = {
 };
 
 const PendingBorrowerRow: React.FC<Props> = ({ pendingBorrower, debtId }) => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const removeInvite = api.debts.removeDebtInvite.useMutation();
   async function handleRemoveInvite(): Promise<void> {
     await toast.promise(

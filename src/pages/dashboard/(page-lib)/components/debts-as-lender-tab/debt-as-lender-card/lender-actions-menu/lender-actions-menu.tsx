@@ -2,14 +2,14 @@ import React from "react";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import { Button } from "$/components/ui/button";
 import * as LucideIcons from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import { AttentionIndicator } from "$/components/common/attention-indicator/attention-indicator";
 import ArchiveDialog from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/archive-dialog";
 import BorrowersDialog from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/borrowers-dialog";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import PaymentsDialog from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/payments-dialog";
-import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 import RecurringCyclesDialog from "$/pages/dashboard/(page-lib)/components/recurring-cycles-dialog";
-import { InfoIcon } from "lucide-react";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/types";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/input";
 
 type Props = {
   debt: DebtsAsLenderResult["debts"][number];
@@ -31,7 +31,7 @@ const LenderActionsMenu: React.FC<Props> = ({
     React.useState(false);
 
   return (
-    <>
+    <React.Fragment>
       <ArchiveDialog
         debt={debt}
         open={openArchiveDialog}
@@ -134,7 +134,7 @@ const LenderActionsMenu: React.FC<Props> = ({
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>
-    </>
+    </React.Fragment>
   );
 };
 

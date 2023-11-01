@@ -15,7 +15,7 @@ import { DebtRecurringFrequency } from "@prisma/client";
 import { Skeleton } from "$/components/ui/skeleton";
 import { getRecurrentCycleDates } from "$/pages/dashboard/(page-lib)/utils/get-recurrent-cycle-dates";
 import { formatCurrency } from "$/lib/utils/format-currency";
-import { type Currency } from "$/server/api/routers/debts/create-debt/input";
+import { type Currency } from "$/server/api/routers/debts/mutations/input";
 
 type RootProps = {
   children: React.ReactNode;
@@ -287,10 +287,12 @@ const Footer: React.FC<FooterProps> = ({ children, className, ...props }) => {
 
 type CreatedAtBadgeProps = {
   createdAt: Date;
+  label?: string;
 } & React.ComponentPropsWithoutRef<typeof Badge>;
 const CreatedAtBadge: React.FC<CreatedAtBadgeProps> = ({
   className,
   createdAt,
+  label = "Creada",
   ...props
 }) => {
   return (
@@ -301,7 +303,7 @@ const CreatedAtBadge: React.FC<CreatedAtBadgeProps> = ({
     >
       <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
       <span>
-        Creada{" "}
+        {label}{" "}
         {DateTime.fromJSDate(createdAt).toLocaleString(DateTime.DATE_MED)}
       </span>
     </Badge>

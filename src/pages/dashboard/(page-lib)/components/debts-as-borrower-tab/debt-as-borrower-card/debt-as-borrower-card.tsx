@@ -1,12 +1,12 @@
 import React from "react";
-import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
-import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/input";
 import { PaymentStatus } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 import { Button } from "$/components/ui/button";
 import { Popover } from "$/components/ui/popover";
 import BorrowerActionsMenu from "src/pages/dashboard/(page-lib)/components/debts-as-borrower-tab/debt-as-borrower-card/borrower-actions-menu";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/types";
 
 type Props = {
   debt: DebtsAsLenderResult["debts"][number];

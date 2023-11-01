@@ -1,6 +1,6 @@
 import React from "react";
 import { type InputProps, inputVariants } from "$/components/ui/form/input";
-import { type Currency } from "$/server/api/routers/debts/create-debt/input";
+import { type Currency } from "$/server/api/routers/debts/mutations/input";
 import dynamic from "next/dynamic";
 
 const IntlCurrencyInput = dynamic(

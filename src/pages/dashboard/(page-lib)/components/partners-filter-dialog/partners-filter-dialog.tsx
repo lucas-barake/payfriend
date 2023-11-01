@@ -1,7 +1,7 @@
 import React from "react";
 import { Dialog } from "$/components/ui/dialog";
 import { Button, buttonVariants } from "$/components/ui/button";
-import { EyeIcon, Loader2, SearchCheckIcon, SearchIcon } from "lucide-react";
+import { EyeIcon, Loader2, SearchCheckIcon, User2Icon } from "lucide-react";
 import { api } from "$/lib/utils/api";
 import { Avatar } from "$/components/ui/avatar";
 import { TimeInMs } from "$/lib/enums/time";
@@ -48,7 +48,7 @@ const PartnersFilterDialog: React.FC<Props> = ({
           {selectedPartnerEmail ? (
             <SearchCheckIcon className="h-4 w-4 sm:mr-2" />
           ) : (
-            <SearchIcon className="h-4 w-4 sm:mr-2" />
+            <User2Icon className="h-4 w-4 sm:mr-2" />
           )}
           <span className="hidden sm:inline">
             Elegir {type === "borrower" ? "deudor" : "prestador"}

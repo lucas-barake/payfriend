@@ -84,7 +84,7 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
   }
 
   return (
-    <>
+    <React.Fragment>
       <p className="text-center">
         Para verificar tu inicio de sesión, ingresa tu número de celular a
         continuación. Te enviaremos un código de un solo uso para que lo
@@ -211,7 +211,7 @@ const PhoneInput: React.FC<Props> = ({ setView, setPhone }) => {
           Continuar
         </Button>
       </Form>
-    </>
+    </React.Fragment>
   );
 };
 

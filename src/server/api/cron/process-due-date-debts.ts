@@ -62,11 +62,11 @@ export async function processDueDateDebtsCronJob(
       }
 
       for (const borrower of debt.borrowers) {
-        await prisma.$transaction(async (prisma) => {
+        await prisma.$transaction(async (transactionPrisma) => {
           const balance = borrower.balance;
           const hasDueAmount = balance !== 0;
           if (hasDueAmount) {
-            const payment = await prisma.payment.create({
+            const payment = await transactionPrisma.payment.create({
               data: {
                 amount: balance,
                 status: PaymentStatus.MISSED,

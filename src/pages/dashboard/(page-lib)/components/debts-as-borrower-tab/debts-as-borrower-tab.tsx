@@ -6,18 +6,23 @@ import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
 import FiltersMenu from "$/pages/dashboard/(page-lib)/components/filters-menu";
-import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
-import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/get-debts/(lib)/constants";
+import { debtsAsBorrowerInput } from "$/server/api/routers/debts/queries/input";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/(lib)/constants";
 import DebtAsBorrowerCard from "$/pages/dashboard/(page-lib)/components/debts-as-borrower-tab/debt-as-borrower-card";
 import PartnersFilterDialog from "src/pages/dashboard/(page-lib)/components/partners-filter-dialog";
+import { useSessionStorage } from "$/hooks/browser-storage/use-session-storage";
 
 const DebtsAsBorrowerTab: React.FC = () => {
-  const [queryVariables, setQueryVariables] =
-    React.useState<DebtsAsBorrowerInput>({
-      skip: 0,
-      sort: "desc",
-      status: "active",
-      partnerEmail: null,
+  const { state: queryVariables, setState: setQueryVariables } =
+    useSessionStorage({
+      validationSchema: debtsAsBorrowerInput,
+      defaultValues: {
+        skip: 0,
+        sort: "desc",
+        status: "active",
+        partnerEmail: null,
+      },
+      key: "debts-as-borrower-tab-query-variables",
     });
 
   const query = api.debts.getSharedDebts.useQuery(queryVariables, {

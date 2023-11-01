@@ -1,16 +1,16 @@
 import React from "react";
 import { Dialog } from "$/components/ui/dialog";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
 import { Loader } from "$/components/ui/loader";
 import { ScrollArea } from "$/components/ui/scroll-area";
 import PaymentRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/payments-dialog/payment-row";
-import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
 import BorrowerRow from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card/lender-actions-menu/payments-dialog/borrower-row";
 import { Button } from "$/components/ui/button";
 import { ArrowLeft, InfoIcon } from "lucide-react";
 import { PaymentStatus } from "@prisma/client";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/input";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/types";
 
 type Props = {
   open: boolean;
@@ -63,9 +63,9 @@ const PaymentsDialog: React.FC<Props> = ({
   return (
     <Dialog
       open={open}
-      onOpenChange={(open) => {
+      onOpenChange={(newOpen) => {
         setSelectedBorrowerId(null);
-        onOpenChange(open);
+        onOpenChange(newOpen);
       }}
     >
       <Dialog.Content>

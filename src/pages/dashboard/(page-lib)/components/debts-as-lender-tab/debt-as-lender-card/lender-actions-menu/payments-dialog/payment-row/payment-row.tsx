@@ -1,5 +1,5 @@
 import React from "react";
-import { type GetPaymentsAsLenderResult } from "$/server/api/routers/debts/payments/get-payments-as-lender/types";
+import { type GetPaymentsAsLenderResult } from "$/server/api/routers/debt-payments/get-payments-as-lender/types";
 import { Card } from "$/components/ui/card";
 import { formatCurrency } from "$/lib/utils/format-currency";
 import { DateTime } from "luxon";
@@ -12,9 +12,9 @@ import { PaymentStatus } from "@prisma/client";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
-import { type DebtsAsLenderInput } from "$/server/api/routers/debts/get-debts/debts-as-lender/input";
 import { paymentStatusVariantsMap } from "$/pages/dashboard/(page-lib)/lib/payment-status-variants-map";
-import { type DebtsAsLenderResult } from "$/server/api/routers/debts/get-debts/debts-as-lender/types";
+import { type DebtsAsLenderResult } from "$/server/api/routers/debts/queries/types";
+import { type DebtsAsLenderInput } from "$/server/api/routers/debts/queries/input";
 
 type Props = {
   payment: GetPaymentsAsLenderResult["payments"][number];
@@ -24,7 +24,7 @@ type Props = {
 
 const PaymentRow: React.FC<Props> = ({ payment, debt, queryVariables }) => {
   const confirmPaymentMutation = api.debts.confirmPayment.useMutation();
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const isArchived = debt.archived !== null;
 
   async function handleConfirmPayment(): Promise<void> {

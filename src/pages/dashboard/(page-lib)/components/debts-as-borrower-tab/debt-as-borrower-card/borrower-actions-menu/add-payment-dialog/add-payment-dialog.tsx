@@ -5,16 +5,16 @@ import { Controller, useForm } from "react-hook-form";
 import {
   addPaymentInput,
   type AddPaymentInput,
-} from "$/server/api/routers/debts/payments/add-payment/input";
+} from "$/server/api/routers/debt-payments/add-payment/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "$/components/ui/button";
-import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/get-debts/debts-as-borrower/types";
+import { type DebtsAsBorrowerResult } from "$/server/api/routers/debts/queries/types";
 import { useSession } from "next-auth/react";
 import { formatCurrency } from "$/lib/utils/format-currency";
 import { api } from "$/lib/utils/api";
 import toast from "react-hot-toast";
 import { handleMutationError } from "$/lib/utils/handle-mutation-error";
-import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/get-debts/debts-as-borrower/input";
+import { type DebtsAsBorrowerInput } from "$/server/api/routers/debts/queries/input";
 import { PaymentStatus } from "@prisma/client";
 import { CurrencyInput } from "$/components/ui/currency-input";
 
@@ -33,7 +33,7 @@ const AddPaymentDialog: React.FC<Props> = ({
 }) => {
   const session = useSession();
   const borrower = debt.borrowers.find(
-    (borrower) => borrower.user.id === session.data?.user?.id
+    ({ user }) => user.id === session.data?.user?.id
   );
   const form = useForm<AddPaymentInput>({
     defaultValues: {
@@ -57,7 +57,7 @@ const AddPaymentDialog: React.FC<Props> = ({
   const borrowerBalance = borrower?.balance ?? 0;
   const isFullPayment = form.watch("fullPayment");
   const addPaymentMutation = api.debts.addPayment.useMutation();
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
 
   async function handleSubmit(data: AddPaymentInput): Promise<void> {
     const result = await toast.promise(addPaymentMutation.mutateAsync(data), {
@@ -124,8 +124,8 @@ const AddPaymentDialog: React.FC<Props> = ({
                   id="fullPayment"
                   checked={field.value}
                   onCheckedChange={(checked) => {
-                    const isFullPayment = !checked;
-                    if (isFullPayment) return;
+                    const fullPayment = !checked;
+                    if (fullPayment) return;
                     field.onChange(checked);
                     form.setValue("amount", null);
                   }}
@@ -144,8 +144,8 @@ const AddPaymentDialog: React.FC<Props> = ({
                   id="partialPayment"
                   checked={!field.value}
                   onCheckedChange={(checked) => {
-                    const isFullPayment = !checked;
-                    if (isFullPayment) return;
+                    const fullPayment = !checked;
+                    if (fullPayment) return;
                     field.onChange(!checked);
                   }}
                 />
