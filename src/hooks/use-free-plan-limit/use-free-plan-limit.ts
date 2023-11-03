@@ -8,7 +8,7 @@ type Return = {
 };
 
 export function useFreePlanLimit(): Return {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const createdDebtsThisMonth =
     utils.user.getFreePlanDebtLimitCount.getData() ?? 0;
   const reachedMonthlyLimit = createdDebtsThisMonth >= FREE_PLAN_DEBT_LIMIT;

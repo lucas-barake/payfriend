@@ -1,7 +1,7 @@
 import React from "react";
 import { Popover } from "$/components/ui/popover";
 import { Button } from "$/components/ui/button";
-import { Users2, CheckIcon } from "lucide-react";
+import { CheckIcon, Users2 } from "lucide-react";
 import { Command } from "$/components/ui/command";
 import { useWindowDimensions } from "$/hooks/use-window-dimensions";
 import { api } from "$/lib/utils/api";
@@ -9,7 +9,7 @@ import { TimeInMs } from "$/lib/enums/time";
 import { FieldError } from "$/components/ui/form/field-error";
 import { ScrollArea } from "$/components/ui/scroll-area";
 import { Separator } from "$/components/ui/separator";
-import { MAX_STORED_RECENT_EMAILS } from "$/server/api/routers/debts/mutations/lib/constants/stored-recent-emails";
+import { MAX_STORED_RECENT_EMAILS } from "$/server/api/routers/debts/_lib/constants/stored-recent-emails";
 import { Loader } from "$/components/ui/loader";
 
 type Props = {
@@ -69,7 +69,7 @@ const RecentEmailsPopover: React.FC<Props> = ({
             Empieza a invitar a tus amigos para que aparezcan aquí
           </p>
         ) : (
-          <>
+          <React.Fragment>
             <p className="p-2 text-center text-sm">
               Los últimos {MAX_STORED_RECENT_EMAILS} correos electrónicos a los
               que has invitado
@@ -89,8 +89,8 @@ const RecentEmailsPopover: React.FC<Props> = ({
                       <Command.Item
                         key={email}
                         value={email}
-                        onSelect={(email) => {
-                          onSelect(email);
+                        onSelect={(e) => {
+                          onSelect(e);
                           setOpen(false);
                         }}
                         disabled={isSelected && disableSelected}
@@ -103,7 +103,7 @@ const RecentEmailsPopover: React.FC<Props> = ({
                 </ScrollArea>
               </Command.Group>
             </Command>
-          </>
+          </React.Fragment>
         )}
       </Popover.Content>
     </Popover>

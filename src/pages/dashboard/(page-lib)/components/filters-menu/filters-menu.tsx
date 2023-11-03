@@ -3,22 +3,20 @@ import * as LucideIcons from "lucide-react";
 import { Button } from "$/components/ui/button";
 import { DropdownMenu } from "$/components/ui/dropdown-menu";
 import {
-  type LenderDebtsQueryInput,
-  statusOptions,
-} from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
-import {
-  type BorrowerDebtsQueryInput,
   borrowerStatusOptions,
-} from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+  type DebtsAsBorrowerInput,
+  type DebtsAsLenderInput,
+  statusOptions,
+} from "$/server/api/routers/debts/queries/input";
 
 type LenderProps = {
-  selectedStatus: LenderDebtsQueryInput["status"];
-  setSelectedStatus: (status: LenderDebtsQueryInput["status"]) => void;
+  selectedStatus: DebtsAsLenderInput["status"];
+  setSelectedStatus: (status: DebtsAsLenderInput["status"]) => void;
   lender: true;
 };
 type BorrowerProps = {
-  selectedStatus: BorrowerDebtsQueryInput["status"];
-  setSelectedStatus: (status: BorrowerDebtsQueryInput["status"]) => void;
+  selectedStatus: DebtsAsBorrowerInput["status"];
+  setSelectedStatus: (status: DebtsAsBorrowerInput["status"]) => void;
   lender: false;
 };
 type Props = LenderProps | BorrowerProps;

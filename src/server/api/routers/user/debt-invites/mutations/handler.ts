@@ -4,13 +4,26 @@ import {
   declineGroupInviteInput,
 } from "$/server/api/routers/user/debt-invites/mutations/input";
 import CUSTOM_EXCEPTIONS from "$/server/api/custom-exceptions";
-import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
+import { checkDebtLimitAndIncr } from "$/server/api/routers/debts/_lib/utils/check-debt-limit-and-incr";
 
 export const userGroupInvitesMutations = createTRPCRouter({
   acceptDebtInvite: TRPCProcedures.protected
     .input(acceptGroupInviteInput)
     .mutation(async ({ ctx, input }) => {
       await checkDebtLimitAndIncr(ctx);
+
+      const debt = await ctx.prisma.debt.findUnique({
+        where: {
+          id: input.debtId,
+        },
+        select: {
+          amount: true,
+        },
+      });
+
+      if (!debt) {
+        throw CUSTOM_EXCEPTIONS.BAD_REQUEST("No se encontró la deuda");
+      }
 
       return ctx.prisma.$transaction(async (prisma) => {
         const pendingInvite = await prisma.pendingInvite.findUnique({
@@ -37,6 +50,7 @@ export const userGroupInvitesMutations = createTRPCRouter({
           data: {
             userId: ctx.session.user.id,
             debtId: input.debtId,
+            balance: debt.amount,
           },
           select: {
             debtId: true,
@@ -50,6 +64,7 @@ export const userGroupInvitesMutations = createTRPCRouter({
               debtId: input.debtId,
             },
           },
+          select: { debtId: true },
         });
 
         return createdBorrower;

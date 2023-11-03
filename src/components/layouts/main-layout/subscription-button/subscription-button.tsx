@@ -13,7 +13,7 @@ export const SubscriptionButton: React.FC = () => {
   if (activeSubscription) return null;
 
   return (
-    <>
+    <React.Fragment>
       <SubscriptionsDialog open={open} onOpenChange={setOpen} />
 
       <Button
@@ -27,6 +27,6 @@ export const SubscriptionButton: React.FC = () => {
         <LucideIcons.Crown className="h-5 w-5 text-yellow-600 dark:text-yellow-500" />
         <span className="sr-only">Planes de Suscripción</span>
       </Button>
-    </>
+    </React.Fragment>
   );
 };

@@ -1,160 +1,332 @@
-import React, { type FC } from "react";
-import { DateTime } from "luxon";
-import { type AppRouter } from "$/server/api/root";
-import { BadgeCheck, CalendarIcon } from "lucide-react";
-import { Skeleton } from "$/components/ui/skeleton";
-import { type inferProcedureOutput } from "@trpc/server";
-import { Button } from "$/components/ui/button";
-import { Badge } from "$/components/ui/badge";
-import { Avatar } from "$/components/ui/avatar";
-import { useSession } from "next-auth/react";
-import { BorrowerStatus } from "@prisma/client";
-import BorrowerConfirmDialog from "src/pages/dashboard/(page-lib)/components/debt-card/borrower-confirm-dialog";
-import ActionsMenu from "$/pages/dashboard/(page-lib)/components/debt-card/actions-menu";
+import React from "react";
 import { cn } from "$/lib/utils/cn";
-import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
-import { type BorrowerDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-shared-debts/input";
+import { Avatar } from "$/components/ui/avatar";
+import { Badge } from "$/components/ui/badge";
+import {
+  BadgeCheck,
+  CalendarCheck,
+  CalendarIcon,
+  Clock,
+  RotateCw,
+} from "lucide-react";
+import { DateTime } from "luxon";
+import { getRecurrentDebtFinalPayment } from "$/pages/dashboard/(page-lib)/utils/get-recurrent-debt-final-payment";
+import { DebtRecurringFrequency } from "@prisma/client";
+import { Skeleton } from "$/components/ui/skeleton";
+import { getRecurrentCycleDates } from "$/pages/dashboard/(page-lib)/utils/get-recurrent-cycle-dates";
+import { formatCurrency } from "$/lib/utils/format-currency";
+import { type Currency } from "$/server/api/routers/debts/mutations/input";
 
-type BorrowerProps = {
-  lender: false;
-  debt: NonNullable<
-    inferProcedureOutput<AppRouter["debts"]["getSharedDebts"]>
-  >["debts"][number];
-  queryVariables: BorrowerDebtsQueryInput;
-};
-type LenderProps = {
-  lender: true;
-  debt: NonNullable<
-    inferProcedureOutput<AppRouter["debts"]["getOwnedDebts"]>
-  >["debts"][number];
-  queryVariables: LenderDebtsQueryInput;
-};
-type Props = BorrowerProps | LenderProps;
-
-const BaseDebtCard: FC<Props> = ({ debt, lender, queryVariables }) => {
-  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
-  const session = useSession();
-  const currentBorrower = debt.borrowers.find(
-    ({ user }) => user.id === session.data?.user?.id
+type RootProps = {
+  children: React.ReactNode;
+  isConcluded: boolean;
+} & React.ComponentPropsWithoutRef<"div">;
+const Root: React.FC<RootProps> = ({
+  children,
+  className,
+  isConcluded,
+  ...props
+}) => {
+  return (
+    <div
+      className={cn(
+        "relative flex flex-col gap-3 rounded-lg border border-border p-6 shadow-sm",
+        className,
+        isConcluded && "group opacity-50 hover:opacity-100"
+      )}
+      {...props}
+    >
+      {isConcluded && (
+        <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-lg group-hover:hidden">
+          <div className="flex h-full items-center justify-center">
+            <BadgeCheck className="h-12 w-12 text-foreground" />
+          </div>
+        </div>
+      )}
+      {children}
+    </div>
   );
-  const paymentStatus = currentBorrower?.status ?? BorrowerStatus.YET_TO_PAY;
-  const normalizedBorrowers = debt.borrowers.map(({ user }) => user);
-  const members = [debt.lender, ...normalizedBorrowers];
-  const hasPendingConfirmations =
-    debt.borrowers.filter(
-      ({ status }) => status === BorrowerStatus.PENDING_CONFIRMATION
-    ).length > 0;
+};
+
+type HeaderProps = {
+  children: React.ReactNode;
+} & React.ComponentPropsWithoutRef<"div">;
+const Header: React.FC<HeaderProps> = ({ children, className, ...props }) => {
+  return (
+    <div
+      className={cn(
+        "flex w-full items-center justify-between gap-4",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+type TitleProps = {
+  children: React.ReactNode;
+} & React.ComponentPropsWithoutRef<"span">;
+const Title: React.FC<TitleProps> = ({ children, className, ...props }) => {
+  return (
+    <span
+      className={cn("max-w-[250px] text-lg font-bold", className)}
+      {...props}
+    >
+      {children}
+    </span>
+  );
+};
+
+type AvatarContainerProps = {
+  children: React.ReactNode;
+} & React.ComponentPropsWithoutRef<"div">;
+const AvatarContainer: React.FC<AvatarContainerProps> = ({
+  children,
+  className,
+  ...props
+}) => {
+  return (
+    <div
+      className={cn("flex -space-x-2 overflow-hidden", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+type AvatarProps = {
+  image: string | null | undefined;
+  fallback: string;
+  className?: string;
+};
+const MemberAvatar: React.FC<AvatarProps> = ({
+  image,
+  fallback,
+  className,
+}) => {
+  return (
+    <Avatar className={cn("h-7 w-7", className)}>
+      <Avatar.Image src={image ?? undefined} />
+
+      <Avatar.Fallback>{fallback}</Avatar.Fallback>
+    </Avatar>
+  );
+};
+
+type BadgeContainerProps = {
+  children: React.ReactNode;
+} & React.ComponentPropsWithoutRef<"div">;
+const BadgeContainer: React.FC<BadgeContainerProps> = ({
+  children,
+  className,
+  ...props
+}) => {
+  return (
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-start gap-1.5",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+type AmountBadgeProps = {
+  amount: number;
+  currency: Currency;
+} & React.ComponentPropsWithoutRef<typeof Badge>;
+const AmountBadge: React.FC<AmountBadgeProps> = ({
+  amount,
+  currency,
+  ...props
+}) => {
+  console.log({ amount, currency });
+  return (
+    <Badge variant="success" {...props}>
+      {formatCurrency(amount, currency)}
+    </Badge>
+  );
+};
+
+type DueDateBadgeProps = {
+  recurringFrequency: DebtRecurringFrequency | null;
+  duration: number | null;
+  createdAt: Date | null;
+  dueDate: Date | null;
+} & React.ComponentPropsWithoutRef<typeof Badge>;
+const DueDateBadge: React.FC<DueDateBadgeProps> = ({
+  className,
+  recurringFrequency,
+  duration,
+  createdAt,
+  dueDate,
+  ...props
+}) => {
+  const isRecurrent =
+    recurringFrequency !== null && duration !== null && createdAt !== null;
+  if (!isRecurrent && dueDate === null) return null;
+
+  const finalPaymentDate = isRecurrent
+    ? getRecurrentDebtFinalPayment({
+        recurringFrequency,
+        duration,
+        createdAt,
+      })
+    : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- We know it's not null because of the previous condition
+      DateTime.fromJSDate(dueDate!);
+  const endsToday = finalPaymentDate.hasSame(DateTime.now(), "day");
+  const hasEnded = finalPaymentDate < DateTime.now();
 
   return (
-    <>
-      {!lender && (
-        <BorrowerConfirmDialog
-          open={openConfirmDialog}
-          onOpenChange={setOpenConfirmDialog}
-          debtId={debt.id}
-          queryVariables={queryVariables}
-        />
-      )}
-
-      <div
-        className={cn(
-          "relative flex flex-col gap-2 rounded-lg border border-border p-6 shadow-sm",
-          debt.archived && "pointer-events-none select-none"
-        )}
-      >
-        {debt.archived && (
-          <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-lg bg-background/50">
-            <div className="flex h-full items-center justify-center">
-              <BadgeCheck className="h-12 w-12 text-foreground" />
-            </div>
-          </div>
-        )}
-
-        <div className="flex w-full items-center justify-between gap-4">
-          <span className="max-w-[250px] text-lg font-bold">{debt.name}</span>
-
-          <div className="flex -space-x-2 overflow-hidden">
-            {members.map((user) => (
-              <Avatar key={user.email} className="h-7 w-7">
-                <Avatar.Image src={user.image ?? undefined} />
-
-                <Avatar.Fallback>
-                  {user.name?.[0]?.toUpperCase() ??
-                    user.email?.[0]?.toUpperCase() ??
-                    "?"}
-                </Avatar.Fallback>
-              </Avatar>
-            ))}
-          </div>
-        </div>
-
-        <Badge className="self-start rounded-sm text-base" variant="success">
-          💵 {debt.amount.toLocaleString()}
-        </Badge>
-
-        <p className="mb-6 mt-2 pr-2 lg:pr-3 xl:pr-6">{debt.description}</p>
-
-        <div className="mt-auto flex w-full items-center justify-between">
-          <Badge variant="secondary">
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {DateTime.fromJSDate(debt.createdAt).toLocaleString(
-              DateTime.DATE_MED
-            )}
-          </Badge>
-
-          {lender ? (
-            <ActionsMenu
-              debt={debt}
-              hasPendingConfirmations={hasPendingConfirmations}
-              queryVariables={queryVariables}
-            />
-          ) : (
-            <Button
-              size="sm"
-              className="text-sm"
-              disabled={
-                paymentStatus === BorrowerStatus.CONFIRMED ||
-                paymentStatus === BorrowerStatus.PENDING_CONFIRMATION
-              }
-              variant={
-                paymentStatus === BorrowerStatus.YET_TO_PAY
-                  ? "default"
-                  : paymentStatus === BorrowerStatus.PENDING_CONFIRMATION
-                  ? "secondary"
-                  : "success"
-              }
-              onClick={() => {
-                if (paymentStatus === BorrowerStatus.YET_TO_PAY) {
-                  setOpenConfirmDialog(true);
-                }
-              }}
-            >
-              {paymentStatus === BorrowerStatus.YET_TO_PAY ? (
-                <>
-                  <span className="xs:mr-1">Confirmar</span>{" "}
-                  <span className="hidden xs:inline">Pago</span>
-                </>
-              ) : paymentStatus === BorrowerStatus.PENDING_CONFIRMATION ? (
-                "Pendiente"
-              ) : (
-                <>
-                  <BadgeCheck className="mr-1 h-4 w-4" />
-                  <span>Pagado</span>
-                </>
-              )}
-            </Button>
-          )}
-        </div>
-      </div>
-    </>
+    <Badge
+      variant={endsToday ? "destructive" : "outline"}
+      className={cn("self-start", className)}
+      {...props}
+    >
+      <CalendarCheck className="mr-1.5 h-3.5 w-3.5" />
+      {endsToday ? "Finaliza hoy" : hasEnded ? "Finalizó" : "Finaliza"}{" "}
+      {!endsToday && finalPaymentDate.toLocaleString(DateTime.DATE_MED)}
+    </Badge>
   );
 };
 
+export const recurringFrequencyLabels = new Map<DebtRecurringFrequency, string>(
+  [
+    [DebtRecurringFrequency.WEEKLY, "Semanal"],
+    [DebtRecurringFrequency.BIWEEKLY, "Quincenal"],
+    [DebtRecurringFrequency.MONTHLY, "Mensual"],
+  ]
+);
+type RecurringBadgeProps = {
+  recurringFrequency: DebtRecurringFrequency | null;
+  duration: number | null;
+  className?: string;
+};
+const RecurringFrequencyBadge: React.FC<RecurringBadgeProps> = ({
+  recurringFrequency,
+  duration,
+  className,
+}) => {
+  const isRecurrent = recurringFrequency !== null && duration !== null;
+  if (!isRecurrent) return null;
+
+  return (
+    <Badge variant="outline" className={cn(className)}>
+      <RotateCw className="mr-1.5 h-3.5 w-3.5" />
+      {recurringFrequencyLabels.get(recurringFrequency)!} ({duration})
+    </Badge>
+  );
+};
+
+type PayUntilRecurrenceBadgeProps = {
+  recurringFrequency: DebtRecurringFrequency | null;
+  duration: number | null;
+  createdAt: Date;
+};
+const PayUntilRecurrenceBadge: React.FC<PayUntilRecurrenceBadgeProps> = ({
+  recurringFrequency,
+  duration,
+  createdAt,
+}) => {
+  const isRecurrent = recurringFrequency !== null && duration !== null;
+  if (!isRecurrent) return null;
+
+  const cycles: DateTime[] = getRecurrentCycleDates({
+    recurringFrequency,
+    duration,
+    createdAt,
+  });
+  const currentCycle = cycles.find((cycle) => cycle > DateTime.now());
+  if (!currentCycle) return null;
+
+  return (
+    <Badge variant="outline">
+      <Clock className="mr-1.5 h-3.5 w-3.5" />
+      Paga antes del {currentCycle.toLocaleString(DateTime.DATE_MED)}
+    </Badge>
+  );
+};
+
+type DescriptionProps = {
+  children: React.ReactNode;
+} & React.ComponentPropsWithoutRef<"p">;
+const Description: React.FC<DescriptionProps> = ({
+  children,
+  className,
+  ...props
+}) => {
+  return (
+    <p className={cn("mb-6 mt-2 pr-2 lg:pr-3 xl:pr-6", className)} {...props}>
+      {children}
+    </p>
+  );
+};
+
+type FooterProps = {
+  children: React.ReactNode;
+} & React.ComponentPropsWithoutRef<"div">;
+const Footer: React.FC<FooterProps> = ({ children, className, ...props }) => {
+  return (
+    <div
+      className={cn(
+        "mt-auto flex w-full items-center justify-between gap-4",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+type CreatedAtBadgeProps = {
+  createdAt: Date;
+  label?: string;
+} & React.ComponentPropsWithoutRef<typeof Badge>;
+const CreatedAtBadge: React.FC<CreatedAtBadgeProps> = ({
+  className,
+  createdAt,
+  label = "Creada",
+  ...props
+}) => {
+  return (
+    <Badge
+      variant="outline"
+      className={cn("h-full break-all", className)}
+      {...props}
+    >
+      <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+      <span>
+        {label}{" "}
+        {DateTime.fromJSDate(createdAt).toLocaleString(DateTime.DATE_MED)}
+      </span>
+    </Badge>
+  );
+};
 const DebtCardSkeleton: React.FC = () => (
   <Skeleton className="flex h-48 flex-col gap-2 rounded-lg p-6" />
 );
 
-const DebtCard = Object.assign(BaseDebtCard, {
+const DebtCard = Object.assign(Root, {
+  Header,
+  Title,
+  AvatarContainer,
+  MemberAvatar,
+  BadgeContainer,
+  AmountBadge,
+  DueDateBadge,
+  RecurringFrequencyBadge,
+  PayUntilRecurrenceBadge,
+  Description,
+  Footer,
+  CreatedAtBadge,
   Skeleton: DebtCardSkeleton,
 });
+
 export default DebtCard;

@@ -48,10 +48,10 @@ const Onboard: NextPageWithLayout = () => {
 };
 
 Onboard.getLayout = (page): JSX.Element => (
-  <>
+  <React.Fragment>
     <CustomHead title="Verifica tu celular" content="Verifica tu celular" />
     {page}
-  </>
+  </React.Fragment>
 );
 
 export default Onboard;

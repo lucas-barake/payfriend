@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
+/* eslint-disable @typescript-eslint/consistent-type-definitions,no-param-reassign */
 import { type GetServerSidePropsContext } from "next";
 import {
   type DefaultSession,
@@ -130,7 +130,7 @@ export const authOptions: NextAuthOptions = {
      */
   ],
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/",
   },
 };
 

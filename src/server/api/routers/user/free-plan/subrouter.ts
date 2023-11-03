@@ -1,5 +1,5 @@
 import { createTRPCRouter, TRPCProcedures } from "$/server/api/trpc";
-import { getFreePlanDebtLimitCount } from "$/server/api/routers/debts/mutations/lib/utils/check-debt-limit-and-incr";
+import { getFreePlanDebtLimitCount } from "$/server/api/routers/debts/_lib/utils/check-debt-limit-and-incr";
 
 export const userFreePlanSubRouter = createTRPCRouter({
   getFreePlanDebtLimitCount: TRPCProcedures.protected.query(async ({ ctx }) => {

@@ -1,17 +1,25 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
+}
+
+model PersonalExpense {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+  name        String
+  description String?  @db.Text
+  currency    String
+  amount      Float
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([userId, amount])
 }
 
 enum DebtRecurringFrequency {
@@ -26,33 +34,52 @@ model Debt {
   updatedAt          DateTime                @updatedAt @db.Timestamptz(6)
   name               String
   description        String?                 @db.Text
+  currency           String
   amount             Float
-  dueDate            DateTime?               @db.Timestamptz(6)
   lenderId           String
   lender             User                    @relation(fields: [lenderId], references: [id])
-  archived           Boolean                 @default(false)
+  archived           DateTime?               @db.Timestamptz(6)
   recurringFrequency DebtRecurringFrequency?
+  dueDate            DateTime?               @db.Timestamptz(6)
+  duration           Int? // number of periods (if recurring)
+  payments           Payment[]
   borrowers          Borrower[]
   pendingInvites     PendingInvite[]
+  processedAt        DateTime?               @db.Timestamptz(6) // when the debt was processed by the cron job
+
+  @@index([lenderId, archived])
+  @@index([createdAt])
 }
 
-enum BorrowerStatus {
-  YET_TO_PAY
-  PENDING_CONFIRMATION
-  CONFIRMED
+enum PaymentStatus {
+  PAID
+  MISSED // for recurrent debts and non-recurrent debts with due date
+  PENDING_CONFIRMATION // for the lender to confirm the payment
+}
+
+model Payment {
+  id         String        @id @default(uuid())
+  createdAt  DateTime      @default(now()) @db.Timestamptz(6)
+  amount     Float
+  status     PaymentStatus
+  borrowerId String
+  borrower   Borrower      @relation(fields: [borrowerId, debtId], references: [userId, debtId])
+  debtId     String
+  debt       Debt          @relation(fields: [debtId], references: [id])
 }
 
 model Borrower {
-  id        String         @id @default(uuid())
-  createdAt DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime       @updatedAt @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt @db.Timestamptz(6)
   userId    String
-  user      User           @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
   debtId    String
-  debt      Debt           @relation(fields: [debtId], references: [id])
-  status    BorrowerStatus @default(YET_TO_PAY)
+  debt      Debt      @relation(fields: [debtId], references: [id])
+  payments  Payment[]
+  balance   Float // amount remaining to be paid by the borrower for the debt or payment
 
-  @@unique([userId, debtId])
+  @@id([userId, debtId])
+  @@index([debtId])
 }
 
 model PendingInvite {
@@ -141,21 +168,25 @@ model SubscriptionInvoice {
 }
 
 model User {
-  id                  String                @id @default(uuid())
-  name                String?
-  email               String?               @unique
-  emailVerified       DateTime?             @db.Timestamptz(6)
-  phoneNumber         String?               @unique
-  phoneVerified       DateTime?             @db.Timestamptz(6)
-  image               String?
-  accounts            Account[]
-  sessions            Session[]
-  debtsAsLender       Debt[]
-  debtsAsBorrower     Borrower[]
-  pendingInvites      PendingInvite[]
-  activeSubscription  ActiveSubscription?
-  subscriptionHistory SubscriptionHistory[]
-  suscriptionInvoices SubscriptionInvoice[]
+  id                   String                @id @default(uuid())
+  name                 String?
+  email                String?               @unique
+  emailVerified        DateTime?             @db.Timestamptz(6)
+  phoneNumber          String?               @unique
+  phoneVerified        DateTime?             @db.Timestamptz(6)
+  image                String?
+  preferences          Json?
+  accounts             Account[]
+  sessions             Session[]
+  debtsAsLender        Debt[]
+  debtsAsBorrower      Borrower[]
+  pendingInvites       PendingInvite[]
+  activeSubscription   ActiveSubscription?
+  subscriptionHistory  SubscriptionHistory[]
+  subscriptionInvoices SubscriptionInvoice[]
+  personalExpenses     PersonalExpense[]
+
+  @@index([email])
 }
 
 model VerificationToken {

@@ -26,10 +26,10 @@ const AuthWrapper: FC<Props> = ({ children }) => {
     session.data?.user.subscription?.isActive ?? false;
 
   return (
-    <>
+    <React.Fragment>
       {!hasActiveSubscription && <FreePlanDebtLimitCount />}
       {children}
-    </>
+    </React.Fragment>
   );
 };
 

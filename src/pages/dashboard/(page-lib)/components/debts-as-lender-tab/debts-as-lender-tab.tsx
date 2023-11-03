@@ -1,21 +1,29 @@
 import React from "react";
 import { api } from "$/lib/utils/api";
 import { TimeInMs } from "$/lib/enums/time";
-import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
 import DebtsGrid from "$/pages/dashboard/(page-lib)/components/debts-grid";
 import PageControls from "$/pages/dashboard/(page-lib)/components/page-controls";
-import AddDebtDialog from "$/pages/dashboard/(page-lib)/components/add-debt-dialog";
+import AddDebtDialog from "src/pages/dashboard/(page-lib)/components/debts-as-lender-tab/add-debt-dialog";
 import FiltersMenu from "src/pages/dashboard/(page-lib)/components/filters-menu";
 import SortMenu from "$/pages/dashboard/(page-lib)/components/sort-menu";
-import { type LenderDebtsQueryInput } from "$/server/api/routers/debts/queries/handlers/get-owned-debts/input";
-import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/handlers/lib/constants";
+import { DEBTS_QUERY_PAGINATION_LIMIT } from "$/server/api/routers/debts/queries/(lib)/constants";
+import DebtAsLenderCard from "$/pages/dashboard/(page-lib)/components/debts-as-lender-tab/debt-as-lender-card";
+import DebtCard from "src/pages/dashboard/(page-lib)/components/debt-card";
+import PartnersFilterDialog from "src/pages/dashboard/(page-lib)/components/partners-filter-dialog";
+import { useSessionStorage } from "$/hooks/browser-storage/use-session-storage";
+import { debtsAsLenderInput } from "$/server/api/routers/debts/queries/input";
 
 const DebtsAsLenderTab: React.FC = () => {
-  const [queryVariables, setQueryVariables] =
-    React.useState<LenderDebtsQueryInput>({
-      skip: 0,
-      sort: "desc",
-      status: "active",
+  const { state: queryVariables, setState: setQueryVariables } =
+    useSessionStorage({
+      validationSchema: debtsAsLenderInput,
+      defaultValues: {
+        skip: 0,
+        sort: "desc",
+        status: "active",
+        partnerEmail: null,
+      },
+      key: "debts-as-lender-tab-query-variables",
     });
 
   const query = api.debts.getOwnedDebts.useQuery(queryVariables, {
@@ -26,11 +34,23 @@ const DebtsAsLenderTab: React.FC = () => {
   const debts = query.data?.debts ?? [];
 
   return (
-    <>
+    <React.Fragment>
       <div className="flex items-center justify-between">
         <AddDebtDialog queryVariables={queryVariables} />
 
         <div className="flex items-center gap-2">
+          <PartnersFilterDialog
+            type="lender"
+            selectedPartnerEmail={queryVariables.partnerEmail}
+            selectPartnerEmail={(partnerEmail) => {
+              setQueryVariables({
+                ...queryVariables,
+                partnerEmail,
+                skip: 0,
+              });
+            }}
+          />
+
           <SortMenu
             selectedSort={queryVariables.sort}
             setSelectedSort={(sort) => {
@@ -62,22 +82,21 @@ const DebtsAsLenderTab: React.FC = () => {
 
       <DebtsGrid>
         {query.isLoading ? (
-          <>
-            {Array.from({ length: 3 }).map((_, index) => (
+          <React.Fragment>
+            {Array.from({ length: 8 }).map((_, index) => (
               <DebtCard.Skeleton key={index} />
             ))}
-          </>
+          </React.Fragment>
         ) : (
-          <>
+          <React.Fragment>
             {debts.map((debt) => (
-              <DebtCard
+              <DebtAsLenderCard
                 key={debt.id}
                 debt={debt}
-                lender
                 queryVariables={queryVariables}
               />
             ))}
-          </>
+          </React.Fragment>
         )}
       </DebtsGrid>
 
@@ -91,7 +110,7 @@ const DebtsAsLenderTab: React.FC = () => {
         }}
         count={query.data?.count ?? 0}
       />
-    </>
+    </React.Fragment>
   );
 };
 

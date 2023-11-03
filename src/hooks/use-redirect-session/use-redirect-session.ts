@@ -7,7 +7,7 @@ function useRedirectSession(): ReturnType<typeof useSession> {
   return useSession({
     required: true,
     onUnauthenticated() {
-      void router.push(Pages.LOGIN);
+      void router.push(Pages.HOME);
     },
   });
 }

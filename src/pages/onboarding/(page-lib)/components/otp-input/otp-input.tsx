@@ -89,7 +89,7 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
   }
 
   return (
-    <>
+    <React.Fragment>
       <p className="text-center">
         ¡Perfecto! Hemos enviado un código a tu número de celular. Si aún no lo
         has recibido, espera un momento más. Una vez que lo tengas, ingrésalo
@@ -174,7 +174,7 @@ const OtpInput: React.FC<Props> = ({ setView, phone }) => {
           Reenviar código
         </Button>
       )}
-    </>
+    </React.Fragment>
   );
 };
 
