@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function */
 
-export const isBrowser: () => boolean = () => typeof window !== "undefined";
+function isBrowser(): boolean {
+  return typeof window !== "undefined";
+}
 
 export function getStorage(type: "session" | "local"): Storage {
   if (isBrowser()) {

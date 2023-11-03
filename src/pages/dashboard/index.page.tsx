@@ -65,14 +65,12 @@ const Dashboard: NextPageWithLayout = () => {
         });
       }}
     >
-      <div className="flex flex-col gap-4 border-b border-b-border/50 pb-2">
-        <div className="flex items-center gap-4">
-          <Tabs.List>
-            <Tabs.Trigger value={tabs[0]}>Prestador</Tabs.Trigger>
-            <Tabs.Trigger value={tabs[1]}>Deudor</Tabs.Trigger>
-            <Tabs.Trigger value={tabs[2]}>Mis Gastos</Tabs.Trigger>
-          </Tabs.List>
-        </div>
+      <div className="mb-2 flex flex-col gap-4 border-b border-b-border/50 pb-2">
+        <Tabs.List className="self-start">
+          <Tabs.Trigger value={tabs[0]}>Prestador</Tabs.Trigger>
+          <Tabs.Trigger value={tabs[1]}>Deudor</Tabs.Trigger>
+          <Tabs.Trigger value={tabs[2]}>Mis Gastos</Tabs.Trigger>
+        </Tabs.List>
 
         {selectedTab && (
           <div className="flex flex-col gap-0.5">
